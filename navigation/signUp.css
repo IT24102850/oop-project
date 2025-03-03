@@ -130,6 +130,17 @@ body {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 /* Login Section */
 .login-section {
   display: flex;
@@ -137,49 +148,49 @@ body {
   align-items: center;
   flex: 1;
   background: rgba(0, 0, 0, 0.7); /* Darker semi-transparent background */
-  padding: 10px; /* Reduced padding */
+  padding: 5px; /* Further reduced padding */
 }
 
 .login-container {
   background: #1f1f1f;
-  padding: 20px; /* Reduced padding */
+  padding: 15px; /* Further reduced padding */
   border-radius: 10px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
   width: 100%;
-  max-width: 400px; /* Reduced max-width */
+  max-width: 350px; /* Further reduced max-width */
   text-align: center;
   animation: fadeIn 0.5s ease-in-out; /* Adds a fade-in animation */
 }
 
 .login-container h2 {
-  font-size: 1.5rem; /* Reduced font size */
-  margin-bottom: 8px; /* Reduced margin */
+  font-size: 1.3rem; /* Further reduced font size */
+  margin-bottom: 6px; /* Further reduced margin */
   color: #ffffff;
 }
 
 .login-subtitle {
-  font-size: 0.8rem; /* Reduced font size */
+  font-size: 0.7rem; /* Further reduced font size */
   color: #cccccc;
-  margin-bottom: 15px; /* Reduced margin */
+  margin-bottom: 10px; /* Further reduced margin */
 }
 
 /* Social Login Buttons */
 .social-login {
   display: flex;
   flex-direction: column;
-  gap: 8px; /* Reduced gap */
-  margin-bottom: 15px; /* Reduced margin */
+  gap: 6px; /* Further reduced gap */
+  margin-bottom: 10px; /* Further reduced margin */
 }
 
 .btn-social {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px; /* Reduced gap */
-  padding: 10px; /* Reduced padding */
+  gap: 6px; /* Further reduced gap */
+  padding: 8px; /* Further reduced padding */
   border: none;
   border-radius: 5px;
-  font-size: 0.9rem; /* Reduced font size */
+  font-size: 0.8rem; /* Further reduced font size */
   font-weight: 500;
   cursor: pointer;
   transition: background-color 0.3s ease, transform 0.2s ease;
@@ -189,36 +200,36 @@ body {
 .divider {
   display: flex;
   align-items: center;
-  margin: 15px 0; /* Reduced margin */
+  margin: 10px 0; /* Further reduced margin */
 }
 
 .divider span {
-  padding: 0 8px; /* Reduced padding */
+  padding: 0 6px; /* Further reduced padding */
   color: #cccccc;
-  font-size: 0.8rem; /* Reduced font size */
+  font-size: 0.7rem; /* Further reduced font size */
 }
 
 /* Login Form */
 .login-form .form-group {
-  margin-bottom: 15px; /* Reduced margin */
+  margin-bottom: 10px; /* Further reduced margin */
   text-align: left;
 }
 
 .login-form .form-group label {
   display: block;
-  margin-bottom: 4px; /* Reduced margin */
+  margin-bottom: 3px; /* Further reduced margin */
   color: #ffffff;
   font-weight: 500;
 }
 
 .login-form .form-group input {
   width: 100%;
-  padding: 10px; /* Reduced padding */
+  padding: 8px; /* Further reduced padding */
   border: 1px solid #009acd;
   border-radius: 5px;
   background: #121212;
   color: #ffffff;
-  font-size: 0.9rem; /* Reduced font size */
+  font-size: 0.8rem; /* Further reduced font size */
   transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
@@ -226,42 +237,42 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 15px; /* Reduced margin */
+  margin-bottom: 10px; /* Further reduced margin */
 }
 
 .remember-me {
   display: flex;
   align-items: center;
-  gap: 4px; /* Reduced gap */
+  gap: 3px; /* Further reduced gap */
 }
 
 .remember-me label {
   color: #cccccc;
-  font-size: 0.8rem; /* Reduced font size */
+  font-size: 0.7rem; /* Further reduced font size */
 }
 
 .forgot-password {
   color: #009acd;
   text-decoration: none;
-  font-size: 0.8rem; /* Reduced font size */
+  font-size: 0.7rem; /* Further reduced font size */
   transition: color 0.3s ease;
 }
 
 .login-form .btn-login {
   width: 100%;
-  padding: 10px; /* Reduced padding */
+  padding: 8px; /* Further reduced padding */
   background-color: #009acd;
   color: #121212;
   border: none;
   border-radius: 5px;
-  font-size: 0.9rem; /* Reduced font size */
+  font-size: 0.8rem; /* Further reduced font size */
   font-weight: 500;
   cursor: pointer;
   transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 .signup-link {
-  margin-top: 10px; /* Reduced margin */
+  margin-top: 8px; /* Further reduced margin */
   color: #cccccc;
 }
 
@@ -270,72 +281,4 @@ body {
   text-decoration: none;
   font-weight: 500;
   transition: color 0.3s ease;
-}
-
-
-
-
-
-
-/* Footer Section */
-.footer {
-  background-color: #1f1f1f;
-  padding: 2rem 0;
-  text-align: center;
-  position: relative;
-  bottom: 0;
-  width: 100%;
-  margin-top: auto; /* Ensures footer sticks to the bottom */
-}
-
-.footer p {
-  margin-bottom: 1rem;
-  color: #cccccc;
-}
-
-.social-links {
-  display: flex;
-  justify-content: center;
-  gap: 20px;
-  margin-top: 10px;
-}
-
-.social-links a {
-  font-size: 1.5rem;
-  transition: color 0.3s ease, transform 0.2s ease;
-}
-
-.social-links a:hover {
-  opacity: 0.7;
-  transform: translateY(-2px); /* Adds a slight lift effect on hover */
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-  .header {
-    flex-direction: column;
-    align-items: flex-start;
-    padding: 15px;
-  }
-
-  .navbar ul {
-    flex-direction: column;
-    gap: 10px;
-  }
-
-  .auth-buttons {
-    margin-top: 10px;
-  }
-
-  .login-container {
-    padding: 20px;
-  }
-
-  .btn-social {
-    font-size: 0.9rem;
-  }
-
-  .login-form .btn-login {
-    font-size: 0.9rem;
-  }
 }
