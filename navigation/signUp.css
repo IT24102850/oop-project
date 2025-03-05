@@ -22,7 +22,7 @@ body {
 /* Logo */
 .logo img { height: 40px; }
 
-/* Navigation Menu */
+//navigation menu
 .navbar {
   position: fixed; /* Fixes the navbar at the top */
   top: 0; /* Positions it at the top */
