@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    //show the registration key points
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registration - NexoraSkill</title>
@@ -22,7 +23,7 @@
             <ul>
                 <li><a href="../index.html">Home</a></li>
                 <li><a href="../navigation/courses.html">Courses</a></li>
-                <li><a href="">Registration</a></li>
+                <li><a href=""></a>Registration</a></li>
                 <li><a href="../navigation/aboutus.html">About Us</a></li>
                 <li><a href="../navigation/contact%20us.html">Contact</a></li>
             </ul>
@@ -40,7 +41,10 @@
 <section class="registration">
     <div class="container">
         <h2>Register for a Course</h2>
-        <form id="registration-form">
+        <form id="registration-form" action="http://localhost:8080/register" method="POST">
+
+
+
             <!-- Personal Information -->
             <div class="form-group">
                 <label for="full-name">Full Name</label>
@@ -80,9 +84,5 @@
         </form>
     </div>
 </section>
-
-<!-- JavaScript to handle form submission -->
-<script src="registration.js"></script>
 </body>
 </html>
-

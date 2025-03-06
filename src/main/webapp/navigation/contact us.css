@@ -1,0 +1,264 @@
+/* General Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Arial', sans-serif;
+  background-color: #121212; /* Dark background */
+  color: #ffffff; /* Light text */
+}
+
+/* Header Styles */
+.header {
+  background-color: #1f1f1f;
+  padding: 20px 0;
+  border-bottom: 1px solid #333;
+}
+
+.container {
+  width: 90%;
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo img {
+  height: 40px;
+}
+
+.navbar ul {
+  list-style: none;
+  display: flex;
+  gap: 20px;
+}
+
+.navbar ul li a {
+  text-decoration: none;
+  color: #ffffff;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.navbar ul li a:hover,
+.navbar ul li a.active {
+  color: #4CAF50;
+}
+
+.cta {
+  display: flex;
+  gap: 15px;
+}
+
+.btn {
+  padding: 10px 20px;
+  text-decoration: none;
+  border-radius: 5px;
+  font-weight: 500;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.btn-primary {
+  background-color: #4CAF50;
+  color: #ffffff;
+}
+
+.btn-primary:hover {
+  background-color: #45a049;
+}
+
+/* Hero Section */
+.hero {
+  background-color: #1f1f1f;
+  padding: 100px 0;
+  text-align: center;
+}
+
+.hero h1 {
+  font-size: 48px;
+  margin-bottom: 20px;
+}
+
+.hero p {
+  font-size: 18px;
+  color: #cccccc;
+}
+
+/* Contact Information Section */
+.contact-info {
+  padding: 80px 0;
+  background-color: #1f1f1f;
+}
+
+.contact-info h2 {
+  text-align: center;
+  margin-bottom: 40px;
+  font-size: 36px;
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+  text-align: center;
+}
+
+.info-item {
+  background-color: #2a2a2a;
+  padding: 20px;
+  border-radius: 10px;
+  transition: transform 0.3s ease;
+}
+
+.info-item:hover {
+  transform: translateY(-10px);
+}
+
+.info-item i {
+  font-size: 32px;
+  margin-bottom: 15px;
+  color: #4CAF50;
+}
+
+.info-item h3 {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.info-item p {
+  font-size: 16px;
+  color: #cccccc;
+}
+
+.map {
+  margin-top: 40px;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+/* Contact Form Section */
+.contact-form {
+  padding: 80px 0;
+  background-color: #1f1f1f;
+}
+
+.contact-form h2 {
+  text-align: center;
+  margin-bottom: 40px;
+  font-size: 36px;
+}
+
+.contact-form form {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #333;
+  border-radius: 5px;
+  background-color: #2a2a2a;
+  color: #ffffff;
+  font-size: 16px;
+}
+
+.form-group textarea {
+  resize: vertical;
+}
+
+.contact-form .btn-primary {
+  width: 100%;
+  padding: 15px;
+  font-size: 18px;
+}
+
+/* Footer Section */
+.footer {
+  background-color: #1f1f1f;
+  padding: 40px 0;
+  border-top: 1px solid #333;
+}
+
+.footer .container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.footer-links {
+  display: flex;
+  gap: 20px;
+}
+
+.footer-links a {
+  text-decoration: none;
+  color: #ffffff;
+  transition: color 0.3s ease;
+}
+
+.footer-links a:hover {
+  color: #4CAF50;
+}
+
+.footer-social {
+  display: flex;
+  gap: 15px;
+}
+
+.footer-social a {
+  color: #ffffff;
+  font-size: 24px;
+  transition: color 0.3s ease;
+}
+
+.footer-social a:hover {
+  color: #4CAF50;
+}
+
+.footer-newsletter {
+  text-align: center;
+}
+
+.footer-newsletter p {
+  margin-bottom: 10px;
+}
+
+.footer-newsletter form {
+  display: flex;
+  gap: 10px;
+}
+
+.footer-newsletter input {
+  padding: 10px;
+  border: 1px solid #333;
+  border-radius: 5px;
+  background-color: #2a2a2a;
+  color: #ffffff;
+  font-size: 16px;
+}
+
+.footer-newsletter button {
+  padding: 10px 20px;
+  background-color: #4CAF50;
+  color: #ffffff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.footer-newsletter button:hover {
+  background-color: #45a049;
+}
