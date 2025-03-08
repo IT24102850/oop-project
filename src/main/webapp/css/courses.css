@@ -7,7 +7,7 @@
 
 body {
   font-family: 'Poppins', sans-serif;
-  background: url('../images/course.png') no-repeat center center fixed;
+  background: #0a192f;
   background-size: cover;
   color: #ffffff;
 }
@@ -320,85 +320,3 @@ body {
 
 
 
-/* Footer Section */
-.footer {
-  background-color: var(--card-bg);
-  padding: 2rem 0;
-  text-align: center;
-}
-
-.footer p {
-  margin-bottom: 1rem;
-}
-
-.social-links {
-  display: flex;
-  justify-content: center;
-  gap: 20px;
-  margin-top: 10px;
-}
-
-.social-links a {
-  font-size: 1.5rem;
-  transition: color 0.3s ease;
-}
-
-
-
-
-/* Individual colors for each social icon */
-.social-links a[aria-label="WhatsApp"] {
-  color: #25D366;
-}
-
-.social-links a[aria-label="Facebook"] {
-  color: #1877F2;
-}
-
-.social-links a[aria-label="TikTok"] {
-  color: #000000;
-}
-
-.social-links a[aria-label="Instagram"] {
-  color: #E4405F;
-}
-
-.social-links a[aria-label="LinkedIn"] {
-  color: #0077B5;
-}
-
-.social-links a[aria-label="GitHub"] {
-  color: #6e5494;
-}
-
-/* Hover Effect */
-.social-links a:hover {
-  opacity: 0.7;
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-  .nav-links {
-    flex-direction: column;
-    gap: 0.5rem;
-    text-align: center;
-  }
-
-  .hero,
-  .about-content {
-    flex-direction: column;
-    text-align: center;
-  }
-
-  .hero-buttons {
-    justify-content: center;
-  }
-
-  .about-image {
-    margin-top: 2rem;
-  }
-
-  .skills-grid {
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  }
-}
