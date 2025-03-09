@@ -315,8 +315,168 @@ body {
   background: #009acd;
 }
 
+* Footer Section */
+.footer {
+  background-color: var(--dark-color);
+  padding: 40px 0;
+  border-top: 1px solid #333;
+}
 
+.footer .container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 20px;
+}
 
+.footer-links {
+  display: flex;
+  gap: 20px;
+}
 
+.footer-links a {
+  text-decoration: none;
+  color: var(--text-color);
+  transition: color 0.3s ease;
+}
+
+.footer-links a:hover {
+  color: var(--primary-color);
+}
+
+.footer-social {
+  display: flex;
+  gap: 15px;
+}
+
+.footer-social a {
+  color: var(--text-color);
+  font-size: 24px;
+  transition: color 0.3s ease;
+}
+
+.footer-social a:hover {
+  color: var(--primary-color);
+}
+
+.footer-newsletter {
+  text-align: center;
+}
+
+.footer-newsletter p {
+  margin-bottom: 10px;
+  color: var(--text-color);
+}
+
+.footer-newsletter form {
+  display: flex;
+  gap: 10px;
+}
+
+.footer-newsletter input {
+  padding: 10px;
+  border: 1px solid #333;
+  border-radius: 5px;
+  background-color: #1f1f1f;
+  color: var(--text-color);
+  font-size: 16px;
+}
+
+.footer-newsletter button {
+  padding: 10px 20px;
+  background: var(--primary-color);
+  color: var(--dark-color);
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.footer-newsletter button:hover {
+  background: var(--hover-color);
+}
+
+* Footer Section */
+.footer {
+  background-color: var(--dark-color);
+  padding: 40px 0;
+  border-top: 1px solid #333;
+}
+
+.footer .container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.footer-links {
+  display: flex;
+  gap: 20px;
+}
+
+.footer-links a {
+  text-decoration: none;
+  color: var(--text-color);
+  transition: color 0.3s ease;
+}
+
+.footer-links a:hover {
+  color: var(--primary-color);
+}
+
+.footer-social {
+  display: flex;
+  gap: 15px;
+}
+
+.footer-social a {
+  color: var(--text-color);
+  font-size: 24px;
+  transition: color 0.3s ease;
+}
+
+.footer-social a:hover {
+  color: var(--primary-color);
+}
+
+.footer-newsletter {
+  text-align: center;
+}
+
+.footer-newsletter p {
+  margin-bottom: 10px;
+  color: var(--text-color);
+}
+
+.footer-newsletter form {
+  display: flex;
+  gap: 10px;
+}
+
+.footer-newsletter input {
+  padding: 10px;
+  border: 1px solid #333;
+  border-radius: 5px;
+  background-color: #1f1f1f;
+  color: var(--text-color);
+  font-size: 16px;
+}
+
+.footer-newsletter button {
+  padding: 10px 20px;
+  background: var(--primary-color);
+  color: var(--dark-color);
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.footer-newsletter button:hover {
+  background: var(--hover-color);
+}
 
 
