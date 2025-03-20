@@ -1,36 +1,73 @@
-package com.studentregistration.dao;
-
-import com.studentregistration.model.Admin;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AdminDAO {
-    private static final String FILE_PATH = "src/main/resources/admin.txt";
+class Admin {
+    private int id;
+    private String username;
+    private String password;
 
-    // Create a new admin
+    public Admin(int id, String username, String password) {
+        this.id = id;
+        this.username = username;
+        this.password = password;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+}
+
+public class AdminDAO {
+    private static final String FILE_PATH = "admin.txt";
+
+    // Add an admin
     public void addAdmin(Admin admin) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_PATH, true))) {
-            writer.write(admin.getId() + "," + admin.getUsername() + "," + admin.getPassword());
-            writer.newLine();
+        try {
+            FileWriter writer = new FileWriter(FILE_PATH, true);
+            writer.write(admin.getId() + "," + admin.getUsername() + "," + admin.getPassword() + "\n");
+            writer.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("Error writing to file.");
         }
     }
 
-    // Read all admins
+    // Get all admins
     public List<Admin> getAllAdmins() {
         List<Admin> admins = new ArrayList<>();
-        try (BufferedReader reader = new BufferedReader(new FileReader(FILE_PATH))) {
+        try {
+            FileReader reader = new FileReader(FILE_PATH);
+            BufferedReader br = new BufferedReader(reader);
             String line;
-            while ((line = reader.readLine()) != null) {
+            while ((line = br.readLine()) != null) {
                 String[] data = line.split(",");
-                Admin admin = new Admin(Integer.parseInt(data[0]), data[1], data[2]);
-                admins.add(admin);
+                admins.add(new Admin(Integer.parseInt(data[0]), data[1], data[2]));
             }
+            br.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("Error reading file.");
         }
         return admins;
+    }
+
+    public static void main(String[] args) {
+        AdminDAO dao = new AdminDAO();
+
+        // Adding an admin
+        dao.addAdmin(new Admin(1, "admin1", "pass123"));
+
+        // Reading admins
+        List<Admin> admins = dao.getAllAdmins();
+        for (Admin a : admins) {
+            System.out.println(a.getId() + " " + a.getUsername() + " " + a.getPassword());
+        }
     }
 }
