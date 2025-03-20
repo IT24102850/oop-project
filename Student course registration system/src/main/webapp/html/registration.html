@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration - NexoraSkill</title>
+    <link rel="stylesheet" href="../css/registration.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="icon" type="image/png" href="../images/favicon.ico">
+</head>
+<body>
+<!-- Header Section -->
+<header class="header">
+    <div class="container">
+        <!-- Logo -->
+        <div class="logo">
+            <img src="../images/favicon-32x32.png" alt="NexoraSkill Logo">
+        </div>
+
+        <!-- Navigation Menu -->
+        <nav class="navbar">
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="courses.html">Courses</a></li>
+                <li><a href=""></a>Registration</a></li>
+                <li><a href="aboutus.html">About Us</a></li>
+                <li><a href="contact%20us.html">Contact</a></li>
+            </ul>
+        </nav>
+
+        <!-- Authentication Buttons -->
+        <div class="auth-buttons">
+            <a href="logIn.html" class="btn-login">Login</a>
+            <a href="signUp.html" class="btn-signup">Sign Up</a>
+        </div>
+    </div>
+</header>
+
+<!-- Registration Section -->
+<section class="registration">
+    <div class="container">
+        <h2>Register for a Course</h2>
+        <form id="registration-form" action="http://localhost:8080/register" method="POST">
+
+
+
+            <!-- Personal Information -->
+            <div class="form-group">
+                <label for="full-name">Full Name</label>
+                <input type="text" id="full-name" name="full-name" placeholder="Enter your full name" required>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" name="email" placeholder="Enter your email" required>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" placeholder="Enter your password" required>
+            </div>
+
+            <div class="form-group">
+                <label for="confirm-password">Confirm Password</label>
+                <input type="password" id="confirm-password" name="confirm-password" placeholder="Confirm your password" required>
+            </div>
+
+            <!-- Course Selection -->
+            <div class="form-group">
+                <label for="course">Select Course</label>
+                <select id="course" name="course" required>
+                    <option value="" disabled selected>Choose a course</option>
+                    <option value="intro-to-programming">Introduction to Programming</option>
+                    <option value="web-development">Web Development</option>
+                    <option value="data-science">Data Science</option>
+                </select>
+            </div>
+
+            <!-- Submit Button -->
+            <div class="form-group">
+                <button type="submit" class="btn-submit">Register Now</button>
+            </div>
+            <!-- JavaScript to handle form submission -->
+            <script src="registration.js"></script>
+</body>
+        </form>
+    </div>
+</section>
+</body>
+</html>
