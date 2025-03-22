@@ -1,45 +1,33 @@
 package com.example.model;
 
-public class Student extends User {
+public class Student {
     private String fullName;
+    private String email;
+    private String password;
     private String course;
 
-    // Default constructor
+    // Constructor, Getters, and Setters
     public Student() {}
 
-    // Parameterized constructor
     public Student(String fullName, String email, String password, String course) {
-        super(email, password); // Call to User constructor
         this.fullName = fullName;
+        this.email = email;
+        this.password = password;
         this.course = course;
     }
 
     // Getters and Setters
-    public String getFullName() {
-        return fullName;
-    }
+    public String getFullName() { return fullName; }
+    public void setFullName(String fullName) { this.fullName = fullName; }
+    public String getEmail() { return email; }
+    public void setEmail(String email) { this.email = email; }
+    public String getPassword() { return password; }
+    public void setPassword(String password) { this.password = password; }
+    public String getCourse() { return course; }
+    public void setCourse(String course) { this.course = course; }
 
-    public void setFullName(String fullName) {
-        if (fullName == null || fullName.trim().isEmpty()) {
-            throw new IllegalArgumentException("Full name cannot be null or empty");
-        }
-        this.fullName = fullName;
-    }
-
-    public String getCourse() {
-        return course;
-    }
-
-    public void setCourse(String course) {
-        if (course == null || course.trim().isEmpty()) {
-            throw new IllegalArgumentException("Course cannot be null or empty");
-        }
-        this.course = course;
-    }
-
-    // Override toString() method
     @Override
     public String toString() {
-        return String.join(",", fullName, getEmail(), getPassword(), course);
+        return fullName + "," + email + "," + password + "," + course;
     }
 }
