@@ -7,6 +7,10 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="student-registration" />
+<<<<<<< Updated upstream
+=======
+        <module name="oop-project" />
+>>>>>>> Stashed changes
       </profile>
     </annotationProcessing>
   </component>
