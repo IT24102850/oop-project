@@ -21,7 +21,10 @@ class StudentDAOTest {
         studentDAO.setFilePath(TEST_FILE_PATH);
 
         // Clear the test file before each test
-        new File(TEST_FILE_PATH).delete();
+        File file = new File(TEST_FILE_PATH);
+        if (file.exists()) {
+            file.delete();
+        }
     }
 
     @Test
@@ -44,8 +47,8 @@ class StudentDAOTest {
 
         List<Student> students = studentDAO.getAllStudents();
         assertEquals(2, students.size(), "Two students should be retrieved");
-        assertTrue(students.contains(student1), "List should contain student1");
-        assertTrue(students.contains(student2), "List should contain student2");
+        assertTrue(students.stream().anyMatch(s -> s.toString().equals(student1.toString())), "List should contain student1");
+        assertTrue(students.stream().anyMatch(s -> s.toString().equals(student2.toString())), "List should contain student2");
     }
 
     @Test
