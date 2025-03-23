@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<Context docBase="C:\Users\hasir\.SmartTomcat\oop-project\oop-project">
-  <Resources cacheMaxSize="10240">
-    <PreResources base="C:/Users/hasir/OneDrive/Documents/GitHub/oop-project/oop-project/Student course registration system/target/classes" className="org.apache.catalina.webresources.DirResourceSet" webAppMount="/WEB-INF/classes"/>
-  </Resources>
-</Context>
