@@ -1,6 +1,6 @@
 package com.example.dao;
 
-import com.example.model.Student;
+import com.studentregistration.model.Student;
 
 import java.io.*;
 import java.util.ArrayList;

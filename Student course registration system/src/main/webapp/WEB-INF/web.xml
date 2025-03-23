@@ -12,10 +12,20 @@
     <servlet-class>com.studentregistration.servlets.AuthServlet</servlet-class>
   </servlet>
 
+  <servlet>
+    <servlet-name>StudentServlet</servlet-name>
+    <servlet-class>com.studentregistration.servlets.StudentServlet</servlet-class>
+  </servlet>
+
   <!-- Servlet Mappings -->
   <servlet-mapping>
     <servlet-name>AuthServlet</servlet-name>
     <url-pattern>/auth</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>StudentServlet</servlet-name>
+    <url-pattern>/students</url-pattern>
   </servlet-mapping>
 
   <!-- Welcome File List -->

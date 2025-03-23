@@ -1,123 +1,80 @@
-package com.studentregistration.servlets;
+package com.studentregistration.dao;
 
-import com.studentregistration.dao.StudentDAO;
 import com.studentregistration.model.Student;
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
+import java.io.*;
+import java.util.ArrayList;
 import java.util.List;
 
-@WebServlet("/students")
-public class StudentServlet extends HttpServlet {
-    private StudentDAO studentDAO;
+class StudentDAO {
+    private static final String FILE_PATH = "src/main/resources/students.txt";
 
-    @Override
-    public void init() throws ServletException {
-        studentDAO = new StudentDAO(); // Initialize the StudentDAO
-    }
-
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        String action = request.getParameter("action");
-
-        if (action == null) {
-            action = "list"; // Default action
-        }
-
-        switch (action) {
-            case "new":
-                showNewForm(request, response);
-                break;
-            case "edit":
-                showEditForm(request, response);
-                break;
-            case "delete":
-                deleteStudent(request, response);
-                break;
-            default:
-                listStudents(request, response);
+    // Add a new student
+    public void addStudent(Student student) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_PATH, true))) {
+            writer.write(student.getFullName() + "," + student.getEmail() + "," + student.getPassword() + "," + student.getCourse());
+            writer.newLine();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        String action = request.getParameter("action");
-
-        if (action == null) {
-            action = "list"; // Default action
+    // Read all students
+    public List<Student> getAllStudents() {
+        List<Student> students = new ArrayList<>();
+        try (BufferedReader reader = new BufferedReader(new FileReader(FILE_PATH))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] data = line.split(",");
+                Student student = new Student(data[0], data[1], data[2], data[3]);
+                students.add(student);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+        return students;
+    }
 
-        switch (action) {
-            case "insert":
-                insertStudent(request, response);
-                break;
-            case "update":
-                updateStudent(request, response);
-                break;
-            default:
-                listStudents(request, response);
+    // Find a student by email
+    public Student getStudentByEmail(String email) {
+        List<Student> students = getAllStudents();
+        for (Student student : students) {
+            if (student.getEmail().equals(email)) {
+                return student;
+            }
         }
+        return null; // Student not found
     }
 
-    // Display the list of students
-    private void listStudents(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        List<Student> students = studentDAO.getAllStudents();
-        request.setAttribute("students", students);
-        request.getRequestDispatcher("viewStudents.jsp").forward(request, response);
-    }
-
-    // Display the form for adding a new student
-    private void showNewForm(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        request.getRequestDispatcher("studentForm.jsp").forward(request, response);
-    }
-
-    // Display the form for editing an existing student
-    private void showEditForm(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        String email = request.getParameter("email");
-        Student student = studentDAO.getStudentByEmail(email);
-        request.setAttribute("student", student);
-        request.getRequestDispatcher("studentForm.jsp").forward(request, response);
-    }
-
-    // Insert a new student
-    private void insertStudent(HttpServletRequest request, HttpServletResponse response)
-            throws IOException {
-        String fullName = request.getParameter("fullName");
-        String email = request.getParameter("email");
-        String password = request.getParameter("password");
-        String course = request.getParameter("course");
-
-        Student newStudent = new Student(fullName, email, password, course);
-        studentDAO.addStudent(newStudent);
-        response.sendRedirect("students");
-    }
-
-    // Update an existing student
-    private void updateStudent(HttpServletRequest request, HttpServletResponse response)
-            throws IOException {
-        String fullName = request.getParameter("fullName");
-        String email = request.getParameter("email");
-        String password = request.getParameter("password");
-        String course = request.getParameter("course");
-
-        Student updatedStudent = new Student(fullName, email, password, course);
-        studentDAO.updateStudent(email, updatedStudent);
-        response.sendRedirect("students");
+    // Update a student
+    public void updateStudent(String email, Student updatedStudent) {
+        List<Student> students = getAllStudents();
+        for (Student student : students) {
+            if (student.getEmail().equals(email)) {
+                student.setFullName(updatedStudent.getFullName());
+                student.setPassword(updatedStudent.getPassword());
+                student.setCourse(updatedStudent.getCourse());
+                break;
+            }
+        }
+        saveAllStudents(students);
     }
 
     // Delete a student
-    private void deleteStudent(HttpServletRequest request, HttpServletResponse response)
-            throws IOException {
-        String email = request.getParameter("email");
-        studentDAO.deleteStudent(email);
-        response.sendRedirect("students");
+    public void deleteStudent(String email) {
+        List<Student> students = getAllStudents();
+        students.removeIf(student -> student.getEmail().equals(email));
+        saveAllStudents(students);
+    }
+
+    // Save all students to file
+    private void saveAllStudents(List<Student> students) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_PATH))) {
+            for (Student student : students) {
+                writer.write(student.getFullName() + "," + student.getEmail() + "," + student.getPassword() + "," + student.getCourse());
+                writer.newLine();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
