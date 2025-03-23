@@ -1,0 +1,14 @@
+0:0:0:0:0:0:0:1 - - [23/Mar/2025:17:54:22 +0530] "GET /student-registration HTTP/1.1" 302 -
+0:0:0:0:0:0:0:1 - - [23/Mar/2025:17:54:26 +0530] "GET /student-registration/ HTTP/1.1" 200 9357
+0:0:0:0:0:0:0:1 - - [23/Mar/2025:17:54:30 +0530] "GET /student-registration/courses.jsp HTTP/1.1" 200 13942
+0:0:0:0:0:0:0:1 - - [23/Mar/2025:17:54:30 +0530] "GET /student-registration/images/course3.jpg HTTP/1.1" 404 798
+0:0:0:0:0:0:0:1 - - [23/Mar/2025:17:54:30 +0530] "GET /student-registration/images/course2.jpg HTTP/1.1" 404 798
+0:0:0:0:0:0:0:1 - - [23/Mar/2025:17:54:30 +0530] "GET /student-registration/images/course4.jpg HTTP/1.1" 404 798
+0:0:0:0:0:0:0:1 - - [23/Mar/2025:17:54:30 +0530] "GET /student-registration/images/course5.jpg HTTP/1.1" 404 798
+0:0:0:0:0:0:0:1 - - [23/Mar/2025:17:54:30 +0530] "GET /student-registration/images/course6.jpg HTTP/1.1" 404 798
+0:0:0:0:0:0:0:1 - - [23/Mar/2025:17:54:40 +0530] "GET /student-registration/registration.jsp HTTP/1.1" 200 10256
+0:0:0:0:0:0:0:1 - - [23/Mar/2025:17:54:40 +0530] "GET /student-registration/js/registration.js HTTP/1.1" 404 798
+0:0:0:0:0:0:0:1 - - [23/Mar/2025:17:54:44 +0530] "GET /student-registration/contact.jsp HTTP/1.1" 200 9851
+0:0:0:0:0:0:0:1 - - [23/Mar/2025:17:54:45 +0530] "GET /student-registration/css/contactus.css HTTP/1.1" 404 797
+0:0:0:0:0:0:0:1 - - [23/Mar/2025:17:57:59 +0530] "GET /student-registration HTTP/1.1" 302 -
+0:0:0:0:0:0:0:1 - - [23/Mar/2025:17:58:03 +0530] "GET /student-registration/ HTTP/1.1" 200 9357
