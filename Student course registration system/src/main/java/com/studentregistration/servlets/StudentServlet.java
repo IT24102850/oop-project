@@ -1,25 +1,24 @@
-package com.example.dao;
+package com.studentregistration.dao;
 
 import com.studentregistration.model.Student;
-
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class StudentDAO {
+class StudentDAO {
     private static final String FILE_PATH = "src/main/resources/students.txt";
 
-    // Add a new student to the file
+    // Add a new student
     public void addStudent(Student student) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_PATH, true))) {
-            writer.write(student.toString());
+            writer.write(student.getFullName() + "," + student.getEmail() + "," + student.getPassword() + "," + student.getCourse());
             writer.newLine();
         } catch (IOException e) {
-            System.err.println("Error writing to file: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
-    // Retrieve all students from the file
+    // Read all students
     public List<Student> getAllStudents() {
         List<Student> students = new ArrayList<>();
         try (BufferedReader reader = new BufferedReader(new FileReader(FILE_PATH))) {
@@ -30,45 +29,52 @@ public class StudentDAO {
                 students.add(student);
             }
         } catch (IOException e) {
-            System.err.println("Error reading from file: " + e.getMessage());
+            e.printStackTrace();
         }
         return students;
     }
 
-    // Update a student's details
+    // Find a student by email
+    public Student getStudentByEmail(String email) {
+        List<Student> students = getAllStudents();
+        for (Student student : students) {
+            if (student.getEmail().equals(email)) {
+                return student;
+            }
+        }
+        return null; // Student not found
+    }
+
+    // Update a student
     public void updateStudent(String email, Student updatedStudent) {
         List<Student> students = getAllStudents();
-        boolean found = false;
-        for (int i = 0; i < students.size(); i++) {
-            if (students.get(i).getEmail().equals(email)) {
-                students.set(i, updatedStudent);
-                found = true;
+        for (Student student : students) {
+            if (student.getEmail().equals(email)) {
+                student.setFullName(updatedStudent.getFullName());
+                student.setPassword(updatedStudent.getPassword());
+                student.setCourse(updatedStudent.getCourse());
                 break;
             }
         }
-        if (found) {
-            saveAllStudents(students);
-        } else {
-            System.err.println("Student with email " + email + " not found.");
-        }
+        saveAllStudents(students);
     }
 
-    // Delete a student by email
+    // Delete a student
     public void deleteStudent(String email) {
         List<Student> students = getAllStudents();
         students.removeIf(student -> student.getEmail().equals(email));
         saveAllStudents(students);
     }
 
-    // Helper method to save all students to the file
+    // Save all students to file
     private void saveAllStudents(List<Student> students) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_PATH))) {
             for (Student student : students) {
-                writer.write(student.toString());
+                writer.write(student.getFullName() + "," + student.getEmail() + "," + student.getPassword() + "," + student.getCourse());
                 writer.newLine();
             }
         } catch (IOException e) {
-            System.err.println("Error saving students to file: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 }
