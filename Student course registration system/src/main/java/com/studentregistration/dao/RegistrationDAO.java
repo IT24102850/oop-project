@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
     public class RegistrationDAO {
-        private static final String FILE_PATH = "registrations.txt";
+        private static final String FILE_PATH = "registration.txt";
 
         // Save user to file
         public boolean saveUser(User user) {
