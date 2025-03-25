@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+<<<<<<< Updated upstream
     <component name="CompilerConfiguration">
         <annotationProcessing>
             <profile name="Maven default annotation processors profile" enabled="true">
@@ -10,4 +11,16 @@
             </profile>
         </annotationProcessing>
     </component>
+=======
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="student-registration" />
+      </profile>
+    </annotationProcessing>
+  </component>
+>>>>>>> Stashed changes
 </project>
