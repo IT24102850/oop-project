@@ -1,4 +1,4 @@
 <%
     session.invalidate();
-    response.sendRedirect("login.jsp");
+    response.sendRedirect(request.getContextPath() + "/index.jsp");
 %>

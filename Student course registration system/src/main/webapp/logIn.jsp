@@ -48,6 +48,13 @@
         <h2>Login to Your Account</h2>
         <p class="login-subtitle">Welcome back! Please enter your credentials to access your account.</p>
 
+        <!-- User Type Toggle Switch -->
+        <div class="user-type-toggle">
+            <div class="toggle-option active" id="admin-toggle">Admin</div>
+            <div class="toggle-option" id="student-toggle">Student</div>
+            <input type="hidden" id="userType" name="userType" value="admin">
+        </div>
+
         <!-- Login Form -->
         <form class="login-form" action="${pageContext.request.contextPath}/auth" method="POST">
             <div class="form-group">
@@ -65,13 +72,125 @@
                 </div>
             </div>
             <button type="submit" class="btn-login">Login</button>
-            <p class="signup-link">Don't have an account? <a href="${pageContext.request.contextPath}/navigation/signUp.jsp">Sign Up</a></p>
-            <p class="forgot-password">
-                <a href="${pageContext.request.contextPath}/navigation/forgotPassword.jsp">Forgot Password?</a>
-            </p>
+            <div class="auth-links">
+                <p class="signup-link">Don't have an account? <a href="${pageContext.request.contextPath}/navigation/signUp.jsp">Sign Up</a></p>
+                <p class="forgot-password">
+                    <a href="${pageContext.request.contextPath}/navigation/forgotPassword.jsp">Forgot Password?</a>
+                </p>
+            </div>
         </form>
     </div>
 </section>
+
+<style>
+    /* Toggle Switch Styles */
+    .user-type-toggle {
+        display: flex;
+        margin: 20px 0;
+        border-radius: 6px;
+        overflow: hidden;
+        border: 1px solid #ddd;
+        background: #f5f5f5;
+    }
+
+    .toggle-option {
+        flex: 1;
+        padding: 10px 15px;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-weight: 500;
+        color: #555;
+    }
+
+    .toggle-option.active {
+        background: #009acd;
+        color: white;
+    }
+
+    /* Form Styles */
+    .login-container {
+        max-width: 400px;
+        margin: 0 auto;
+        padding: 30px;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 500;
+    }
+
+    .form-group input {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 14px;
+    }
+
+    .remember-me {
+        display: flex;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+
+    .remember-me input {
+        margin-right: 8px;
+    }
+
+    .btn-login {
+        width: 100%;
+        padding: 12px;
+        background: #009acd;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background 0.3s;
+    }
+
+    .btn-login:hover {
+        background: #009acd;
+    }
+
+    .auth-links {
+        margin-top: 15px;
+        text-align: center;
+    }
+
+    .auth-links a {
+        color:  #009acd;
+        text-decoration: none;
+    }
+
+    .auth-links a:hover {
+        text-decoration: underline;
+    }
+</style>
+
+<script>
+    // Toggle Switch Functionality
+    document.getElementById('admin-toggle').addEventListener('click', function() {
+        this.classList.add('active');
+        document.getElementById('student-toggle').classList.remove('active');
+        document.getElementById('userType').value = 'admin';
+    });
+
+    document.getElementById('student-toggle').addEventListener('click', function() {
+        this.classList.add('active');
+        document.getElementById('admin-toggle').classList.remove('active');
+        document.getElementById('userType').value = 'student';
+    });
+</script>
 
 <!-- JavaScript for Form Validation -->
 <script>

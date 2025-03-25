@@ -1,3 +1,6 @@
+<a href="<%= request.getContextPath() %>/login.jsp">Login</a>
+<a href="<%= request.getContextPath() %>/signup.jsp">sign up</a>
+
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="en">

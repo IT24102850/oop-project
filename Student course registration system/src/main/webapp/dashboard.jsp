@@ -3,6 +3,18 @@
     String role = (String) session.getAttribute("role");
 %>
 
+<%@include file="authFilter.jsp"%>
+<%@page import="com.studentregistration.model.User"%>
+<%
+    User user = (User) session.getAttribute("user");
+// Ensure only students can access
+    if(!"student".equals(user.getRole())) {
+        response.sendError(HttpServletResponse.SC_FORBIDDEN);
+        return;
+    }
+%>
+<!-- Student dashboard content -->
+
 <html>
 <head><title>Dashboard</title></head>
 <body>
