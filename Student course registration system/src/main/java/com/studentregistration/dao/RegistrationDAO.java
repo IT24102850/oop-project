@@ -1,110 +1,92 @@
 // In src/main/java/com/studentregistration/dao/RegistrationDAO.java
 
+import com.studentregistration.model.Registration;
+
+import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
 public class RegistrationDAO {
     private static final String REGISTRATIONS_FILE = "registrations.txt";
     private FileUtils fileUtils;
 
     public RegistrationDAO() {
-        this.fileUtils = new FileUtils();
-    }
+package com.studentregistration.dao;
 
-    // Register a student for a course
-    public boolean registerStudentForCourse(Registration registration) {
-        try {
-            // Check if already registered
-            List<Registration> allRegistrations = getAllRegistrations();
-            boolean alreadyRegistered = allRegistrations.stream()
-                    .anyMatch(r -> r.getStudentId().equals(registration.getStudentId())
-                            && r.getCourseId().equals(registration.getCourseId()));
+import com.studentregistration.model.Registration;
+import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 
-            if (alreadyRegistered) {
-                return false;
-            }
+        public class RegistrationDAO {
+            private static final String REGISTRATIONS_FILE = "registrations.txt";
 
-            // Append new registration to file
-            String registrationData = String.format("%s,%s,%s%n",
-                    registration.getStudentId(),
-                    registration.getCourseId(),
-                    registration.getRegistrationDate());
+            // Register a student for a course
+            public boolean registerStudentForCourse(Registration registration) {
+                try {
+                    // Check if already registered
+                    List<Registration> allRegistrations = getAllRegistrations();
+                    boolean alreadyRegistered = allRegistrations.stream()
+                            .anyMatch(r -> r.getStudentId().equals(registration.getStudentId())
+                                    && r.getCourseId().equals(registration.getCourseId()));
 
-            return fileUtils.appendToFile(REGISTRATIONS_FILE, registrationData);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
-
-    // Get all courses registered by a student
-    public List<Course> getRegisteredCourses(String studentId) {
-        List<Course> registeredCourses = new ArrayList<>();
-        CourseDAO courseDAO = new CourseDAO();
-
-        try {
-            List<Registration> allRegistrations = getAllRegistrations();
-            for (Registration reg : allRegistrations) {
-                if (reg.getStudentId().equals(studentId)) {
-                    Course course = courseDAO.getCourseById(reg.getCourseId());
-                    if (course != null) {
-                        registeredCourses.add(course);
+                    if (alreadyRegistered) {
+                        return false; // Registration already exists
                     }
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
 
-        return registeredCourses;
-    }
-
-    // Drop a course for a student
-    public boolean dropCourse(String studentId, String courseId) {
-        try {
-            List<Registration> allRegistrations = getAllRegistrations();
-            List<Registration> updatedRegistrations = new ArrayList<>();
-
-            boolean found = false;
-            for (Registration reg : allRegistrations) {
-                if (!(reg.getStudentId().equals(studentId) && reg.getCourseId().equals(courseId))) {
-                    updatedRegistrations.add(reg);
-                } else {
-                    found = true;
+                    // Add new registration
+                    allRegistrations.add(registration);
+                    saveAllRegistrations(allRegistrations);
+                    return true;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    return false;
                 }
             }
 
-            if (found) {
-                // Rewrite the file with updated registrations
-                List<String> registrationLines = new ArrayList<>();
-                for (Registration reg : updatedRegistrations) {
-                    registrationLines.add(String.format("%s,%s,%s",
-                            reg.getStudentId(),
-                            reg.getCourseId(),
-                            reg.getRegistrationDate()));
+            // Get all registrations
+            public List<Registration> getAllRegistrations() {
+                try {
+                    File file = new File(REGISTRATIONS_FILE);
+                    if (!file.exists()) {
+                        return new ArrayList<>();
+                    }
+
+                    try (BufferedReader reader = new BufferedReader(new FileReader(REGISTRATIONS_FILE))) {
+                        List<Registration> registrations = new ArrayList<>();
+                        String line;
+                        while ((line = reader.readLine()) != null) {
+                            String[] parts = line.split(",");
+                            if (parts.length == 6) {
+                                registrations.add(new Registration(
+                                        parts[0], parts[1], parts[2], parts[3], parts[4], parts[5]));
+                            }
+                        }
+                        return registrations;
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    return new ArrayList<>();
                 }
-                return fileUtils.writeLinesToFile(REGISTRATIONS_FILE, registrationLines);
             }
-            return false;
-        } catch (IOException e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
 
-    // Helper method to get all registrations
-    private List<Registration> getAllRegistrations() throws IOException {
-        List<String> lines = fileUtils.readLinesFromFile(REGISTRATIONS_FILE);
-        List<Registration> registrations = new ArrayList<>();
+            // Save all registrations to file
+            private void saveAllRegistrations(List<Registration> registrations) {
+                try (BufferedWriter writer = new BufferedWriter(new FileWriter(REGISTRATIONS_FILE))) {
+                    for (Registration r : registrations) {
+                        writer.write(r.toString());
+                        writer.newLine();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
 
-        for (String line : lines) {
-            String[] parts = line.split(",");
-            if (parts.length >= 3) {
-                registrations.add(new Registration(
-                        parts[0].trim(),  // studentId
-                        parts[1].trim(),  // courseId
-                        parts[2].trim()   // registrationDate
-                ));
+            // Additional method to find registrations by student ID
+            public List<Registration> getRegistrationsByStudentId(String studentId) {
+                return getAllRegistrations().stream()
+                        .filter(r -> r.getStudentId().equals(studentId))
+                        .collect(Collectors.toList());
             }
         }
-
-        return registrations;
-    }
-}
