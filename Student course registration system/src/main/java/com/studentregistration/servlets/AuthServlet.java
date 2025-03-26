@@ -1,27 +1,42 @@
 package com.studentregistration.servlets;
 
+import com.studentregistration.dao.AdminDAO;
+import com.studentregistration.dao.StudentDAO;
 import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.*;
 
-@WebServlet("/auth") // Correct annotation
+@WebServlet("/auth")
 public class AuthServlet extends HttpServlet {
-    private static final long serialVersionUID = 1L; // Corrected serialVersionUID
 
-    @Override // Added @Override annotation
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+
         String username = request.getParameter("username");
         String password = request.getParameter("password");
+        String userType = request.getParameter("userType");
 
-        // Perform authentication logic here
-        if ("admin".equals(username) && "password".equals(password)) {
-            response.sendRedirect("home.jsp"); // Redirect to home page on success
+        boolean authenticated = false;
+
+        if("admin".equals(userType)) {
+            authenticated = new AdminDAO().validateAdmin(username, password);
         } else {
-            response.sendRedirect("Login.jsp?error=1"); // Redirect to login page with error
+            authenticated = new StudentDAO().validateStudent(username, password);
+        }
+
+        if(authenticated) {
+            HttpSession session = request.getSession();
+            session.setAttribute("username", username);
+            session.setAttribute("userType", userType);
+
+            if("admin".equals(userType)) {
+                response.sendRedirect("jsp/admin-dashboard.jsp");
+            } else {
+                response.sendRedirect("jsp/dashboard.jsp");
+            }
+        } else {
+            response.sendRedirect("jsp/login.jsp?error=1");
         }
     }
 }
