@@ -1,5 +1,6 @@
 package com.nexoraskill.servlets;
 
+import com.nexoraskill.utils.UserDataHandler;
 import java.io.*;
 import javax.servlet.*;
 import javax.servlet.annotation.WebServlet;
@@ -7,7 +8,6 @@ import javax.servlet.http.*;
 
 @WebServlet("/signup")
 public class SignUpServlet extends HttpServlet {
-    private static final String FILE_PATH = "users.txt";
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -24,20 +24,25 @@ public class SignUpServlet extends HttpServlet {
             return;
         }
 
+        // Check if email already exists
+        String realPath = getServletContext().getRealPath("/");
+        if (UserDataHandler.emailExists(realPath, email)) {
+            response.sendRedirect(request.getContextPath() + "/signUp.jsp?error=2");
+            return;
+        }
+
         // Create user data string
         String userData = String.format("%s|%s|%s%n", fullname, email, password);
 
         // Save to file
-        saveUserData(userData);
+        saveUserData(realPath, userData);
 
         // Redirect to login page after successful registration
-        response.sendRedirect(request.getContextPath() + "/logIn.jsp");
+        response.sendRedirect(request.getContextPath() + "/logIn.jsp?registered=1");
     }
 
-    private synchronized void saveUserData(String userData) throws IOException {
-        // Get real path to store the file in the web application directory
-        String realPath = getServletContext().getRealPath("/");
-        File file = new File(realPath + FILE_PATH);
+    private synchronized void saveUserData(String realPath, String userData) throws IOException {
+        File file = new File(realPath + UserDataHandler.FILE_PATH);
 
         // Create parent directories if they don't exist
         file.getParentFile().mkdirs();
