@@ -1,14 +1,12 @@
 package com.studentregistration.dao;
 
 import com.studentregistration.model.Student;
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class StudentDAO {
-    private static final String STUDENT_FILE = "users.txt"; // Stored in src/main/resources
+    private static final String STUDENT_FILE = "users.txt";
 
     // Validate student credentials
     public boolean validateStudent(String username, String password) {
@@ -21,20 +19,28 @@ public class StudentDAO {
     // Get all students from file
     public List<Student> getAllStudents() {
         List<Student> students = new ArrayList<>();
-        String filePath = getClass().getClassLoader().getResource(STUDENT_FILE).getPath();
 
-        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
-            String line;
-            while ((line = br.readLine()) != null) {
-                String[] parts = line.split(":");
-                if (parts.length >= 2) {
-                    Student student = new Student();
-                    student.setUsername(parts[0]);
-                    student.setPassword(parts[1]);
-                    // Add additional fields if present in the file
-                    if (parts.length > 2) student.setEmail(parts[2]);
-                    if (parts.length > 3) student.setFullName(parts[3]);
-                    students.add(student);
+        try {
+            // Get file path from resources
+            InputStream inputStream = getClass().getClassLoader().getResourceAsStream(STUDENT_FILE);
+            if (inputStream == null) {
+                // Create file if it doesn't exist
+                new File(STUDENT_FILE).createNewFile();
+                return students;
+            }
+
+            try (BufferedReader br = new BufferedReader(new InputStreamReader(inputStream))) {
+                String line;
+                while ((line = br.readLine()) != null) {
+                    String[] parts = line.split(":");
+                    if (parts.length >= 2) {
+                        Student student = new Student();
+                        student.setUsername(parts[0]);
+                        student.setPassword(parts[1]);
+                        if (parts.length > 2) student.setEmail(parts[2]);
+                        if (parts.length > 3) student.setFullName(parts[3]);
+                        students.add(student);
+                    }
                 }
             }
         } catch (IOException e) {
@@ -53,9 +59,14 @@ public class StudentDAO {
 
     // Register new student
     public boolean registerStudent(Student student) {
-        // Implementation to write to users.txt
-        // You'll need to add proper file writing logic here
-        // Remember to handle file locking if multiple users register simultaneously
-        return true;
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(STUDENT_FILE, true))) {
+            writer.write(student.getUsername() + ":" + student.getPassword() + ":"
+                    + student.getEmail() + ":" + student.getFullName());
+            writer.newLine();
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 }
