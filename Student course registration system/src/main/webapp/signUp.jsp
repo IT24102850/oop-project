@@ -68,6 +68,12 @@
             <p class="signup-link">Already have an account? <a href="${pageContext.request.contextPath}/navigation/logIn.jsp">Login here</a></p>
         </form>
 
+        <% if (request.getParameter("registered") != null) { %>
+        <div class="success-message">
+            Registration successful! Please login with your credentials.
+        </div>
+        <% } %>
+
         <% if (request.getParameter("error") != null) { %>
         <div class="error-message">
             Passwords do not match. Please try again.
