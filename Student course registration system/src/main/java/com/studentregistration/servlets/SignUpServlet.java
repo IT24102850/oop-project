@@ -1,43 +1,52 @@
-package com.studentregistration.servlets;
+package com.nexoraskill.servlets;
 
-import com.studentregistration.dao.UserDAO;
-import com.studentregistration.model.User;
-import java.io.IOException;
-import javax.servlet.ServletException;
+import java.io.*;
+import javax.servlet.*;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.*;
 
 @WebServlet("/signup")
 public class SignUpServlet extends HttpServlet {
-    private UserDAO userDAO = new UserDAO();
+    private static final String FILE_PATH = "users.txt";
 
-    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        // Read form data
-        String username = request.getParameter("username");
+
+        // Get form data
+        String fullname = request.getParameter("fullname");
         String email = request.getParameter("email");
         String password = request.getParameter("password");
         String confirmPassword = request.getParameter("confirm-password");
 
         // Validate passwords match
         if (!password.equals(confirmPassword)) {
-            response.sendRedirect("signUp.jsp?error=1"); // Redirect with error
+            response.sendRedirect(request.getContextPath() + "/signUp.jsp?error=1");
             return;
         }
 
-        // Generate a unique ID for the new user
-        int id = userDAO.getAllUsers().size() + 1;
+        // Create user data string
+        String userData = String.format("%s|%s|%s%n", fullname, email, password);
 
-        // Create a new User object
-        User newUser = new User(id, username, password, "student");
+        // Save to file
+        saveUserData(userData);
 
-        // Save the new user to users.txt
-        userDAO.addUser(newUser);
+        // Redirect to login page after successful registration
+        response.sendRedirect(request.getContextPath() + "/logIn.jsp");
+    }
 
-        // Redirect to login page with success message
-        response.sendRedirect("login.jsp?success=1");
+    private synchronized void saveUserData(String userData) throws IOException {
+        // Get real path to store the file in the web application directory
+        String realPath = getServletContext().getRealPath("/");
+        File file = new File(realPath + FILE_PATH);
+
+        // Create parent directories if they don't exist
+        file.getParentFile().mkdirs();
+
+        // Write user data to file (append mode)
+        try (FileWriter fw = new FileWriter(file, true);
+             BufferedWriter bw = new BufferedWriter(fw);
+             PrintWriter out = new PrintWriter(bw)) {
+            out.print(userData);
+        }
     }
 }
