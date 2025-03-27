@@ -4,17 +4,18 @@ import com.studentregistration.model.Student;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
-//implement class
-class StudentDAO {
-    private static final String FILE_PATH = "src/main/resources/students.txt";
+
+public class StudentDAO {
+    private static final String FILE_PATH = "students.txt";
 
     // Add a new student
     public void addStudent(Student student) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_PATH, true))) {
-            writer.write(student.getFullName() + "," + student.getEmail() + "," + student.getPassword() + "," + student.getCourse());
+            writer.write(student.getFullName() + "," + student.getEmail() + ","
+                    + student.getPassword() + "," + student.getCourse());
             writer.newLine();
         } catch (IOException e) {
-            e.printStackTrace();
+            System.err.println("Error adding student: " + e.getMessage());
         }
     }
 
@@ -25,56 +26,65 @@ class StudentDAO {
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] data = line.split(",");
-                Student student = new Student(data[0], data[1], data[2], data[3]);
-                students.add(student);
+                if (data.length >= 4) { // Safety check
+                    Student student = new Student(data[0], data[1], data[2], data[3]);
+                    students.add(student);
+                }
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            System.err.println("Error reading students: " + e.getMessage());
         }
         return students;
     }
 
     // Find a student by email
     public Student getStudentByEmail(String email) {
-        List<Student> students = getAllStudents();
-        for (Student student : students) {
-            if (student.getEmail().equals(email)) {
-                return student;
-            }
-        }
-        return null; // Student not found
+        return getAllStudents().stream()
+                .filter(student -> student.getEmail().equals(email))
+                .findFirst()
+                .orElse(null);
     }
 
     // Update a student
-    public void updateStudent(String email, Student updatedStudent) {
+    public boolean updateStudent(String email, Student updatedStudent) {
         List<Student> students = getAllStudents();
-        for (Student student : students) {
-            if (student.getEmail().equals(email)) {
-                student.setFullName(updatedStudent.getFullName());
-                student.setPassword(updatedStudent.getPassword());
-                student.setCourse(updatedStudent.getCourse());
+        boolean updated = false;
+
+        for (int i = 0; i < students.size(); i++) {
+            if (students.get(i).getEmail().equals(email)) {
+                students.set(i, updatedStudent);
+                updated = true;
                 break;
             }
         }
-        saveAllStudents(students);
+
+        if (updated) {
+            saveAllStudents(students);
+        }
+        return updated;
     }
 
     // Delete a student
-    public void deleteStudent(String email) {
+    public boolean deleteStudent(String email) {
         List<Student> students = getAllStudents();
-        students.removeIf(student -> student.getEmail().equals(email));
-        saveAllStudents(students);
+        boolean removed = students.removeIf(student -> student.getEmail().equals(email));
+
+        if (removed) {
+            saveAllStudents(students);
+        }
+        return removed;
     }
 
     // Save all students to file
     private void saveAllStudents(List<Student> students) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_PATH))) {
             for (Student student : students) {
-                writer.write(student.getFullName() + "," + student.getEmail() + "," + student.getPassword() + "," + student.getCourse());
+                writer.write(student.getFullName() + "," + student.getEmail() + ","
+                        + student.getPassword() + "," + student.getCourse());
                 writer.newLine();
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            System.err.println("Error saving students: " + e.getMessage());
         }
     }
 }
