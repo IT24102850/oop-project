@@ -1,386 +1,286 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - NexoraSkill</title>
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link rel="icon" type="image/png" href="${pageContext.request.contextPath}/images/favicon.ico">
+    <title>Login - Student Registration</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* Header Styles */
-        .header {
-            background-color: #2c3e50;
-            padding: 15px 0;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        :root {
+            --primary: #4361ee;
+            --secondary: #3f37c9;
+            --accent: #4895ef;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --success: #4cc9f0;
+            --danger: #f72585;
         }
 
-        .container {
-            width: 90%;
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .logo img {
-            height: 40px;
-        }
-
-        .navbar ul {
-            display: flex;
-            list-style: none;
+        * {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
         }
 
-        .navbar li {
-            margin-left: 25px;
-        }
-
-        .navbar a {
-            color: white;
-            text-decoration: none;
-            font-weight: 500;
-        }
-
-        /* Message Styles */
-        .success-message {
-            background-color: #d4edda;
-            color: #155724;
-            padding: 10px;
-            border-radius: 4px;
-            margin: 10px 0;
-            text-align: center;
-        }
-
-        .error-message {
-            background-color: #f8d7da;
-            color: #721c24;
-            padding: 10px;
-            border-radius: 4px;
-            margin: 10px 0;
-            text-align: center;
-        }
-
-        /* Login Section Styles */
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f5f5f5;
-            margin: 0;
-            color: #333;
-        }
-
-        .login-section {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+            color: var(--light);
+            min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: calc(100vh - 70px);
             padding: 20px;
         }
 
         .login-container {
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            border: 1px solid rgba(255, 255, 255, 0.18);
             width: 100%;
-            max-width: 400px;
-            padding: 30px;
+            max-width: 450px;
+            padding: 40px;
+            transition: all 0.3s ease;
         }
 
-        .login-container h2 {
-            color: #2c3e50;
-            margin-bottom: 10px;
+        h2 {
             text-align: center;
+            margin-bottom: 20px;
+            font-size: 2rem;
+            background: linear-gradient(to right, var(--accent), var(--success));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
         }
 
-        .login-subtitle {
-            color: #7f8c8d;
+        .error-message {
+            background: rgba(247, 37, 133, 0.2);
+            color: var(--light);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 25px;
             text-align: center;
+            border-left: 4px solid var(--danger);
+        }
+
+        .form-group {
             margin-bottom: 25px;
         }
 
-        /* Futuristic Toggle Styles */
-        .toggle-wrapper {
-            margin: 25px 0;
-            perspective: 1000px;
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.8);
         }
 
+        input[type="text"],
+        input[type="password"] {
+            width: 100%;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            color: var(--light);
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        input[type="text"]:focus,
+        input[type="password"]:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(72, 149, 239, 0.3);
+        }
+
+        /* Futuristic Toggle Switch */
         .toggle-container {
-            position: relative;
             display: flex;
-            height: 60px;
-            background: rgba(20, 20, 30, 0.8);
+            background: rgba(0, 0, 0, 0.3);
             border-radius: 50px;
+            padding: 5px;
+            margin: 20px 0;
+            position: relative;
             overflow: hidden;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3),
-            inset 0 1px 0 rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .toggle-container input[type="radio"] {
-            display: none;
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
         }
 
         .toggle-option {
             flex: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
+            text-align: center;
+            padding: 12px;
             z-index: 2;
-            transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
             color: rgba(255, 255, 255, 0.7);
+            position: relative;
+        }
+
+        .toggle-option input[type="radio"] {
+            position: absolute;
+            opacity: 0;
+            width: 0;
+            height: 0;
         }
 
         .toggle-option .icon {
-            font-size: 20px;
+            font-size: 1.2rem;
             margin-bottom: 5px;
             transition: all 0.3s;
         }
 
         .toggle-option .text {
-            font-size: 14px;
-            font-weight: 500;
+            font-size: 0.9rem;
+            font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 1px;
         }
 
-        input[type="radio"]:checked + label {
-            color: #fff;
-            transform: translateY(-5px);
-        }
-
-        input[type="radio"]:checked + label .icon {
-            transform: scale(1.2);
-            text-shadow: 0 0 10px rgba(100, 255, 255, 0.7);
+        .toggle-option input:checked + label {
+            color: white;
         }
 
         .toggle-glider {
             position: absolute;
-            height: 100%;
-            width: 50%;
-            background: linear-gradient(135deg, #00b4db, #0083b0);
+            height: calc(100% - 10px);
+            width: calc(50% - 5px);
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
             border-radius: 50px;
-            transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
             z-index: 1;
-            box-shadow: 0 0 20px rgba(0, 180, 219, 0.5);
+            box-shadow: 0 4px 15px rgba(67, 97, 238, 0.4);
+            top: 5px;
+            left: 5px;
         }
 
         #student:checked ~ .toggle-glider {
             transform: translateX(100%);
-            background: linear-gradient(135deg, #a8ff78, #78ffd6);
-            box-shadow: 0 0 20px rgba(168, 255, 120, 0.5);
-        }
-
-        /* Form Styles */
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 500;
-        }
-
-        .form-group input {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            font-size: 14px;
-            box-sizing: border-box;
-            transition: border 0.3s;
-        }
-
-        .form-group input:focus {
-            border-color: #009acd;
-            outline: none;
-        }
-
-        .remember-me {
-            display: flex;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        .remember-me input {
-            margin-right: 8px;
+            background: linear-gradient(135deg, var(--success), #38b000);
         }
 
         .btn-login {
             width: 100%;
-            padding: 12px;
-            background: #009acd;
+            padding: 15px;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
             color: white;
             border: none;
-            border-radius: 4px;
-            font-size: 16px;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
             cursor: pointer;
-            transition: background 0.3s;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 10px;
         }
 
         .btn-login:hover {
-            background: #007fa3;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(67, 97, 238, 0.4);
         }
 
         .auth-links {
-            margin-top: 15px;
+            margin-top: 20px;
             text-align: center;
-            font-size: 14px;
         }
 
         .auth-links a {
-            color: #009acd;
+            color: var(--accent);
             text-decoration: none;
-        }
-
-        .auth-links a:hover {
-            text-decoration: underline;
+            font-size: 0.9rem;
+            transition: all 0.2s;
         }
     </style>
 </head>
 <body>
-<!-- Header Section -->
-<header class="header">
-    <div class="container">
-        <div class="logo">
-            <img src="${pageContext.request.contextPath}/images/logo.png" alt="NexoraSkill Logo">
+<div class="login-container">
+    <h2>Welcome Back</h2>
+
+    <c:if test="${not empty error}">
+        <div class="error-message">
+            <i class="fas fa-exclamation-circle"></i> ${error}
         </div>
-        <nav class="navbar">
-            <ul>
-                <li><a href="${pageContext.request.contextPath}/index.jsp">Home</a></li>
-                <li><a href="${pageContext.request.contextPath}/navigation/courses.jsp">Courses</a></li>
-                <li><a href="${pageContext.request.contextPath}/navigation/registration.jsp">Registration</a></li>
-                <li><a href="${pageContext.request.contextPath}/navigation/aboutus.jsp">About Us</a></li>
-                <li><a href="#contact">Contact</a></li>
-            </ul>
-        </nav>
-    </div>
-</header>
+    </c:if>
 
-<!-- Success and Error Messages -->
-<% if (request.getParameter("success") != null) { %>
-<div class="success-message">
-    Registration successful! Please login.
-</div>
-<% } %>
+    <form id="loginForm" action="${pageContext.request.contextPath}/auth" method="post">
+        <div class="form-group">
+            <label for="username"><i class="fas fa-user"></i> Username</label>
+            <input type="text" id="username" name="username" placeholder="Enter your username" required>
+        </div>
 
-<% if (request.getParameter("error") != null) { %>
-<div class="error-message">
-    Invalid username or password. Please try again.
-</div>
-<% } %>
-
-<!-- Login Section -->
-<section class="login-section">
-    <div class="login-container">
-        <h2>Login to Your Account</h2>
-        <p class="login-subtitle">Welcome back! Please enter your credentials to access your account.</p>
+        <div class="form-group">
+            <label for="password"><i class="fas fa-lock"></i> Password</label>
+            <input type="password" id="password" name="password" placeholder="Enter your password" required>
+        </div>
 
         <!-- Futuristic Toggle Switch -->
-        <div class="toggle-wrapper">
+        <div class="form-group">
+            <label>Select Role</label>
             <div class="toggle-container">
-                <input type="radio" id="admin" name="userType" value="admin" checked>
-                <label for="admin" class="toggle-option">
-                    <span class="icon"><i class="fas fa-user-shield"></i></span>
-                    <span class="text">Admin</span>
-                </label>
+                <div class="toggle-option">
+                    <input type="radio" id="admin" name="userType" value="admin" checked>
+                    <label for="admin">
+                        <div class="icon"><i class="fas fa-user-shield"></i></div>
+                        <div class="text">Admin</div>
+                    </label>
+                </div>
 
-                <input type="radio" id="student" name="userType" value="student">
-                <label for="student" class="toggle-option">
-                    <span class="icon"><i class="fas fa-user-graduate"></i></span>
-                    <span class="text">Student</span>
-                </label>
-
+                <div class="toggle-option">
+                    <input type="radio" id="student" name="userType" value="student">
+                    <label for="student">
+                        <div class="icon"><i class="fas fa-user-graduate"></i></div>
+                        <div class="text">Student</div>
+                    </label>
+                </div>
                 <div class="toggle-glider"></div>
             </div>
         </div>
 
-        <!-- Login Form -->
-        <form class="login-form" action="${pageContext.request.contextPath}/auth" method="POST">
-            <input type="hidden" id="userType" name="userType" value="admin">
+        <button type="submit" class="btn-login">
+            <i class="fas fa-sign-in-alt"></i> Login
+        </button>
 
-            <div class="form-group">
-                <label for="username">Username</label>
-                <input type="text" id="username" name="username" placeholder="Enter your username" required>
-            </div>
-
-            <div class="form-group">
-                <label for="password">Password</label>
-                <input type="password" id="password" name="password" placeholder="Enter your password" required>
-            </div>
-
-            <div class="remember-me">
-                <input type="checkbox" id="remember-me" name="remember-me">
-                <label for="remember-me">Remember Me</label>
-            </div>
-
-            <button type="submit" class="btn-login">Login</button>
-
-            <div class="auth-links">
-                <p>Don't have an account? <a href="${pageContext.request.contextPath}/navigation/signUp.jsp">Sign Up</a></p>
-                <p><a href="${pageContext.request.contextPath}/navigation/forgotPassword.jsp">Forgot Password?</a></p>
-            </div>
-        </form>
-    </div>
-</section>
+        <div class="auth-links">
+            <a href="#"><i class="fas fa-question-circle"></i> Forgot Password?</a>
+            <span style="color: rgba(255,255,255,0.5)"> | </span>
+            <a href="#"><i class="fas fa-user-plus"></i> Create Account</a>
+        </div>
+    </form>
+</div>
 
 <script>
-    // Enhanced futuristic toggle with animations
     document.addEventListener('DOMContentLoaded', function() {
-        const toggleOptions = document.querySelectorAll('.toggle-option');
+        const toggleOptions = document.querySelectorAll('.toggle-option input[type="radio"]');
         const toggleGlider = document.querySelector('.toggle-glider');
-        const userTypeInput = document.getElementById('userType');
 
+        // Initialize glider position
+        const initialChecked = document.querySelector('input[name="userType"]:checked');
+        if (initialChecked.id === 'student') {
+            toggleGlider.style.transform = 'translateX(100%)';
+            toggleGlider.style.background = 'linear-gradient(135deg, #a8ff78, #78ffd6)';
+        }
+
+        // Handle toggle changes
         toggleOptions.forEach(option => {
-            option.addEventListener('click', function() {
-                // Add animation class
-                toggleGlider.classList.add('animate');
-
-                // Remove animation class after effect completes
-                setTimeout(() => {
-                    toggleGlider.classList.remove('animate');
-                }, 500);
+            option.addEventListener('change', function() {
+                if (this.id === 'student') {
+                    toggleGlider.style.transform = 'translateX(100%)';
+                    toggleGlider.style.background = 'linear-gradient(135deg, #a8ff78, #78ffd6)';
+                } else {
+                    toggleGlider.style.transform = 'translateX(0)';
+                    toggleGlider.style.background = 'linear-gradient(135deg, #00b4db, #0083b0)';
+                }
             });
         });
 
-        // Handle toggle changes
-        document.getElementById('admin').addEventListener('change', function() {
-            userTypeInput.value = 'admin';
+        // Form submission handler
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            const userType = document.querySelector('input[name="userType"]:checked').value;
+            console.log('Submitting form with user type:', userType);
+            // Add any additional validation here
         });
-
-        document.getElementById('student').addEventListener('change', function() {
-            userTypeInput.value = 'student';
-        });
-    });
-
-    // Form validation
-    document.querySelector('.login-form').addEventListener('submit', function(event) {
-        const username = document.getElementById('username').value.trim();
-        const password = document.getElementById('password').value.trim();
-        const userType = document.getElementById('userType').value;
-
-        if (!username || !password) {
-            alert('Please fill in all fields.');
-            event.preventDefault();
-        }
-
-        if (username.length < 4) {
-            alert('Username must be at least 4 characters long.');
-            event.preventDefault();
-        }
-
-        if (password.length < 6) {
-            alert('Password must be at least 6 characters long.');
-            event.preventDefault();
-        }
-
-        // You can add additional validation here if needed
     });
 </script>
 </body>
