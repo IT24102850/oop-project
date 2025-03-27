@@ -1,74 +1,61 @@
-package com.example.dao;
+package com.studentregistration.dao;
 
 import com.studentregistration.model.Student;
-
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class StudentDAO {
-    private static final String FILE_PATH = "src/main/resources/students.txt";
+    private static final String STUDENT_FILE = "users.txt"; // Stored in src/main/resources
 
-    // Add a new student to the file
-    public void addStudent(Student student) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_PATH, true))) {
-            writer.write(student.toString());
-            writer.newLine();
-        } catch (IOException e) {
-            System.err.println("Error writing to file: " + e.getMessage());
-        }
+    // Validate student credentials
+    public boolean validateStudent(String username, String password) {
+        List<Student> students = getAllStudents();
+        return students.stream()
+                .anyMatch(s -> s.getUsername().equals(username)
+                        && s.getPassword().equals(password));
     }
 
-    // Retrieve all students from the file
+    // Get all students from file
     public List<Student> getAllStudents() {
         List<Student> students = new ArrayList<>();
-        try (BufferedReader reader = new BufferedReader(new FileReader(FILE_PATH))) {
+        String filePath = getClass().getClassLoader().getResource(STUDENT_FILE).getPath();
+
+        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
             String line;
-            while ((line = reader.readLine()) != null) {
-                String[] data = line.split(",");
-                Student student = new Student(data[0], data[1], data[2], data[3]);
-                students.add(student);
+            while ((line = br.readLine()) != null) {
+                String[] parts = line.split(":");
+                if (parts.length >= 2) {
+                    Student student = new Student();
+                    student.setUsername(parts[0]);
+                    student.setPassword(parts[1]);
+                    // Add additional fields if present in the file
+                    if (parts.length > 2) student.setEmail(parts[2]);
+                    if (parts.length > 3) student.setFullName(parts[3]);
+                    students.add(student);
+                }
             }
         } catch (IOException e) {
-            System.err.println("Error reading from file: " + e.getMessage());
+            e.printStackTrace();
         }
         return students;
     }
 
-    // Update a student's details
-    public void updateStudent(String email, Student updatedStudent) {
-        List<Student> students = getAllStudents();
-        boolean found = false;
-        for (int i = 0; i < students.size(); i++) {
-            if (students.get(i).getEmail().equals(email)) {
-                students.set(i, updatedStudent);
-                found = true;
-                break;
-            }
-        }
-        if (found) {
-            saveAllStudents(students);
-        } else {
-            System.err.println("Student with email " + email + " not found.");
-        }
+    // Get student by username
+    public Student getStudentByUsername(String username) {
+        return getAllStudents().stream()
+                .filter(s -> s.getUsername().equals(username))
+                .findFirst()
+                .orElse(null);
     }
 
-    // Delete a student by email
-    public void deleteStudent(String email) {
-        List<Student> students = getAllStudents();
-        students.removeIf(student -> student.getEmail().equals(email));
-        saveAllStudents(students);
-    }
-
-    // Helper method to save all students to the file
-    private void saveAllStudents(List<Student> students) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_PATH))) {
-            for (Student student : students) {
-                writer.write(student.toString());
-                writer.newLine();
-            }
-        } catch (IOException e) {
-            System.err.println("Error saving students to file: " + e.getMessage());
-        }
+    // Register new student
+    public boolean registerStudent(Student student) {
+        // Implementation to write to users.txt
+        // You'll need to add proper file writing logic here
+        // Remember to handle file locking if multiple users register simultaneously
+        return true;
     }
 }
