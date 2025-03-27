@@ -1,5 +1,13 @@
 
-
+<% if (request.getParameter("error") != null) { %>
+<div class="error-message">
+    <% if (request.getParameter("error").equals("1")) { %>
+    Passwords do not match. Please try again.
+    <% } else if (request.getParameter("error").equals("2")) { %>
+    Email already exists. Please use a different email or login.
+    <% } %>
+</div>
+<% } %>
 
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
