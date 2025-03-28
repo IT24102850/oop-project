@@ -23,11 +23,12 @@
     <servlet-class>com.studentregistration.servlets.RegistrationServlet</servlet-class>
   </servlet>
 
-
-
+  <servlet>
+    <servlet-name>SignUpServlet</servlet-name>
+    <servlet-class>com.studentregistration.servlets.SignUpServlet</servlet-class>
+  </servlet>
 
   <!-- Servlet Mappings -->
-
   <servlet-mapping>
     <servlet-name>StudentServlet</servlet-name>
     <url-pattern>/students</url-pattern>
@@ -38,23 +39,15 @@
     <url-pattern>/registrations/*</url-pattern>
   </servlet-mapping>
 
-  <servlet>
-    <servlet-name>SignUpServlet</servlet-name>
-    <servlet-class>com.studentregistration.servlets.SignUpServlet</servlet-class>
-  </servlet>
-
   <servlet-mapping>
     <servlet-name>SignUpServlet</servlet-name>
     <url-pattern>/signup</url-pattern>
   </servlet-mapping>
 
-
-  <!-- Welcome File List -->
+  <!-- Corrected Welcome File List -->
   <welcome-file-list>
     <welcome-file>index.jsp</welcome-file>
-  </welcome-file-list>
-
-  <welcome-file-list>
+    <welcome-file>login.jsp</welcome-file>
     <welcome-file>logIn.jsp</welcome-file>
   </welcome-file-list>
 
