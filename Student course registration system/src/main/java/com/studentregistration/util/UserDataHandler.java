@@ -5,16 +5,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UserDataHandler {
-    private static final String FILE_PATH = "user_data.txt";
+    public static final String FILE_PATH = "WEB-INF/user_data.txt"; // More secure location
 
-    // Create a new user (already implemented in the servlet)
-
-    // Read all users
+    // Get all users with additional validation
     public static List<String[]> getAllUsers(String realPath) throws IOException {
         List<String[]> users = new ArrayList<>();
         File file = new File(realPath + FILE_PATH);
 
         if (!file.exists()) {
+            file.getParentFile().mkdirs(); // Create directories if needed
+            file.createNewFile();
             return users;
         }
 
@@ -22,7 +22,7 @@ public class UserDataHandler {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] userData = line.split("\\|");
-                if (userData.length == 3) {
+                if (userData.length >= 3) { // At least fullname, email, password
                     users.add(userData);
                 }
             }
@@ -30,14 +30,22 @@ public class UserDataHandler {
         return users;
     }
 
-    // Update user by email
-    public static boolean updateUser(String realPath, String email, String newFullname, String newPassword)
-            throws IOException {
+    // Check if email exists (case-insensitive)
+    public static boolean emailExists(String realPath, String email) throws IOException {
+        List<String[]> users = getAllUsers(realPath);
+        return users.stream()
+                .anyMatch(user -> user.length > 1 &&
+                        user[1].equalsIgnoreCase(email));
+    }
+
+    // Update user information
+    public static boolean updateUser(String realPath, String email,
+                                     String newFullname, String newPassword) throws IOException {
         List<String[]> users = getAllUsers(realPath);
         boolean found = false;
 
         for (String[] user : users) {
-            if (user[1].equals(email)) {
+            if (user.length > 1 && user[1].equalsIgnoreCase(email)) {
                 user[0] = newFullname;
                 user[2] = newPassword;
                 found = true;
@@ -55,7 +63,8 @@ public class UserDataHandler {
     // Delete user by email
     public static boolean deleteUser(String realPath, String email) throws IOException {
         List<String[]> users = getAllUsers(realPath);
-        boolean removed = users.removeIf(user -> user[1].equals(email));
+        boolean removed = users.removeIf(user ->
+                user.length > 1 && user[1].equalsIgnoreCase(email));
 
         if (removed) {
             writeAllUsers(realPath, users);
@@ -64,23 +73,23 @@ public class UserDataHandler {
         return false;
     }
 
-    // Helper method to write all users back to file
+    // Write all users back to file
     private static void writeAllUsers(String realPath, List<String[]> users) throws IOException {
         File file = new File(realPath + FILE_PATH);
 
-        try (FileWriter fw = new FileWriter(file);
-             BufferedWriter bw = new BufferedWriter(fw);
-             PrintWriter out = new PrintWriter(bw)) {
-
+        try (PrintWriter out = new PrintWriter(new FileWriter(file))) {
             for (String[] user : users) {
                 out.println(String.join("|", user));
             }
         }
     }
 
-    // Check if email exists
-    public static boolean emailExists(String realPath, String email) throws IOException {
+    // Get user by email
+    public static String[] getUserByEmail(String realPath, String email) throws IOException {
         List<String[]> users = getAllUsers(realPath);
-        return users.stream().anyMatch(user -> user[1].equals(email));
+        return users.stream()
+                .filter(user -> user.length > 1 && user[1].equalsIgnoreCase(email))
+                .findFirst()
+                .orElse(null);
     }
 }
