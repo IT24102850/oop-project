@@ -1,7 +1,6 @@
 package com.studentregistration.servlets;
 
-import com.studentregistration.dao.UserDAO;
-import com.studentregistration.model.User;
+import com.studentregistration.util.FileUtil;
 import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -11,33 +10,30 @@ import javax.servlet.http.HttpServletResponse;
 
 @WebServlet("/signup")
 public class SignUpServlet extends HttpServlet {
-    private UserDAO userDAO = new UserDAO();
 
-    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        // Read form data
-        String username = request.getParameter("username");
+
+        // Get form parameters
+        String fullname = request.getParameter("fullname");
         String email = request.getParameter("email");
         String password = request.getParameter("password");
         String confirmPassword = request.getParameter("confirm-password");
 
         // Validate passwords match
         if (!password.equals(confirmPassword)) {
-            response.sendRedirect("signUp.jsp?error=1"); // Redirect with error
+            response.sendRedirect(request.getContextPath() + "/signUp.jsp?error=1");
             return;
         }
 
-        // Generate a unique ID for the new user
-        int id = userDAO.getAllUsers().size() + 1;
+        // Prepare user data
+        String userData = String.format("%s|%s|%s\n", fullname, email, password);
 
-        // Create a new User object
-        User newUser = new User(id, username, password, "student");
+        // Save to file
+        String filePath = getServletContext().getRealPath("/WEB-INF/user_data.txt");
+        FileUtil.saveUser(filePath, userData);
 
-        // Save the new user to users.txt
-        userDAO.addUser(newUser);
-
-        // Redirect to login page with success message
-        response.sendRedirect("login.jsp?success=1");
+        // Redirect to login page
+        response.sendRedirect(request.getContextPath() + "/login.jsp?registered=1");
     }
 }
