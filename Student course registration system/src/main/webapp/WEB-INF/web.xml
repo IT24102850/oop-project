@@ -12,37 +12,36 @@
     <servlet-name>AuthServlet</servlet-name>
     <servlet-class>com.studentregistration.servlets.AuthServlet</servlet-class>
   </servlet>
-
   <servlet>
     <servlet-name>StudentServlet</servlet-name>
     <servlet-class>com.studentregistration.servlets.StudentServlet</servlet-class>
   </servlet>
-
   <servlet>
     <servlet-name>RegistrationServlet</servlet-name>
     <servlet-class>com.studentregistration.servlets.RegistrationServlet</servlet-class>
   </servlet>
-
+  <servlet>
+    <servlet-name>SignUpServlet</servlet-name>
+    <servlet-class>com.studentregistration.servlets.SignUpServlet</servlet-class>
+  </servlet>
 
   <!-- Servlet Mappings -->
-
   <servlet-mapping>
     <servlet-name>StudentServlet</servlet-name>
     <url-pattern>/students</url-pattern>
   </servlet-mapping>
-
   <servlet-mapping>
     <servlet-name>RegistrationServlet</servlet-name>
     <url-pattern>/registrations/*</url-pattern>
   </servlet-mapping>
-
+  <servlet-mapping>
+    <servlet-name>SignUpServlet</servlet-name>
+    <url-pattern>/signup</url-pattern>
+  </servlet-mapping>
 
   <!-- Welcome File List -->
   <welcome-file-list>
     <welcome-file>index.jsp</welcome-file>
-  </welcome-file-list>
-
-  <welcome-file-list>
     <welcome-file>logIn.jsp</welcome-file>
   </welcome-file-list>
 
