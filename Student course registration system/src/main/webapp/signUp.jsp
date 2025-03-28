@@ -53,7 +53,7 @@
     </div>
 </c:if>
 
-<form action="${pageContext.request.contextPath}/signup" method="POST" onsubmit="return validateForm()">
+<form action="${pageContext.request.contextPath}/signup" method="POST">
     <div class="form-group">
         <label for="fullname">Full Name</label>
         <input type="text" id="fullname" name="fullname"

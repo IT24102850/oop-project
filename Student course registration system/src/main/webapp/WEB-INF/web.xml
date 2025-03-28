@@ -44,6 +44,13 @@
     <url-pattern>/signup</url-pattern>
   </servlet-mapping>
 
+  <servlet>
+    <servlet-name>SignUpServlet</servlet-name>
+    <servlet-class>com.studentregistration.servlets.SignUpServlet</servlet-class>
+  </servlet>
+
+
+
   <!-- Corrected Welcome File List -->
   <welcome-file-list>
     <welcome-file>index.jsp</welcome-file>
