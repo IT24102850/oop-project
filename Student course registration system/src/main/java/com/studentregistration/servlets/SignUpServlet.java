@@ -1,54 +1,35 @@
 package com.studentregistration.servlets;
 
-import java.io.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
+import java.io.IOException;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
-public class SignUpServlet extends HttpServlet {
-
+@WebServlet("/auth")
+public class AuthServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        try {
-            // Get form data with null checks
-            String fullname = request.getParameter("fullname");
-            String email = request.getParameter("email");
-            String password = request.getParameter("password");
-            String confirmPassword = request.getParameter("confirm-password");
+        String username = request.getParameter("username");
+        String password = request.getParameter("password");
+        String userType = request.getParameter("userType");
 
-            // Validate all fields are present
-            if (fullname == null || fullname.trim().isEmpty() ||
-                    email == null || email.trim().isEmpty() ||
-                    password == null || password.trim().isEmpty() ||
-                    confirmPassword == null || confirmPassword.trim().isEmpty()) {
-                response.sendRedirect("signUp.jsp?error=3"); // Missing fields error
-                return;
+        if ("Hasiru".equals(username) && "asdasd".equals(password)) {
+            HttpSession session = request.getSession();
+            session.setAttribute("username", username);
+            session.setAttribute("userType", userType);
+
+            if ("admin".equals(userType)) {
+                response.sendRedirect(request.getContextPath() + "/admin/dashboard.jsp");
+            } else {
+                response.sendRedirect(request.getContextPath() + "/courses.jsp");
             }
-
-            // Validate passwords match
-            if (!password.equals(confirmPassword)) {
-                response.sendRedirect("signUp.jsp?error=1"); // Password mismatch
-                return;
-            }
-
-            // Save user data
-            saveUserData(request, fullname, email, password);
-
-            // Successful registration - use correct path to login.jsp
-            response.sendRedirect(request.getContextPath() + "/login.jsp?registered=1");
-// OR if login.jsp is in root:
-// response.sendRedirect(request.getContextPath() + "/login.jsp?registered=1");
-        } catch (Exception e) {
-            e.printStackTrace();
-            response.sendRedirect("signUp.jsp?error=2"); // Server error
-        }
-    }
-
-    private void saveUserData(HttpServletRequest request, String fullname,
-                              String email, String password) throws IOException {
-        String path = request.getServletContext().getRealPath("/WEB-INF/user_data.txt");
-        try (PrintWriter out = new PrintWriter(new FileWriter(path, true))) {
-            out.println(fullname + "|" + email + "|" + password);
+        } else {
+            request.setAttribute("error", "Invalid username or password");
+            request.getRequestDispatcher("/login.jsp").forward(request, response);
         }
     }
 }
