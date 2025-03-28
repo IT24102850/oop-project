@@ -25,7 +25,7 @@ public class StudentServlet extends HttpServlet {
 
         HttpSession session = request.getSession(false);
         if (session == null || session.getAttribute("username") == null) {
-            response.sendRedirect(request.getContextPath() + "/jsp/login.jsp");
+            response.sendRedirect(request.getContextPath() + "/login.jsp");
             return;
         }
 
@@ -52,7 +52,7 @@ public class StudentServlet extends HttpServlet {
 
         HttpSession session = request.getSession(false);
         if (session == null || session.getAttribute("username") == null) {
-            response.sendRedirect(request.getContextPath() + "/jsp/login.jsp");
+            response.sendRedirect(request.getContextPath() + "/login.jsp");
             return;
         }
 
@@ -77,7 +77,7 @@ public class StudentServlet extends HttpServlet {
     private void listCourses(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         // Implementation to list available courses
-        request.getRequestDispatcher("/jsp/courses.jsp").forward(request, response);
+        request.getRequestDispatcher("/courses.jsp").forward(request, response);
     }
 
     private void viewProfile(HttpServletRequest request, HttpServletResponse response)
@@ -85,7 +85,7 @@ public class StudentServlet extends HttpServlet {
         String username = (String) request.getSession().getAttribute("username");
         Student student = studentDao.getStudentByUsername(username);
         request.setAttribute("student", student);
-        request.getRequestDispatcher("/jsp/student-profile.jsp").forward(request, response);
+        request.getRequestDispatcher("/student-profile.jsp").forward(request, response);
     }
 
     private void showEditForm(HttpServletRequest request, HttpServletResponse response)
@@ -93,7 +93,7 @@ public class StudentServlet extends HttpServlet {
         String username = (String) request.getSession().getAttribute("username");
         Student student = studentDao.getStudentByUsername(username);
         request.setAttribute("student", student);
-        request.getRequestDispatcher("/jsp/edit-profile.jsp").forward(request, response);
+        request.getRequestDispatcher("/edit-profile.jsp").forward(request, response);
     }
 
     private void updateProfile(HttpServletRequest request, HttpServletResponse response)
