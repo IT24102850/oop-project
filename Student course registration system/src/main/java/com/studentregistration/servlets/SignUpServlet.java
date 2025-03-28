@@ -1,39 +1,53 @@
 package com.studentregistration.servlets;
 
-import com.studentregistration.util.FileUtil;
-import java.io.IOException;
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import java.io.*;
+import javax.servlet.*;
+import javax.servlet.http.*;
 
-@WebServlet("/signup")
 public class SignUpServlet extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        // Get form parameters
-        String fullname = request.getParameter("fullname");
-        String email = request.getParameter("email");
-        String password = request.getParameter("password");
-        String confirmPassword = request.getParameter("confirm-password");
+        try {
+            // Get form data with null checks
+            String fullname = request.getParameter("fullname");
+            String email = request.getParameter("email");
+            String password = request.getParameter("password");
+            String confirmPassword = request.getParameter("confirm-password");
 
-        // Validate passwords match
-        if (!password.equals(confirmPassword)) {
-            response.sendRedirect(request.getContextPath() + "/signUp.jsp?error=1");
-            return;
+            // Validate all fields are present
+            if (fullname == null || fullname.trim().isEmpty() ||
+                    email == null || email.trim().isEmpty() ||
+                    password == null || password.trim().isEmpty() ||
+                    confirmPassword == null || confirmPassword.trim().isEmpty()) {
+                response.sendRedirect("signUp.jsp?error=3"); // Missing fields error
+                return;
+            }
+
+            // Validate passwords match
+            if (!password.equals(confirmPassword)) {
+                response.sendRedirect("signUp.jsp?error=1"); // Password mismatch
+                return;
+            }
+
+            // Save user data
+            saveUserData(request, fullname, email, password);
+
+            // Successful registration
+            response.sendRedirect("login.jsp?registered=1");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.sendRedirect("signUp.jsp?error=2"); // Server error
         }
+    }
 
-        // Prepare user data
-        String userData = String.format("%s|%s|%s\n", fullname, email, password);
-
-        // Save to file
-        String filePath = getServletContext().getRealPath("/WEB-INF/user_data.txt");
-        FileUtil.saveUser(filePath, userData);
-
-        // Redirect to login page
-        response.sendRedirect(request.getContextPath() + "/login.jsp?registered=1");
+    private void saveUserData(HttpServletRequest request, String fullname,
+                              String email, String password) throws IOException {
+        String path = request.getServletContext().getRealPath("/WEB-INF/user_data.txt");
+        try (PrintWriter out = new PrintWriter(new FileWriter(path, true))) {
+            out.println(fullname + "|" + email + "|" + password);
+        }
     }
 }

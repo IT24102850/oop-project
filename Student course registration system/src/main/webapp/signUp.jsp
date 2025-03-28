@@ -1,3 +1,8 @@
+<form action="signup" method="POST">
+    <!-- Your form fields -->
+    <button type="submit">Sign Up</button>
+</form>
+
 <form action="${pageContext.request.contextPath}/signup" method="POST">
     <div class="form-group">
         <label for="fullname">Full Name</label>
@@ -18,7 +23,17 @@
     <button type="submit">Sign Up</button>
 </form>
 
-<%-- Display error message if passwords didn't match --%>
 <% if (request.getParameter("error") != null) { %>
-<div class="error">Passwords do not match!</div>
+<div class="error-message">
+    <%
+        String error = request.getParameter("error");
+        if ("1".equals(error)) { %>
+    Passwords do not match!
+    <% } else if ("2".equals(error)) { %>
+    Server error. Please try again.
+    <% } else if ("3".equals(error)) { %>
+    Please fill all fields!
+    <% } %>
+</div>
 <% } %>
+
