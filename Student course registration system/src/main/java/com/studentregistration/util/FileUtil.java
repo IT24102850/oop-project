@@ -10,7 +10,7 @@ public class FileUtil {
         File file = new File(filePath);
 
         file.getParentFile().mkdirs();
-        
+
         try (FileWriter fw = new FileWriter(file, true);
              BufferedWriter bw = new BufferedWriter(fw)) {
             bw.write(userData);
