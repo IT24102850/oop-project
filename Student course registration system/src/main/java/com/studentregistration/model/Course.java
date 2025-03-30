@@ -6,9 +6,9 @@ public class Course {
     private String description;
     private int credits;
 
-    // Constructors
-    public Course() {}
 
+    public Course() {}
+//add the constructors
     public Course(String courseId, String courseName, String description, int credits) {
         this.courseId = courseId;
         this.courseName = courseName;

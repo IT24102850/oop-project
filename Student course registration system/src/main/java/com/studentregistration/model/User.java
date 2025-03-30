@@ -6,14 +6,14 @@ public class User {
     private int id;
     private String username;
     private String password;
-    private String role; // "student" or "admin"
+    private String role;
     private String email;
     private String fullName;
     private boolean active;
 
-    // Constructors
+    // Add the Constructors
     public User() {
-        this.active = true; // Default to active user
+        this.active = true;
     }
 
     public User(int id, String username, String password, String role) {
