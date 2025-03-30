@@ -13,7 +13,7 @@ public class User {
 
     // Add the Constructors
     public User() {
-        this.active = true; 
+        this.active = true;
     }
 
     public User(int id, String username, String password, String role) {
