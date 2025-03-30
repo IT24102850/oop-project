@@ -1,27 +1,32 @@
-<a href="<%= request.getContextPath() %>/login.jsp">Login</a>
-<a href="<%= request.getContextPath() %>/signup.jsp">sign up</a>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%
+    response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+    response.setHeader("Pragma", "no-cache");
+    response.setHeader("Expires", "0");
+%>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="NexoraSkill - Your gateway to mastering new skills and achieving your goals">
     <title>NexoraSkill - Student Course Registration System</title>
+
+    <!-- Preload critical resources -->
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" as="style">
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" as="style">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="${pageContext.request.contextPath}/images/favicon-32x32.png">
+
+    <!-- CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link rel="icon" type="image/png" href="./images/favicon.ico">
-    <!-- Add Google Fonts for Poppins -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-
     <style>
-        /* General   Reset*/
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        /* CSS Variables */
         :root {
             --primary-color: #009acd;
             --secondary-color: #00ffcc;
@@ -30,16 +35,26 @@
             --text-color: #ffffff;
             --hover-color: #007ba7;
             --glow-color: rgba(0, 255, 204, 0.6);
+            --transition-speed: 0.3s;
+        }
+
+        /* Base Styles */
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
         body {
             font-family: 'Poppins', sans-serif;
             background: var(--dark-color);
             color: var(--text-color);
+            line-height: 1.6;
             overflow-x: hidden;
+            min-height: 100vh;
         }
 
-        /* Header Section */
+        /* Header Styles */
         .header {
             position: fixed;
             top: 0;
@@ -47,13 +62,15 @@
             z-index: 1000;
             background: var(--dark-color);
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
         }
 
         .container {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 20px;
+            padding: 1.25rem 2rem;
             max-width: 1200px;
             margin: 0 auto;
         }
@@ -61,15 +78,16 @@
         .logo {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 0.625rem;
             font-size: 1.5rem;
             font-weight: 600;
             color: var(--text-color);
+            text-decoration: none;
         }
 
         .logo img {
-            height: 40px;
-            transition: transform 0.3s ease;
+            height: 2.5rem;
+            transition: transform var(--transition-speed) ease;
         }
 
         .logo:hover img {
@@ -79,33 +97,50 @@
         .navbar ul {
             list-style: none;
             display: flex;
-            gap: 20px;
+            gap: 1.25rem;
         }
 
         .navbar ul li a {
-            font-family: 'Poppins', sans-serif;
-            font-weight: bold;
+            font-weight: 500;
             text-decoration: none;
             color: var(--text-color);
-            font-weight: 500;
-            transition: color 0.3s ease;
+            transition: color var(--transition-speed) ease;
+            position: relative;
+            padding: 0.5rem 0;
+        }
+
+        .navbar ul li a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary-color);
+            transition: width var(--transition-speed) ease;
         }
 
         .navbar ul li a:hover {
             color: var(--primary-color);
         }
 
-        .auth-buttons {
-            display: flex;
-            gap: 10px;
+        .navbar ul li a:hover::after {
+            width: 100%;
         }
 
-        .btn-login, .btn-signup {
-            padding: 10px 20px;
-            border-radius: 25px;
+        .auth-buttons {
+            display: flex;
+            gap: 0.625rem;
+        }
+
+        .btn {
+            padding: 0.625rem 1.25rem;
+            border-radius: 1.5625rem;
             text-decoration: none;
             font-weight: 500;
-            transition: all 0.3s ease;
+            transition: all var(--transition-speed) ease;
+            display: inline-block;
+            text-align: center;
         }
 
         .btn-login {
@@ -126,6 +161,7 @@
 
         .btn-signup:hover {
             background: var(--hover-color);
+            transform: translateY(-2px);
         }
 
         /* Hero Section */
@@ -134,40 +170,45 @@
             justify-content: space-between;
             align-items: center;
             min-height: 100vh;
-            padding: 0 5%;
+            padding: 6rem 5% 2rem;
             position: relative;
-            overflow: hidden;
         }
 
         .hero-content {
-            max-width: 600px;
+            max-width: 37.5rem;
             animation: slideInLeft 1s ease;
         }
 
         .hero-title {
-            font-size: 3.5rem;
-            margin-bottom: 20px;
+            font-size: clamp(2.5rem, 5vw, 3.5rem);
+            margin-bottom: 1.25rem;
             color: var(--text-color);
-            text-shadow: 0 0 10px var(--glow-color);
+            line-height: 1.2;
+        }
+
+        .hero-title span {
+            color: var(--secondary-color);
+            text-shadow: 0 0 0.625rem var(--glow-color);
         }
 
         .hero-subtext {
             font-size: 1.2rem;
-            margin-bottom: 30px;
+            margin-bottom: 1.875rem;
             color: var(--text-color);
+            opacity: 0.9;
         }
 
         .hero-cta {
             display: flex;
-            gap: 20px;
+            gap: 1.25rem;
         }
 
         .cta-button {
-            padding: 12px 24px;
-            border-radius: 25px;
+            padding: 0.75rem 1.5rem;
+            border-radius: 1.5625rem;
             text-decoration: none;
             font-weight: 600;
-            transition: all 0.3s ease;
+            transition: all var(--transition-speed) ease;
         }
 
         .primary-cta {
@@ -177,8 +218,8 @@
 
         .primary-cta:hover {
             background: var(--hover-color);
-            transform: translateY(-5px);
-            box-shadow: 0 5px 20px var(--glow-color);
+            transform: translateY(-0.3125rem);
+            box-shadow: 0 0.3125rem 1.25rem var(--glow-color);
         }
 
         .secondary-cta {
@@ -190,13 +231,13 @@
         .secondary-cta:hover {
             background: var(--primary-color);
             color: var(--dark-color);
-            transform: translateY(-5px);
+            transform: translateY(-0.3125rem);
         }
 
         .hero-visual {
             position: relative;
-            width: 500px;
-            height: 500px;
+            width: 31.25rem;
+            height: 31.25rem;
             animation: slideInRight 1s ease;
         }
 
@@ -220,14 +261,15 @@
                     var(--glow-color) 25%,
                     var(--glow-color) 50%
             );
-            background-size: 20px 20px;
+            background-size: 1.25rem 1.25rem;
             animation: moveGrid 5s linear infinite;
+            opacity: 0.3;
         }
 
         /* Animations */
         @keyframes slideInLeft {
             from {
-                transform: translateX(-100px);
+                transform: translateX(-6.25rem);
                 opacity: 0;
             }
             to {
@@ -238,7 +280,7 @@
 
         @keyframes slideInRight {
             from {
-                transform: translateX(100px);
+                transform: translateX(6.25rem);
                 opacity: 0;
             }
             to {
@@ -250,9 +292,11 @@
         @keyframes glow {
             0% {
                 opacity: 0.6;
+                transform: scale(0.98);
             }
             100% {
                 opacity: 1;
+                transform: scale(1);
             }
         }
 
@@ -261,29 +305,63 @@
                 background-position: 0 0;
             }
             100% {
-                background-position: 40px 40px;
+                background-position: 2.5rem 2.5rem;
             }
         }
 
         /* Responsive Design */
         @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+                flex-wrap: wrap;
+            }
+
+            .navbar {
+                order: 3;
+                width: 100%;
+                margin-top: 1rem;
+            }
+
+            .navbar ul {
+                justify-content: center;
+            }
+
             .hero {
                 flex-direction: column;
                 text-align: center;
+                padding-top: 8rem;
+            }
+
+            .hero-content {
+                margin-bottom: 3rem;
+            }
+
+            .hero-cta {
+                justify-content: center;
             }
 
             .hero-visual {
-                width: 300px;
-                height: 300px;
-                margin-top: 30px;
+                width: 18.75rem;
+                height: 18.75rem;
             }
+        }
 
+        @media (max-width: 480px) {
             .hero-title {
-                font-size: 2.5rem;
+                font-size: 2rem;
             }
 
             .hero-subtext {
                 font-size: 1rem;
+            }
+
+            .hero-cta {
+                flex-direction: column;
+                gap: 0.625rem;
+            }
+
+            .cta-button {
+                width: 100%;
             }
         }
     </style>
@@ -293,26 +371,23 @@
 <!-- Header Section -->
 <header class="header">
     <div class="container">
-        <div class="logo">
-            <link rel="icon" type="image/png" href="./images/favicon-32x32.png">
+        <a href="${pageContext.request.contextPath}/" class="logo">
+            <img src="${pageContext.request.contextPath}/images/favicon-32x32.png" alt="NexoraSkill Logo">
             <span>NexoraSkill</span>
-        </div>
+        </a>
 
-        <div class="logo">
-            <img src="./images/favicon-32x32.png" alt="NexoraSkill Logo">
-        </div>
         <nav class="navbar">
             <ul>
-                <li><a href="#home">Home</a></li>
-                <li><a href="courses.jsp">Courses</a></li>
-                <li><a href="registration.jsp">Registration</a></li>
-                <li><a href="aboutus.jsp">About Us</a></li>
-                <li><a href="contact.jsp">Contact</a></li>
+                <li><a href="${pageContext.request.contextPath}/">Home</a></li>
+                <li><a href="${pageContext.request.contextPath}/courses.jsp">Courses</a></li>
+                <li><a href="${pageContext.request.contextPath}/registration.jsp">Registration</a></li>
+                <li><a href="${pageContext.request.contextPath}/aboutus.jsp">About Us</a></li>
+                <li><a href="${pageContext.request.contextPath}/contact.jsp">Contact</a></li>
             </ul>
         </nav>
         <div class="auth-buttons">
-            <a href="logIn.jsp" class="btn-login">Login</a>
-            <a href="signUp.jsp" class="btn-signup">Sign Up</a>
+            <a href="${pageContext.request.contextPath}/logIn.jsp" class="btn btn-login">Login</a>
+            <a href="${pageContext.request.contextPath}/signUp.jsp" class="btn btn-signup">Sign Up</a>
         </div>
     </div>
 </header>
@@ -320,7 +395,7 @@
 <!-- Hero Section -->
 <section class="hero">
     <div class="hero-content">
-        <h1 class="hero-title">Welcome to NexoraSkill</h1>
+        <h1 class="hero-title">Welcome to <span>NexoraSkill</span></h1>
         <p class="hero-subtext">Your gateway to mastering new skills and achieving your goals.</p>
         <div class="hero-cta">
             <a href="${pageContext.request.contextPath}/courses.jsp" class="cta-button primary-cta">Explore Courses</a>
@@ -328,13 +403,19 @@
         </div>
     </div>
     <div class="hero-visual">
-        <link rel="icon" type="image/png" href="./images/favicon-32x32.png">
         <div class="glowing-circle"></div>
         <div class="animated-grid"></div>
     </div>
 </section>
 
-<!-- Ensure FontAwesome is included -->
+<!-- FontAwesome -->
 <script src="https://kit.fontawesome.com/YOUR-KIT-ID.js" crossorigin="anonymous"></script>
+
+<!-- Optional: Lazy load non-critical resources -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Lazy load any non-critical resources here
+    });
+</script>
 </body>
 </html>
