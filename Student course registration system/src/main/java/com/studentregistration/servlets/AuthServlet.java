@@ -29,7 +29,7 @@ public class AuthServlet extends HttpServlet {
             }
         } else {
             request.setAttribute("error", "Invalid username or password");
-            request.getRequestDispatcher("/login.jsp").forward(request, response);
+            request.getRequestDispatcher("/logIn.jsp").forward(request, response);
         }
     }
 }

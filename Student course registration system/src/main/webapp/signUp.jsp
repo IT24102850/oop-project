@@ -44,7 +44,7 @@
         if (errors.isEmpty()) {
             boolean success = saveStudent(studentId, name, email, password);
             if (success) {
-                response.sendRedirect("login.jsp?signup=success");
+                response.sendRedirect("logIn.jsp?signup=success");
                 return;
             } else {
                 errors.add("Registration failed. Please try again.");
@@ -214,7 +214,7 @@
         </div>
     </form>
 
-    <p>Already have an account? <a href="login.jsp">Login here</a></p>
+    <p>Already have an account? <a href="logIn.jsp">Login here</a></p>
 </div>
 </body>
 </html>

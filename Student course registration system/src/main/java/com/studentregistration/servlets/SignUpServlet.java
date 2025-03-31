@@ -34,10 +34,10 @@ public class SignUpServlet extends HttpServlet {
             // Save user data
             saveUserData(request, fullname, email, password);
 
-            // Successful registration - use correct path to login.jsp
-            response.sendRedirect(request.getContextPath() + "/login.jsp?registered=1");
-// OR if login.jsp is in root:
-// response.sendRedirect(request.getContextPath() + "/login.jsp?registered=1");
+            // Successful registration - use correct path to logIn.jsp
+            response.sendRedirect(request.getContextPath() + "logIn.jsp?registered=1");
+// OR if logIn.jsp is in root:
+// response.sendRedirect(request.getContextPath() + "/logIn.jsp?registered=1");
         } catch (Exception e) {
             e.printStackTrace();
             response.sendRedirect("signUp.jsp?error=2"); // Server error
