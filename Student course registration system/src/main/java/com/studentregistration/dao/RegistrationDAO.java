@@ -10,27 +10,31 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class RegistrationDAO {
+public class RegistrationDAO
+{
     private static final String ENROLLMENT_FILE = "enrollments.txt";
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ISO_LOCAL_DATE;
     private static final String DEADLINE = "2023-12-15"; // Example deadline
 
     // C: Enroll student in multiple courses
     public boolean enrollStudent(String studentEmail, List<String> courseIds, String section) throws IOException {
-        if (!ValidationUtils.isValidEmail(studentEmail)) {
+        if (!ValidationUtils.isValidEmail(studentEmail))
+        {
             return false;
         }
 
         String enrollmentDate = LocalDate.now().format(DATE_FORMATTER);
         List<Enrollment> existingEnrollments = getAllEnrollments();
 
-        for (String courseId : courseIds) {
+        for (String courseId : courseIds)
+        {
             // Check if already enrolled
             boolean alreadyEnrolled = existingEnrollments.stream()
                     .anyMatch(e -> e.getStudentEmail().equals(studentEmail)
                             && e.getCourseId().equals(courseId));
 
-            if (alreadyEnrolled) {
+            if (alreadyEnrolled)
+            {
                 continue; // Skip already enrolled courses
             }
 
