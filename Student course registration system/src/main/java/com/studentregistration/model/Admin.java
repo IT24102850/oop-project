@@ -5,36 +5,25 @@ import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
 public class Admin extends User {
-    private String role; // "admin" or "superadmin"
     private boolean forcePasswordReset;
     private LocalDateTime lastPasswordChange;
 
     private static final DateTimeFormatter DATE_TIME_FORMATTER =
             DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
-    public Admin(String email, String password, String name, boolean isVerified) {
-        super(email, password, name, isVerified);
-        this.role = "admin";
+    public Admin(String email, String password, String fullName, boolean isVerified) {
+        super(email, password, fullName, "admin", isVerified);
         this.forcePasswordReset = false;
         this.lastPasswordChange = LocalDateTime.now();
     }
 
-    public Admin(String email, String password, String name, boolean isVerified, String role) {
-        super(email, password, name, isVerified);
-        this.role = role;
+    public Admin(String email, String password, String fullName, boolean isVerified, String role) {
+        super(email, password, fullName, role, isVerified);
         this.forcePasswordReset = false;
         this.lastPasswordChange = LocalDateTime.now();
     }
 
     // Getters and Setters
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
-    }
-
     public boolean isForcePasswordReset() {
         return forcePasswordReset;
     }
@@ -52,12 +41,24 @@ public class Admin extends User {
     }
 
     public boolean isSuperAdmin() {
-        return "superadmin".equalsIgnoreCase(role);
+        return "superadmin".equalsIgnoreCase(getRole());
     }
 
+    // File handling methods
+    @Override
+    public String toFileString() {
+        return String.join("|",
+                getEmail(),
+                getPassword(),
+                getFullName(),
+                String.valueOf(isActive()),
+                getRole(),
+                String.valueOf(forcePasswordReset),
+                lastPasswordChange.format(DATE_TIME_FORMATTER),
+                getLastLogin() != null ? getLastLogin().format(DATE_TIME_FORMATTER) : "null"
+        );
+    }
 
-
-    // Create Admin object from file string
     public static Admin fromFileString(String fileString) {
         String[] parts = fileString.split("\\|");
         if (parts.length < 8) {
@@ -67,8 +68,8 @@ public class Admin extends User {
         Admin admin = new Admin(
                 parts[0], // email
                 parts[1], // password
-                parts[2], // name
-                Boolean.parseBoolean(parts[3]), // isVerified
+                parts[2], // fullName
+                Boolean.parseBoolean(parts[3]), // isActive
                 parts[4]  // role
         );
 
@@ -77,8 +78,6 @@ public class Admin extends User {
         if (!"null".equals(parts[6])) {
             admin.setLastPasswordChange(LocalDateTime.parse(parts[6], DATE_TIME_FORMATTER));
         }
-
-
 
         return admin;
     }
@@ -90,25 +89,23 @@ public class Admin extends User {
         if (!super.equals(o)) return false;
         Admin admin = (Admin) o;
         return forcePasswordReset == admin.forcePasswordReset &&
-                Objects.equals(role, admin.role) &&
                 Objects.equals(lastPasswordChange, admin.lastPasswordChange);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), role, forcePasswordReset, lastPasswordChange);
+        return Objects.hash(super.hashCode(), forcePasswordReset, lastPasswordChange);
     }
 
     @Override
     public String toString() {
         return "Admin{" +
                 "email='" + getEmail() + '\'' +
-
-                ", role='" + role + '\'' +
-
+                ", name='" + getFullName() + '\'' +
+                ", role='" + getRole() + '\'' +
+                ", isVerified=" + isActive() +
                 ", forcePasswordReset=" + forcePasswordReset +
                 ", lastPasswordChange=" + lastPasswordChange +
-
                 '}';
     }
 
