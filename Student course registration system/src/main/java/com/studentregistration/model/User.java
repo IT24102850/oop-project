@@ -11,11 +11,23 @@ public class User {
     private String fullName;
     private boolean active;
 
-    // Add the Constructors
+    // Default Constructor
     public User() {
         this.active = true;
     }
 
+    // Constructor for registration (matches Admin's needs)
+    public User(String email, String password, String fullName, String role, boolean isVerified) {
+        this();
+        this.email = email;
+        this.password = password;
+        this.fullName = fullName;
+        this.role = role;
+        this.active = isVerified;
+        this.username = email; // Assume email as username
+    }
+
+    // Existing Constructors
     public User(int id, String username, String password, String role) {
         this();
         this.id = id;
@@ -24,14 +36,13 @@ public class User {
         this.role = role;
     }
 
-    public User(int id, String username, String password, String role,
-                String email, String fullName) {
+    public User(int id, String username, String password, String role, String email, String fullName) {
         this(id, username, password, role);
         this.email = email;
         this.fullName = fullName;
     }
 
-    // Getters and Setters
+    // Getters and Setters (unchanged)
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
 
@@ -41,9 +52,7 @@ public class User {
     }
 
     public String getPassword() { return password; }
-    public void setPassword(String password) {
-        this.password = password;
-    }
+    public void setPassword(String password) { this.password = password; }
 
     public String getRole() { return role; }
     public void setRole(String role) {
@@ -70,7 +79,7 @@ public class User {
     public boolean isActive() { return active; }
     public void setActive(boolean active) { this.active = active; }
 
-    // Business Logic Methods
+    // Business Logic Methods (unchanged)
     public boolean hasPermission(String requiredPermission) {
         if ("admin".equals(role)) {
             return true;
@@ -78,7 +87,7 @@ public class User {
         return "student".equals(role) && !requiredPermission.startsWith("admin:");
     }
 
-    // File Storage Format
+    // File Storage Format (updated to include all fields)
     public String toFileString() {
         return String.format("%d|%s|%s|%s|%s|%s|%b",
                 id, username, password, role, email, fullName, active);
@@ -100,7 +109,7 @@ public class User {
         throw new IllegalArgumentException("Invalid user data format");
     }
 
-    // Overrides
+    // Overrides (unchanged)
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
