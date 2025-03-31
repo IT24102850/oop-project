@@ -416,7 +416,7 @@
 
             <!-- Course 1 -->
             <div class="course-card">
-                <img src="./images/course.png" alt="Introduction to Programming">
+                <img src="./images/course1.jpg" alt="Introduction to Programming">
                 <h3>Introduction to Programming</h3>
                 <p>Learn the basics of programming with Python.</p>
                 <a href="./courses/course1.jsp" class="btn-learn-more">Learn More</a>
