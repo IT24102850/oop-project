@@ -26,9 +26,7 @@ public class FileUtil {
     // Read all lines from a file
     public static List<String> readAllLines(String filePath) throws IOException {
         Path path = Paths.get(filePath);
-        if (!Files.exists(path)) {
-            return List.of(); // Return empty list if file doesn't exist
-        }
+
         return Files.readAllLines(path);
     }
 

@@ -17,7 +17,7 @@ public class RegistrationDAO {
 
     // C: Enroll student in multiple courses
     public boolean enrollStudent(String studentEmail, List<String> courseIds, String section) throws IOException {
-        if (!ValidationUtils.isValidEmail(studentEmail) {
+        if (!ValidationUtils.isValidEmail(studentEmail)) {
             return false;
         }
 

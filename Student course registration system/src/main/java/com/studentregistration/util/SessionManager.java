@@ -1,5 +1,6 @@
 package com.studentregistration.util;
 
+import com.studentregistration.model.Admin;
 import com.studentregistration.model.User;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -32,7 +33,6 @@ public class SessionManager {
             removeSession(sessionId);
             adminSessions.remove(email);
         }
-        // Additional logic for student sessions if needed
     }
 
     // Get all active admin sessions
@@ -43,6 +43,5 @@ public class SessionManager {
     // Force password reset by invalidating sessions
     public static void forcePasswordReset(String email) {
         invalidateUserSessions(email);
-        // Additional logic to mark password as needing reset
     }
 }
