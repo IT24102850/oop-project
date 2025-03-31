@@ -1,5 +1,7 @@
 package com.studentregistration.model;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
 public class User {
@@ -10,10 +12,15 @@ public class User {
     private String email;
     private String fullName;
     private boolean active;
+    private LocalDateTime lastLogin;
+
+    private static final DateTimeFormatter DATE_TIME_FORMATTER =
+            DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     // Default Constructor
     public User() {
         this.active = true;
+        this.lastLogin = null;
     }
 
     // Constructor for registration (matches Admin's needs)
@@ -42,7 +49,7 @@ public class User {
         this.fullName = fullName;
     }
 
-    // Getters and Setters (unchanged)
+    // Getters and Setters
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
 
@@ -56,7 +63,7 @@ public class User {
 
     public String getRole() { return role; }
     public void setRole(String role) {
-        if ("student".equalsIgnoreCase(role) || "admin".equalsIgnoreCase(role)) {
+        if ("student".equalsIgnoreCase(role) || "admin".equalsIgnoreCase(role) || "superadmin".equalsIgnoreCase(role)) {
             this.role = role.toLowerCase();
         } else {
             throw new IllegalArgumentException("Invalid role specified");
@@ -79,23 +86,33 @@ public class User {
     public boolean isActive() { return active; }
     public void setActive(boolean active) { this.active = active; }
 
-    // Business Logic Methods (unchanged)
+    public LocalDateTime getLastLogin() { return lastLogin; }
+    public void setLastLogin(LocalDateTime lastLogin) { this.lastLogin = lastLogin; }
+
+    // Business Logic Methods
     public boolean hasPermission(String requiredPermission) {
-        if ("admin".equals(role)) {
+        if ("admin".equals(role) || "superadmin".equals(role)) {
             return true;
         }
         return "student".equals(role) && !requiredPermission.startsWith("admin:");
     }
 
-    // File Storage Format (updated to include all fields)
+    // File Storage Format
     public String toFileString() {
-        return String.format("%d|%s|%s|%s|%s|%s|%b",
-                id, username, password, role, email, fullName, active);
+        return String.format("%d|%s|%s|%s|%s|%s|%b|%s",
+                id,
+                username,
+                password,
+                role,
+                email,
+                fullName,
+                active,
+                lastLogin != null ? lastLogin.format(DATE_TIME_FORMATTER) : "null");
     }
 
     public static User fromFileString(String fileLine) {
         String[] parts = fileLine.split("\\|");
-        if (parts.length >= 7) {
+        if (parts.length >= 8) {
             User user = new User();
             user.setId(Integer.parseInt(parts[0]));
             user.setUsername(parts[1]);
@@ -104,12 +121,16 @@ public class User {
             user.setEmail(parts[4]);
             user.setFullName(parts[5]);
             user.setActive(Boolean.parseBoolean(parts[6]));
+            if (!"null".equals(parts[7])) {
+                user.setLastLogin(LocalDateTime.parse(parts[7],
+                        DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+            }
             return user;
         }
         throw new IllegalArgumentException("Invalid user data format");
     }
 
-    // Overrides (unchanged)
+    // Overrides
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -134,6 +155,7 @@ public class User {
                 ", email='" + email + '\'' +
                 ", fullName='" + fullName + '\'' +
                 ", active=" + active +
+                ", lastLogin=" + lastLogin +
                 '}';
     }
 }
