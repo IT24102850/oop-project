@@ -1,43 +1,46 @@
-/* Data Science Specific Styles */
+/* Mobile App Specific Styles */
 .course-description h1 {
-    color: #00ffcc;
-    text-shadow: 0 0 10px var(--glow-color);
+    color: #ff6b6b;
+    text-shadow: 0 0 10px rgba(255, 107, 107, 0.4);
 }
 
 .enroll-button {
-    background: linear-gradient(135deg, #00ffcc 0%, #009acd 100%);
-    box-shadow: 0 0 15px rgba(0, 255, 204, 0.4);
+    background: linear-gradient(135deg, #ff6b6b 0%, #ff8e53 100%);
+    box-shadow: 0 0 15px rgba(255, 107, 107, 0.4);
 }
 
 .enroll-button:hover {
-    background: linear-gradient(135deg, #00e6b8 0%, #007ba7 100%);
+    background: linear-gradient(135deg, #e05555 0%, #e67e40 100%);
 }
 
 .instructor-item h3 {
-    color: #00ffcc;
+    color: #ff6b6b;
 }
 
 /* Course-specific additions */
-.data-science-features {
-    margin-top: 30px;
+.platform-badges {
+    display: flex;
+    gap: 15px;
+    margin: 20px 0;
 }
 
-.feature-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 20px;
-    margin-top: 20px;
-}
-
-.feature-card {
+.badge {
     background: #112240;
-    padding: 20px;
-    border-radius: 10px;
-    border-left: 4px solid #00ffcc;
+    padding: 10px 15px;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
-.feature-card i {
-    color: #00ffcc;
-    font-size: 1.5rem;
-    margin-bottom: 10px;
+.badge i {
+    font-size: 1.2rem;
+}
+
+.android-badge {
+    border-left: 4px solid #3ddc84;
+}
+
+.ios-badge {
+    border-left: 4px solid #007aff;
 }
