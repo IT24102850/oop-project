@@ -1,110 +1,141 @@
-// In src/main/java/com/studentregistration/dao/RegistrationDAO.java
+package com.studentregistration.dao;
+
+import com.studentregistration.model.Enrollment;
+import com.studentregistration.util.FileUtil;
+import com.studentregistration.util.ValidationUtils;
+import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class RegistrationDAO {
-    private static final String REGISTRATIONS_FILE = "registrations.txt";
-    private FileUtils fileUtils;
+    private static final String ENROLLMENT_FILE = "enrollments.txt";
+    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ISO_LOCAL_DATE;
+    private static final String DEADLINE = "2023-12-15"; // Example deadline
 
-    public RegistrationDAO() {
-        this.fileUtils = new FileUtils();
-    }
-
-    // Register a student for a course
-    public boolean registerStudentForCourse(Registration registration) {
-        try {
-            // Check if already registered
-            List<Registration> allRegistrations = getAllRegistrations();
-            boolean alreadyRegistered = allRegistrations.stream()
-                    .anyMatch(r -> r.getStudentId().equals(registration.getStudentId())
-                            && r.getCourseId().equals(registration.getCourseId()));
-
-            if (alreadyRegistered) {
-                return false;
-            }
-
-            // Append new registration to file
-            String registrationData = String.format("%s,%s,%s%n",
-                    registration.getStudentId(),
-                    registration.getCourseId(),
-                    registration.getRegistrationDate());
-
-            return fileUtils.appendToFile(REGISTRATIONS_FILE, registrationData);
-        } catch (IOException e) {
-            e.printStackTrace();
+    // C: Enroll student in multiple courses
+    public boolean enrollStudent(String studentEmail, List<String> courseIds, String section) throws IOException {
+        if (!ValidationUtils.isValidEmail(studentEmail) {
             return false;
         }
-    }
 
-    // Get all courses registered by a student
-    public List<Course> getRegisteredCourses(String studentId) {
-        List<Course> registeredCourses = new ArrayList<>();
-        CourseDAO courseDAO = new CourseDAO();
+        String enrollmentDate = LocalDate.now().format(DATE_FORMATTER);
+        List<Enrollment> existingEnrollments = getAllEnrollments();
 
-        try {
-            List<Registration> allRegistrations = getAllRegistrations();
-            for (Registration reg : allRegistrations) {
-                if (reg.getStudentId().equals(studentId)) {
-                    Course course = courseDAO.getCourseById(reg.getCourseId());
-                    if (course != null) {
-                        registeredCourses.add(course);
-                    }
-                }
+        for (String courseId : courseIds) {
+            // Check if already enrolled
+            boolean alreadyEnrolled = existingEnrollments.stream()
+                    .anyMatch(e -> e.getStudentEmail().equals(studentEmail)
+                            && e.getCourseId().equals(courseId));
+
+            if (alreadyEnrolled) {
+                continue; // Skip already enrolled courses
             }
-        } catch (IOException e) {
-            e.printStackTrace();
+
+            Enrollment enrollment = new Enrollment(
+                    studentEmail,
+                    courseId,
+                    section,
+                    enrollmentDate
+            );
+
+            FileUtil.writeToFile(ENROLLMENT_FILE, enrollment.toFileString(), true);
         }
-
-        return registeredCourses;
+        return true;
     }
 
-    // Drop a course for a student
-    public boolean dropCourse(String studentId, String courseId) {
-        try {
-            List<Registration> allRegistrations = getAllRegistrations();
-            List<Registration> updatedRegistrations = new ArrayList<>();
+    // R: View enrollment lists with student-course mapping
+    public List<Enrollment> getAllEnrollments() throws IOException {
+        List<String> enrollmentLines = FileUtil.readAllLines(ENROLLMENT_FILE);
+        List<Enrollment> enrollments = new ArrayList<>();
 
-            boolean found = false;
-            for (Registration reg : allRegistrations) {
-                if (!(reg.getStudentId().equals(studentId) && reg.getCourseId().equals(courseId))) {
-                    updatedRegistrations.add(reg);
-                } else {
-                    found = true;
-                }
-            }
-
-            if (found) {
-                // Rewrite the file with updated registrations
-                List<String> registrationLines = new ArrayList<>();
-                for (Registration reg : updatedRegistrations) {
-                    registrationLines.add(String.format("%s,%s,%s",
-                            reg.getStudentId(),
-                            reg.getCourseId(),
-                            reg.getRegistrationDate()));
-                }
-                return fileUtils.writeLinesToFile(REGISTRATIONS_FILE, registrationLines);
-            }
-            return false;
-        } catch (IOException e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
-
-    // Helper method to get all registrations
-    private List<Registration> getAllRegistrations() throws IOException {
-        List<String> lines = fileUtils.readLinesFromFile(REGISTRATIONS_FILE);
-        List<Registration> registrations = new ArrayList<>();
-
-        for (String line : lines) {
-            String[] parts = line.split(",");
-            if (parts.length >= 3) {
-                registrations.add(new Registration(
-                        parts[0].trim(),  // studentId
-                        parts[1].trim(),  // courseId
-                        parts[2].trim()   // registrationDate
+        for (String line : enrollmentLines) {
+            String[] parts = line.split("\\|");
+            if (parts.length >= 4) {
+                enrollments.add(new Enrollment(
+                        parts[0], // studentEmail
+                        parts[1], // courseId
+                        parts[2], // section
+                        parts[3]  // enrollmentDate
                 ));
             }
         }
+        return enrollments;
+    }
 
-        return registrations;
+    public List<Enrollment> getEnrollmentsByStudent(String studentEmail) throws IOException {
+        return getAllEnrollments().stream()
+                .filter(e -> e.getStudentEmail().equals(studentEmail))
+                .collect(Collectors.toList());
+    }
+
+    public List<Enrollment> getEnrollmentsByCourse(String courseId) throws IOException {
+        return getAllEnrollments().stream()
+                .filter(e -> e.getCourseId().equals(courseId))
+                .collect(Collectors.toList());
+    }
+
+    // U: Change student's course section
+    public boolean changeSection(String studentEmail, String courseId, String newSection) throws IOException {
+        List<Enrollment> enrollments = getAllEnrollments();
+        boolean updated = false;
+
+        for (Enrollment enrollment : enrollments) {
+            if (enrollment.getStudentEmail().equals(studentEmail)
+                    && enrollment.getCourseId().equals(courseId)) {
+                enrollment.setSection(newSection);
+                updated = true;
+                break;
+            }
+        }
+
+        if (updated) {
+            rewriteEnrollmentsFile(enrollments);
+            return true;
+        }
+        return false;
+    }
+
+    // D: Drop course enrollment before deadline
+    public boolean dropEnrollment(String studentEmail, String courseId) throws IOException {
+        if (LocalDate.now().isAfter(LocalDate.parse(DEADLINE))) {
+            return false; // Past deadline
+        }
+
+        List<Enrollment> enrollments = getAllEnrollments();
+        boolean removed = enrollments.removeIf(e ->
+                e.getStudentEmail().equals(studentEmail)
+                        && e.getCourseId().equals(courseId));
+
+        if (removed) {
+            rewriteEnrollmentsFile(enrollments);
+            return true;
+        }
+        return false;
+    }
+
+    // Helper method to rewrite entire enrollments file
+    private void rewriteEnrollmentsFile(List<Enrollment> enrollments) throws IOException {
+        List<String> lines = enrollments.stream()
+                .map(Enrollment::toFileString)
+                .collect(Collectors.toList());
+
+        FileUtil.rewriteFile(ENROLLMENT_FILE, lines);
+    }
+
+    // Check if student is enrolled in a course
+    public boolean isEnrolled(String studentEmail, String courseId) throws IOException {
+        return getAllEnrollments().stream()
+                .anyMatch(e -> e.getStudentEmail().equals(studentEmail)
+                        && e.getCourseId().equals(courseId));
+    }
+
+    // Get count of enrollments for a course
+    public int getEnrollmentCount(String courseId) throws IOException {
+        return (int) getAllEnrollments().stream()
+                .filter(e -> e.getCourseId().equals(courseId))
+                .count();
     }
 }
