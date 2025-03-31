@@ -1,3 +1,5 @@
+package com.studentregistration.dao;
+
 import com.studentregistration.model.FeeInvoice;
 import java.io.*;
 import java.time.LocalDate;
@@ -8,7 +10,6 @@ import java.util.UUID;
 public class FeeDAO {
     private static final String FILE_PATH = "src/main/resources/fee_invoices.txt";
 
-    // Create a new invoice
     public String createInvoice(FeeInvoice invoice) throws IOException {
         String invoiceId = "INV-" + UUID.randomUUID().toString().substring(0, 8);
         invoice.setInvoiceId(invoiceId);
@@ -19,7 +20,6 @@ public class FeeDAO {
         return invoiceId;
     }
 
-    // Get all invoices for a student
     public List<FeeInvoice> getInvoicesByStudent(String studentId) throws IOException {
         List<FeeInvoice> invoices = new ArrayList<>();
         try (BufferedReader reader = new BufferedReader(new FileReader(FILE_PATH))) {
@@ -34,7 +34,6 @@ public class FeeDAO {
         return invoices;
     }
 
-    // Helper method to convert invoice to file string
     private String invoiceToFileString(FeeInvoice invoice) {
         return String.join("|",
                 invoice.getInvoiceId(),
@@ -48,7 +47,6 @@ public class FeeDAO {
                 invoice.getDescription());
     }
 
-    // Helper method to parse invoice from file string
     private FeeInvoice parseInvoiceFromFile(String line) {
         String[] parts = line.split("\\|");
         FeeInvoice invoice = new FeeInvoice(
