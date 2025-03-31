@@ -13,7 +13,6 @@ public class FeeInvoice {
     private double lateFee;
     private String description;
 
-    // Constructor
     public FeeInvoice(String invoiceId, String studentId, double amount,
                       LocalDate issueDate, LocalDate dueDate, String description) {
         this.invoiceId = invoiceId;
@@ -27,7 +26,7 @@ public class FeeInvoice {
         this.lateFee = 0.0;
     }
 
-    // Getters and Setters
+    // Getters and setters
     public String getInvoiceId() { return invoiceId; }
     public String getStudentId() { return studentId; }
     public double getAmount() { return amount; }
@@ -41,6 +40,7 @@ public class FeeInvoice {
     public void setPaid(boolean paid) { isPaid = paid; }
     public void setVoided(boolean voided) { isVoided = voided; }
     public void setLateFee(double lateFee) { this.lateFee = lateFee; }
+    public void setInvoiceId(String invoiceId) { this.invoiceId = invoiceId; }
 
     public double getTotalAmount() {
         return amount + lateFee;

@@ -1,5 +1,3 @@
-package com.studentregistration.dao;
-
 import com.studentregistration.model.FeeInvoice;
 import java.io.*;
 import java.time.LocalDate;
@@ -36,50 +34,7 @@ public class FeeDAO {
         return invoices;
     }
 
-    // Apply late fee waiver
-    public void applyLateFeeWaiver(String invoiceId, double waiverAmount) throws IOException {
-        List<FeeInvoice> invoices = getAllInvoices();
-        for (FeeInvoice invoice : invoices) {
-            if (invoice.getInvoiceId().equals(invoiceId)) {
-                invoice.setLateFee(invoice.getLateFee() - waiverAmount);
-                break;
-            }
-        }
-        rewriteAllInvoices(invoices);
-    }
-
-    // Void an invoice
-    public void voidInvoice(String invoiceId) throws IOException {
-        List<FeeInvoice> invoices = getAllInvoices();
-        for (FeeInvoice invoice : invoices) {
-            if (invoice.getInvoiceId().equals(invoiceId)) {
-                invoice.setVoided(true);
-                break;
-            }
-        }
-        rewriteAllInvoices(invoices);
-    }
-
-    // Helper methods
-    private List<FeeInvoice> getAllInvoices() throws IOException {
-        List<FeeInvoice> invoices = new ArrayList<>();
-        try (BufferedReader reader = new BufferedReader(new FileReader(FILE_PATH))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                invoices.add(parseInvoiceFromFile(line));
-            }
-        }
-        return invoices;
-    }
-
-    private void rewriteAllInvoices(List<FeeInvoice> invoices) throws IOException {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_PATH))) {
-            for (FeeInvoice invoice : invoices) {
-                writer.write(invoiceToFileString(invoice) + "\n");
-            }
-        }
-    }
-
+    // Helper method to convert invoice to file string
     private String invoiceToFileString(FeeInvoice invoice) {
         return String.join("|",
                 invoice.getInvoiceId(),
@@ -93,6 +48,7 @@ public class FeeDAO {
                 invoice.getDescription());
     }
 
+    // Helper method to parse invoice from file string
     private FeeInvoice parseInvoiceFromFile(String line) {
         String[] parts = line.split("\\|");
         FeeInvoice invoice = new FeeInvoice(
