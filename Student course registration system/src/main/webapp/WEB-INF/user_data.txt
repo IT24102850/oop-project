@@ -4,3 +4,6 @@
 1743402100381|sandathi dahamsa|sadanthihuththi@gmail.com|pakayapakaya|student|true
 1743403609140|sajana|sajana@gmail.com|-1861353340|student|true|Mon Mar 31 12:16:49 IST 2025
 1743404793090|Hasiru Chamika|hasiru@gmail.com|1345019655|student|true|Mon Mar 31 12:36:33 IST 2025
+1743405315742|huththige putha|it24102850@my.sliit.lk|-578552654|student|true|Mon Mar 31 12:45:15 IST 2025
+1743407722261|miyuru miyuru|miyuru@gmail.com|miyuru|student|true
+1743409126914|theeksana prathapa|thiksan@gmail.com|123456|student|true
