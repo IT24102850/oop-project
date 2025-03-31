@@ -7,8 +7,9 @@ import javax.servlet.http.*;
 import javax.servlet.annotation.*;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.List;
 
-@WebServlet("/fee-management")  // Fixed: using double quotes and correct path
+@WebServlet("/fee-management")
 public class FeeManagementServlet extends HttpServlet {
     private FeeDAO feeDAO;
 
@@ -21,12 +22,35 @@ public class FeeManagementServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        // Your GET implementation here
+        String action = request.getParameter("action");
+        String studentId = request.getParameter("studentId");
+
+        try {
+            if ("view".equals(action) && studentId != null) {
+                List<FeeInvoice> invoices = feeDAO.getInvoicesByStudent(studentId);
+                request.setAttribute("invoices", invoices);
+                request.getRequestDispatcher("/jsp/viewPaymentHistory.jsp").forward(request, response);
+            }
+        } catch (IOException e) {
+            throw new ServletException("Error processing request", e);
+        }
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        // Your POST implementation here
+        String action = request.getParameter("action");
+
+        try {
+            if ("generate".equals(action)) {
+                // Implementation for generating invoices
+            } else if ("waiver".equals(action)) {
+                // Implementation for fee waivers
+            } else if ("void".equals(action)) {
+                // Implementation for voiding invoices
+            }
+        } catch (Exception e) {
+            throw new ServletException("Error processing request", e);
+        }
     }
 }
