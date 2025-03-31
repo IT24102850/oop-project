@@ -1,3 +1,6 @@
 Hasiru Chamika|Hasiru@gmail.com|123456
 Hasiru Chamika|Hasiru@gmail.com|qweqwe
 Hasiru Chamika|Hasiru@gmail.com|12341234
+1743396701461|hasiru chamika|mahinda@gmail.com|asdfg123|student|true
+1743396840717|hasiru chamika|mahindadd@gmail.com|123456|student|true
+1743397310619|tesan chathu|tesan@gmail.com|098765|student|true
