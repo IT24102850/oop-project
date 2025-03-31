@@ -1,206 +1,159 @@
+
+<%@ page import="java.io.*, java.util.*" %>
+<%@ page import="java.time.LocalDateTime" %>
+
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ page import="java.util.List" %>
+
+<%
+    // Handle form submission
+    if ("POST".equalsIgnoreCase(request.getMethod())) {
+        String name = request.getParameter("name");
+        String email = request.getParameter("email");
+        String password = request.getParameter("password");
+        String confirmPassword = request.getParameter("confirmPassword");
+
+        // Validation
+        List<String> errors = new ArrayList<>();
+
+        if (name == null || name.trim().isEmpty()) {
+            errors.add("Full name is required");
+        }
+
+        if (email == null || email.trim().isEmpty()) {
+            errors.add("Email is required");
+        } else if (!email.matches("^[\\w-.]+@([\\w-]+\\.)+[\\w-]{2,4}$")) {
+            errors.add("Invalid email format");
+        }
+
+        if (password == null || password.trim().isEmpty()) {
+            errors.add("Password is required");
+        } else if (password.length() < 6) {
+            errors.add("Password must be at least 6 characters");
+        } else if (!password.equals(confirmPassword)) {
+            errors.add("Passwords do not match");
+        }
+
+        // Check if email exists
+        if (errors.isEmpty() && emailExists(email)) {
+            errors.add("Email already registered");
+        }
+
+        // Save if no errors
+        if (errors.isEmpty()) {
+            if (saveUser(name, email, password)) {
+                response.sendRedirect("login.jsp?registration=success");
+                return;
+            } else {
+                errors.add("Registration failed. Please try again.");
+            }
+        }
+
+        // Show errors if any
+        request.setAttribute("errors", errors);
+        request.setAttribute("name", name);
+        request.setAttribute("email", email);
+    }
+%>
+
+<%!
+    private boolean emailExists(String email) {
+        File file = new File("user_data.txt");
+        if (!file.exists()) return false;
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split("\\|");
+                if (parts.length > 2 && parts[1].equalsIgnoreCase(email)) {
+                    return true;
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    private boolean saveUser(String name, String email, String password) {
+        try {
+            File file = new File("user_data.txt");
+            if (!file.exists()) {
+                file.createNewFile();
+            }
+
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(file, true))) {
+                String userData = String.join("|",
+                        UUID.randomUUID().toString(), // Generate unique ID
+                        email,
+                        name,
+                        password,
+                        "student",
+                        LocalDateTime.now().toString()
+                );
+                writer.write(userData);
+                writer.newLine();
+                return true;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+%>
+
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Sign Up - Student Registration</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>Register</title>
     <style>
-        :root {
-            --primary: #4361ee;
-            --secondary: #3f37c9;
-            --accent: #4895ef;
-            --light: #f8f9fa;
-            --dark: #212529;
-            --success: #4cc9f0;
-            --danger: #f72585;
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        body {
-            font-family: 'Segoe UI', system-ui, sans-serif;
-            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
-            color: var(--light);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
-
-        .signup-container {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
-            border: 1px solid rgba(255, 255, 255, 0.18);
-            width: 100%;
-            max-width: 450px;
-            padding: 40px;
-            transition: all 0.3s ease;
-        }
-
-        h2 {
-            text-align: center;
-            margin-bottom: 20px;
-            font-size: 2rem;
-            background: linear-gradient(to right, var(--accent), var(--success));
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-        }
-
-        .error-message {
-            background: rgba(247, 37, 133, 0.2);
-            color: var(--light);
-            padding: 15px;
-            border-radius: 10px;
-            margin-bottom: 25px;
-            text-align: center;
-            border-left: 4px solid var(--danger);
-        }
-
-        .form-group {
-            margin-bottom: 25px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 500;
-            color: rgba(255, 255, 255, 0.8);
-        }
-
-        input[type="text"],
-        input[type="email"],
-        input[type="password"] {
-            width: 100%;
-            padding: 15px;
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 10px;
-            color: var(--light);
-            font-size: 1rem;
-            transition: all 0.3s;
-        }
-
-        input:focus {
-            outline: none;
-            border-color: var(--accent);
-            box-shadow: 0 0 0 3px rgba(72, 149, 239, 0.3);
-        }
-
-        .btn-signup {
-            width: 100%;
-            padding: 15px;
-            background: linear-gradient(to right, var(--primary), var(--secondary));
-            color: white;
-            border: none;
-            border-radius: 10px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-top: 10px;
-        }
-
-        .btn-signup:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(67, 97, 238, 0.4);
-        }
-
-        .auth-links {
-            margin-top: 20px;
-            text-align: center;
-        }
-
-        .auth-links a {
-            color: var(--accent);
-            text-decoration: none;
-            font-size: 0.9rem;
-            transition: all 0.2s;
-        }
-
-        .auth-links a:hover {
-            text-decoration: underline;
-        }
+        body { font-family: Arial, sans-serif; margin: 0; padding: 20px; }
+        .container { max-width: 500px; margin: 0 auto; padding: 20px; border: 1px solid #ddd; border-radius: 5px; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; }
+        input { width: 100%; padding: 8px; box-sizing: border-box; }
+        .error { color: red; margin-bottom: 15px; }
+        button { background: #4CAF50; color: white; border: none; padding: 10px; width: 100%; cursor: pointer; }
     </style>
 </head>
 <body>
-<div class="signup-container">
-    <h2>Create Account</h2>
+<div class="container">
+    <h2>Register</h2>
 
-    <%-- Display errors --%>
     <% if (request.getAttribute("errors") != null) { %>
-    <div class="error-message">
-        <ul style="list-style: none; padding: 0;">
-            <%
-                List<String> errors = (List<String>) request.getAttribute("errors");
-                for (String error : errors) {
-            %>
-            <li><i class="fas fa-exclamation-circle"></i> <%= error %></li>
+    <div class="error">
+        <ul>
+            <% for (String error : (List<String>) request.getAttribute("errors")) { %>
+            <li><%= error %></li>
             <% } %>
         </ul>
     </div>
     <% } %>
 
-    <form action="signup" method="post">
+    <form method="post">
         <div class="form-group">
-            <label for="fullName"><i class="fas fa-user"></i> Full Name</label>
-            <input type="text" id="fullName" name="fullName"
-                   value="<%= request.getAttribute("fullName") != null ? request.getAttribute("fullName") : "" %>"
-                   placeholder="Enter your full name" required>
+            <label>Full Name:</label>
+            <input type="text" name="name" value="<%= request.getAttribute("name") != null ? request.getAttribute("name") : "" %>" required>
         </div>
 
         <div class="form-group">
-            <label for="email"><i class="fas fa-envelope"></i> Email</label>
-            <input type="email" id="email" name="email"
-                   value="<%= request.getAttribute("email") != null ? request.getAttribute("email") : "" %>"
-                   placeholder="Enter your email" required>
+            <label>Email:</label>
+            <input type="email" name="email" value="<%= request.getAttribute("email") != null ? request.getAttribute("email") : "" %>" required>
         </div>
 
         <div class="form-group">
-            <label for="password"><i class="fas fa-lock"></i> Password (min 8 characters)</label>
-            <input type="password" id="password" name="password"
-                   placeholder="Enter your password" required minlength="8">
+            <label>Password (min 6 characters):</label>
+            <input type="password" name="password" minlength="6" required>
         </div>
 
         <div class="form-group">
-            <label for="confirmPassword"><i class="fas fa-lock"></i> Confirm Password</label>
-            <input type="password" id="confirmPassword" name="confirmPassword"
-                   placeholder="Confirm your password" required minlength="8">
+            <label>Confirm Password:</label>
+            <input type="password" name="confirmPassword" minlength="6" required>
         </div>
 
-        <button type="submit" class="btn-signup">
-            <i class="fas fa-user-plus"></i> Sign Up
-        </button>
+        <button type="submit">Register</button>
     </form>
 
-    <div class="auth-links">
-        Already have an account? <a href="login.jsp"><i class="fas fa-sign-in-alt"></i> Login</a>
-    </div>
+    <p>Already have an account? <a href="login.jsp">Login here</a></p>
 </div>
-
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Client-side password validation
-        document.querySelector('form').addEventListener('submit', function(e) {
-            const password = document.getElementById('password').value;
-            const confirmPassword = document.getElementById('confirmPassword').value;
-
-            if (password !== confirmPassword) {
-                e.preventDefault();
-                alert('Passwords do not match!');
-            }
-        });
-    });
-</script>
 </body>
 </html>
