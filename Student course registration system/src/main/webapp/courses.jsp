@@ -419,7 +419,7 @@
                 <img src="./images/course1.jpg" alt="Introduction to Programming">
                 <h3>Introduction to Programming</h3>
                 <p>Learn the basics of programming with Python.</p>
-                <a href="./courses/course1.jsp" class="btn-learn-more">Learn More</a>
+                <a href="./courses/course1.html" class="btn-learn-more">Learn More</a>
             </div>
 
             <!-- Course 2 -->
@@ -427,7 +427,7 @@
                 <img src="./images/course2.jpg" alt="Web Development">
                 <h3>Web Development</h3>
                 <p>Master HTML, CSS, and JavaScript to build modern websites.</p>
-                <a href="./courses/course2.jsp" class="btn-learn-more">Learn More</a>
+                <a href="./courses/course2.html" class="btn-learn-more">Learn More</a>
             </div>
 
             <!-- Course 3 -->
@@ -435,7 +435,7 @@
                 <img src="./images/course3.jpg" alt="Data Science">
                 <h3>Data Science</h3>
                 <p>Explore data analysis and machine learning techniques.</p>
-                <a href="./courses/course3.jsp" class="btn-learn-more">Learn More</a>
+                <a href="./courses/course3.html" class="btn-learn-more">Learn More</a>
             </div>
 
             <!-- Course 4 -->
@@ -443,7 +443,7 @@
                 <img src="./images/course4.jpg" alt="Mobile App Development">
                 <h3>Mobile App Development</h3>
                 <p>Build cross-platform mobile apps using Flutter.</p>
-                <a href="./courses/course4.jsp" class="btn-learn-more">Learn More</a>
+                <a href="./courses/course4.html" class="btn-learn-more">Learn More</a>
             </div>
 
             <!-- Course 5 -->
@@ -451,7 +451,7 @@
                 <img src="./images/course5.jpg" alt="Cybersecurity">
                 <h3>Cybersecurity</h3>
                 <p>Understand security fundamentals and ethical hacking.</p>
-                <a href="./courses/course5.jsp" class="btn-learn-more">Learn More</a>
+                <a href="./courses/course5.html" class="btn-learn-more">Learn More</a>
             </div>
 
             <!-- Course 6 -->
@@ -459,7 +459,7 @@
                 <img src="./images/course6.jpg" alt="AI & Machine Learning">
                 <h3>AI & Machine Learning</h3>
                 <p>Learn artificial intelligence and machine learning concepts.</p>
-                <a href="./courses/course6.jsp" class="btn-learn-more">Learn More</a>
+                <a href="./courses/course6.html" class="btn-learn-more">Learn More</a>
             </div>
         </div>
     </div>
