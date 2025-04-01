@@ -1,11 +1,5 @@
 package com.studentregistration.servlets;
 
-
-
-
-
-
-
 import dao.ReviewDAO;
 import model.Review;
 import javax.servlet.*;
