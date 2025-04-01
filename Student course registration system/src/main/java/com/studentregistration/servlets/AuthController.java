@@ -68,6 +68,10 @@ public class AuthController extends HttpServlet {
         }
     }
 
+
+
+
+    
     private void handleLogin(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String username = request.getParameter("username");
