@@ -19,6 +19,8 @@
   </tbody>
 </table>
 
+
+
 <c:if test="${empty students}">
   <p class="no-results">No students found matching your search.</p>
 </c:if>
