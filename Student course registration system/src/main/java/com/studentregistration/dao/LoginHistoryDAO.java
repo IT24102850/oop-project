@@ -1,6 +1,5 @@
 package com.studentregistration.dao;
 
-package dao;
 
 import model.LoginHistory;
 import java.io.*;

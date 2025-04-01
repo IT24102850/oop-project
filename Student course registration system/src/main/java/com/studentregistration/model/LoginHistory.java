@@ -1,7 +1,5 @@
 package com.studentregistration.model;
 
-package model;
-
 import java.time.LocalDateTime;
 
 public class LoginHistory {
