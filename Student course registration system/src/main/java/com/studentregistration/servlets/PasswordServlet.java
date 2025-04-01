@@ -1,7 +1,5 @@
 package com.studentregistration.servlets;
 
-package controller;
-
 import java.io.*;
 import javax.servlet.*;
 import javax.servlet.http.*;

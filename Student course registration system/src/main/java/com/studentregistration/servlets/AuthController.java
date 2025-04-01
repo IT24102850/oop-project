@@ -1,12 +1,9 @@
 package com.studentregistration.servlets;
 
-package controller;
-
 import java.io.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
 import javax.servlet.annotation.*;
-
 
 
 
@@ -70,6 +67,10 @@ public class AuthController extends HttpServlet {
             request.getRequestDispatcher("/auth/register.jsp").forward(request, response);
         }
     }
+
+
+
+
 
     private void handleLogin(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
