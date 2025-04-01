@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 package com.studentregistration.dao;
 
 import com.studentregistration.model.Enrollment;
@@ -143,3 +144,5 @@ public class RegistrationDAO
                 .count();
     }
 }
+=======
+>>>>>>> Stashed changes
