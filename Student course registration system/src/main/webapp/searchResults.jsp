@@ -10,6 +10,8 @@
         </tr>
     </thead>
     <tbody>
+
+
         <c:forEach items="${students}" var="student">
             <tr>
                 <td>${student.id}</td>
