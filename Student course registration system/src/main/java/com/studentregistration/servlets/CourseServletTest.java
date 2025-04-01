@@ -1,8 +1,6 @@
 package com.studentregistration.servlets;
 
 
-
-
 import com.studentregistration.dao.CourseDAO;
 import com.studentregistration.dao.RegistrationDAO;
 import com.studentregistration.model.Course;
