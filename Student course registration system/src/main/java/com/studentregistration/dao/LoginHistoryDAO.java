@@ -1,6 +1,5 @@
 package com.studentregistration.dao;
 
-
 import model.LoginHistory;
 import java.io.*;
 import java.time.LocalDateTime;
@@ -79,8 +78,7 @@ public class LoginHistoryDAO {
             System.err.println("Error reading login history for cleanup: " + e.getMessage());
             return;
         }
-
-        // Write back only recent entries
+        
         try (PrintWriter out = new PrintWriter(new FileWriter(LOGIN_HISTORY_FILE))) {
             for (LoginHistory entry : recentEntries) {
                 out.println(entry.toFileString());
