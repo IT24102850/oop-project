@@ -1,8 +1,6 @@
 <component name="ArtifactManager">
   <artifact type="exploded-war" name="oop-project">
     <output-path>$PROJECT_DIR$/out/artifacts/oop_project</output-path>
-    <root id="root">
-      <element id="module-output" name="student-registration" />
-    </root>
+    <root id="root" />
   </artifact>
 </component>
