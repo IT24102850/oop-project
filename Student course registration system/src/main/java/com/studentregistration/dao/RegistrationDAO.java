@@ -1,3 +1,5 @@
+<<<<<<< HEAD
+=======
 package com.studentregistration.dao;
 
 import com.studentregistration.model.Enrollment;
@@ -129,3 +131,4 @@ public class RegistrationDAO {
                 .count();
     }
 }
+>>>>>>> 60f458afda4a71222b83ad72ddb8665a3a58505b
