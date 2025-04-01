@@ -4,5 +4,5 @@
         <input type="text" name="search" placeholder="Search by ID, Name or Department">
         <button type="submit">Search</button>
     </div>
-    
+
 </form>
