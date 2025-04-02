@@ -25,7 +25,7 @@
             --box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
             --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             --success-color: #00ff88;
-            --warning-color: #ffaa00;
+            --warning-color: #00c6fb;
         }
 
         * {
@@ -696,7 +696,7 @@
 
 
 
-        
+
     });
 </script>
 </body>
