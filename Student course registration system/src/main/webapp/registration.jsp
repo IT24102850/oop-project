@@ -468,28 +468,29 @@
     </div>
 
     <!-- Standard Enrollment Form -->
-    <div class="form-section active" id="standardForm">
+    <form action="register" method="post" id="standardForm" class="form-section active">
+        <input type="hidden" name="action" value="payment">
         <div>
             <div class="input-holofield">
                 <label for="fullName">Full Name</label>
-                <input type="text" id="fullName" class="holo-input" placeholder="Enter your full name">
+                <input type="text" id="fullName" name="fullName" class="holo-input" placeholder="Enter your full name" required>
             </div>
 
             <div class="input-holofield">
                 <label for="email">Email Address</label>
-                <input type="email" id="email" class="holo-input" placeholder="Enter your email">
+                <input type="email" id="email" name="email" class="holo-input" placeholder="Enter your email" required>
             </div>
 
             <div class="input-holofield">
                 <label for="userId">User ID</label>
-                <input type="text" id="userId" class="holo-input" placeholder="Enter your user ID">
+                <input type="text" id="userId" name="userId" class="holo-input" placeholder="Enter your user ID" required>
             </div>
         </div>
 
         <div>
             <div class="input-holofield">
                 <label for="courseSelect">Select Course</label>
-                <select id="courseSelect" class="holo-input">
+                <select id="courseSelect" name="courseSelect" class="holo-input" required>
                     <option value="299">Web Development ($299)</option>
                     <option value="399">Data Science ($399)</option>
                     <option value="499">Cyber Security ($499)</option>
@@ -513,52 +514,54 @@
                 <label>Payment Method</label>
                 <div class="payment-methods">
                     <label class="payment-method">
-                        <input type="radio" name="payment" checked>
+                        <input type="radio" name="paymentMethod" value="Credit Card" checked>
                         <i class="fab fa-cc-visa payment-icon"></i>
                         <span class="payment-label">Credit/Debit Card</span>
                     </label>
                     <label class="payment-method">
-                        <input type="radio" name="payment">
+                        <input type="radio" name="paymentMethod" value="PayPal">
                         <i class="fab fa-paypal payment-icon"></i>
                         <span class="payment-label">PayPal</span>
                     </label>
                     <label class="payment-method">
-                        <input type="radio" name="payment">
+                        <input type="radio" name="paymentMethod" value="Bank Transfer">
                         <i class="fas fa-university payment-icon"></i>
                         <span class="payment-label">Bank Transfer</span>
                     </label>
                 </div>
             </div>
 
-            <button class="submit-button">
+            <input type="hidden" name="amount" id="courseAmount" value="299">
+            <button type="submit" class="submit-button">
                 <i class="fas fa-rocket"></i> Confirm Enrollment
             </button>
         </div>
-    </div>
+    </form>
 
     <!-- Late Fee Application Form -->
-    <div class="form-section" id="lateFeeForm">
+    <form action="register" method="post" id="lateFeeForm" class="form-section">
+        <input type="hidden" name="action" value="latefee">
         <div>
             <div class="input-holofield">
                 <label for="lateFullName">Full Name</label>
-                <input type="text" id="lateFullName" class="holo-input" placeholder="Enter your full name">
+                <input type="text" id="lateFullName" name="fullName" class="holo-input" placeholder="Enter your full name" required>
             </div>
 
             <div class="input-holofield">
                 <label for="lateEmail">Email Address</label>
-                <input type="email" id="lateEmail" class="holo-input" placeholder="Enter your email">
+                <input type="email" id="lateEmail" name="email" class="holo-input" placeholder="Enter your email" required>
             </div>
 
             <div class="input-holofield">
                 <label for="lateUserId">User ID</label>
-                <input type="text" id="lateUserId" class="holo-input" placeholder="Enter your user ID">
+                <input type="text" id="lateUserId" name="userId" class="holo-input" placeholder="Enter your user ID" required>
             </div>
         </div>
 
         <div>
             <div class="input-holofield">
                 <label for="lateCourseSelect">Select Course</label>
-                <select id="lateCourseSelect" class="holo-input">
+                <select id="lateCourseSelect" name="courseSelect" class="holo-input" required>
                     <option value="299">Web Development ($299)</option>
                     <option value="399">Data Science ($399)</option>
                     <option value="499">Cyber Security ($499)</option>
@@ -589,14 +592,16 @@
 
             <div class="input-holofield">
                 <label for="lateReason">Reason for Late Fee</label>
-                <textarea id="lateReason" class="holo-input" rows="4" placeholder="Please explain your reason for applying after the deadline..."></textarea>
+                <textarea id="lateReason" name="lateReason" class="holo-input" rows="4"
+                          placeholder="Please explain your reason for applying after the deadline..." required></textarea>
             </div>
 
-            <button class="submit-button">
+            <input type="hidden" name="amount" value="349">
+            <button type="submit" class="submit-button">
                 <i class="fas fa-paper-plane"></i> Submit Application
             </button>
         </div>
-    </div>
+    </form>
 </div>
 
 <script>
@@ -625,11 +630,13 @@
     const courseSelect = document.getElementById('courseSelect');
     const courseFee = document.getElementById('courseFee');
     const totalFee = document.getElementById('totalFee');
+    const courseAmount = document.getElementById('courseAmount');
 
     function updateStandardPrices() {
         const price = courseSelect.value;
         courseFee.textContent = `$${price}.00`;
         totalFee.textContent = `$${price}.00`;
+        courseAmount.value = price;
     }
 
     courseSelect.addEventListener('change', updateStandardPrices);
@@ -655,48 +662,21 @@
     updateLateFeePrices();
 
     // Form submission handling
-    document.querySelectorAll('.submit-button').forEach(button => {
-        button.addEventListener('click', function() {
-            // Add form submission logic here
-            this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+    document.querySelectorAll('form').forEach(form => {
+        form.addEventListener('submit', function(e) {
+            const button = this.querySelector('.submit-button');
+            button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+            button.disabled = true;
 
-            // Simulate form submission
-            setTimeout(() => {
-                this.innerHTML = this.classList.contains('success') ?
-                    '<i class="fas fa-check"></i> Success!' :
-                    '<i class="fas fa-rocket"></i> Confirm Enrollment';
-
-                if (!this.classList.contains('success')) {
-                    this.classList.add('success');
-                    this.innerHTML = '<i class="fas fa-check"></i> Success!';
-
-                    // Create a success message
-                    const successMessage = document.createElement('div');
-                    successMessage.className = 'status-indicator';
-                    successMessage.innerHTML = `
-                        <i class="fas fa-check-circle status-icon"></i>
-                        <span class="status-text">Application submitted successfully!</span>
-                    `;
-
-                    this.parentNode.insertBefore(successMessage, this);
-
-                    // Reset after 3 seconds
-                    setTimeout(() => {
-                        this.classList.remove('success');
-                        this.innerHTML = this === document.querySelector('#standardForm .submit-button') ?
-                            '<i class="fas fa-rocket"></i> Confirm Enrollment' :
-                            '<i class="fas fa-paper-plane"></i> Submit Application';
-                        if (successMessage.parentNode) {
-                            successMessage.parentNode.removeChild(successMessage);
-                        }
-                    }, 3000);
-                }
-            }, 1500);
+            // Optional: Add client-side validation here
+            if (!this.checkValidity()) {
+                e.preventDefault();
+                button.innerHTML = this.id === 'standardForm'
+                    ? '<i class="fas fa-rocket"></i> Confirm Enrollment'
+                    : '<i class="fas fa-paper-plane"></i> Submit Application';
+                button.disabled = false;
+            }
         });
-
-
-
-
     });
 </script>
 </body>
