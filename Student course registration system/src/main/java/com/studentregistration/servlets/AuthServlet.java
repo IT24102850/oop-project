@@ -15,7 +15,7 @@ public class AuthServlet extends HttpServlet {
 
 
 
-        
+
         String username = request.getParameter("username");
         String password = request.getParameter("password");
         String userType = request.getParameter("userType");

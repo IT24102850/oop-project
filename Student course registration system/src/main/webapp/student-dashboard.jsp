@@ -894,6 +894,12 @@
         </div>
     </section>
 
+
+
+
+
+
+
     <!-- My Courses Section -->
     <section id="courses" class="content-section">
         <div class="dashboard-header">
@@ -1030,6 +1036,12 @@
             </div>
         </div>
     </section>
+
+
+
+
+
+
 
     <!-- Grades Section -->
     <section id="grades" class="content-section">
