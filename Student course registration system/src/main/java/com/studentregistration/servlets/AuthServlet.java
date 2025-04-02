@@ -23,7 +23,7 @@ public class AuthServlet extends HttpServlet {
             session.setAttribute("userType", userType);
 
             if ("admin".equals(userType)) {
-                response.sendRedirect(request.getContextPath() + "/admin/dashboard.jsp");
+                response.sendRedirect(request.getContextPath() + "/admin-dashboard.jsp");
             } else {
                 response.sendRedirect(request.getContextPath() + "/courses.jsp");
             }
