@@ -25,7 +25,7 @@ public class AuthServlet extends HttpServlet {
             if ("admin".equals(userType)) {
                 response.sendRedirect(request.getContextPath() + "/admin-dashboard.jsp");
             } else {
-                response.sendRedirect(request.getContextPath() + "/courses.jsp");
+                response.sendRedirect(request.getContextPath() + "/student-dashboard.jsp");
             }
         } else {
             request.setAttribute("error", "Invalid username or password");
