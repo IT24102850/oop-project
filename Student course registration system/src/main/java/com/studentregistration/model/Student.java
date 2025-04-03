@@ -6,7 +6,6 @@ public class Student {
     private String email;
     private String fullName;
 
-    //
     // Use the Getters and Setters
     public String getUsername() { return username; }
     public void setUsername(String username) { this.username = username; }

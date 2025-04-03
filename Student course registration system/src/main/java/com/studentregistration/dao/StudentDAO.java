@@ -57,7 +57,6 @@ public class StudentDAO {
                 .orElse(null);
     }
 
-
     public boolean registerStudent(Student student) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(STUDENT_FILE, true))) {
             writer.write(student.getUsername() + ":" + student.getPassword() + ":"
