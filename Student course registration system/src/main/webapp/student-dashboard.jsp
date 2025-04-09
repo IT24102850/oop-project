@@ -4,6 +4,9 @@
 <html lang="en">
 <head>
 
+
+
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NexoraSkill | Student Dashboard</title>
@@ -688,7 +691,8 @@
 <div class="sidebar">
     <div class="logo">NexoraSkill</div>
 
-    <div class="user-profile">
+
+    <div class="user-profile" onclick="window.location.href='profile.jsp';" style="cursor: pointer;">
         <div class="user-avatar">JD</div>
         <div class="user-info">
             <h3>John Doe</h3>
