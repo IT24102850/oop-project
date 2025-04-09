@@ -16,7 +16,7 @@ public class FileHandler {
     public static synchronized void savePayment(ServletContext context, String studentId,
                                                 String courseId, double amount, String paymentMethod) {
         String filePath = context.getRealPath(DATA_DIR + "payment_data.txt");
-        String record = String.format("%s\t %s\t %.2f \t %s \t %s\n",
+        String record = String.format("%s|%s|%.2f|%s|%s%n",
                 studentId, courseId, amount, paymentMethod,
                 LocalDateTime.now().format(formatter));
 
