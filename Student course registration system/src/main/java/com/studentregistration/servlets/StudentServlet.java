@@ -24,8 +24,8 @@ public class StudentServlet extends HttpServlet {
             throws ServletException, IOException {
 
         HttpSession session = request.getSession(false);
-        if (session == null || session.getAttribute("username") == null) {
-            response.sendRedirect(request.getContextPath() + "/jsp/logIn.jsp");
+        if (session == null || session.getAttribute("email") == null) { // Changed from username to email
+            response.sendRedirect(request.getContextPath() + "/logIn.jsp");
             return;
         }
 
@@ -51,8 +51,8 @@ public class StudentServlet extends HttpServlet {
             throws ServletException, IOException {
 
         HttpSession session = request.getSession(false);
-        if (session == null || session.getAttribute("username") == null) {
-            response.sendRedirect(request.getContextPath() + "/jsp/logIn.jsp");
+        if (session == null || session.getAttribute("email") == null) { // Changed from username to email
+            response.sendRedirect(request.getContextPath() + "/logIn.jsp");
             return;
         }
 
@@ -76,33 +76,33 @@ public class StudentServlet extends HttpServlet {
 
     private void listCourses(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        // Implementation to list available courses
-        request.getRequestDispatcher("/jsp/courses.jsp").forward(request, response);
+        request.getRequestDispatcher("/courses.jsp").forward(request, response);
     }
 
     private void viewProfile(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String username = (String) request.getSession().getAttribute("username");
-        Student student = studentDao.getStudentByUsername(username);
+        String email = (String) request.getSession().getAttribute("email"); // Changed from username to email
+        Student student = studentDao.getStudentByEmail(email); // Changed method call
         request.setAttribute("student", student);
-        request.getRequestDispatcher("/jsp/student-profile.jsp").forward(request, response);
+        request.getRequestDispatcher("/student-profile.jsp").forward(request, response);
     }
 
     private void showEditForm(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String username = (String) request.getSession().getAttribute("username");
-        Student student = studentDao.getStudentByUsername(username);
+        String email = (String) request.getSession().getAttribute("email"); // Changed from username to email
+        Student student = studentDao.getStudentByEmail(email); // Changed method call
         request.setAttribute("student", student);
-        request.getRequestDispatcher("/jsp/edit-profile.jsp").forward(request, response);
+        request.getRequestDispatcher("/edit-profile.jsp").forward(request, response);
     }
 
     private void updateProfile(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String username = (String) request.getSession().getAttribute("username");
-        Student student = studentDao.getStudentByUsername(username);
+        String email = (String) request.getSession().getAttribute("email"); // Changed from username to email
+        Student student = studentDao.getStudentByEmail(email); // Changed method call
 
+        // Update student details
         student.setEmail(request.getParameter("email"));
-        student.setFullName(request.getParameter("fullName"));
+        student.setFullName(request.getParameter("fullName")); // Changed from setFullName to setName
 
         // Password change logic
         String newPassword = request.getParameter("password");
@@ -110,16 +110,19 @@ public class StudentServlet extends HttpServlet {
             student.setPassword(newPassword);
         }
 
+        // TODO: Add code to actually update the student in the database/file
+        // studentDao.updateStudent(student);
 
+        response.sendRedirect(request.getContextPath() + "/student?action=view");
     }
 
     private void registerCourse(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String username = (String) request.getSession().getAttribute("username");
+        String email = (String) request.getSession().getAttribute("email"); // Changed from username to email
         String courseId = request.getParameter("courseId");
 
         // Implementation to register course would go here
-        // studentDao.registerCourse(username, courseId);
+        // studentDao.registerCourse(email, courseId);
 
         request.setAttribute("message", "Course registered successfully!");
         listCourses(request, response);
