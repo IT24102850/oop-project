@@ -4,9 +4,6 @@
 <html lang="en">
 <head>
 
-
-
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NexoraSkill | Student Dashboard</title>
@@ -691,19 +688,13 @@
 <div class="sidebar">
     <div class="logo">NexoraSkill</div>
 
-
-    <li class="nav-item">
-        <a href="profile.jsp" class="nav-link">
-            <div class="user-profile">
-                <div class="user-avatar">JD</div>
-                <div class="user-info">
-                    <h3>John Doe</h3>
-                    <p>Computer Science</p>
-                </div>
-            </div>
-        </a>
-    </li>
-
+    <div class="user-profile">
+        <div class="user-avatar">JD</div>
+        <div class="user-info">
+            <h3>John Doe</h3>
+            <p>Computer Science</p>
+        </div>
+    </div>
 
     <ul class="nav-menu">
         <li class="nav-item">
@@ -741,39 +732,7 @@
 </div>
 
 <!-- Main Content -->
-
-<!-- Profile Section -->
-<section id="profile" class="content-section">
-    <div class="profile-header">
-        <div class="user-info">
-            <h1>John Doe</h1>
-            <p>Software Engineering Undergraduate | SLIIT</p>
-        </div>
-
-        <div class="profile-actions">
-            <button class="btn btn-outline">
-                <i class="fas fa-edit"></i> Edit Profile
-            </button>
-            <button class="btn btn-outline">
-                <i class="fas fa-sign-out-alt"></i> Logout
-            </button>
-        </div>
-    </div>
-
-    <div class="profile-details">
-        <h2>Personal Information</h2>
-        <ul>
-            <li><strong>Email:</strong> john.doe@example.com</li>
-            <li><strong>Phone:</strong> +94 77 123 4567</li>
-            <li><strong>Location:</strong> Colombo, Sri Lanka</li>
-            <li><strong>Member Since:</strong> January 2024</li>
-        </ul>
-    </div>
-</section>
-
-
 <div class="main-content">
-
     <!-- Dashboard Section -->
     <section id="dashboard" class="content-section active">
         <div class="dashboard-header">

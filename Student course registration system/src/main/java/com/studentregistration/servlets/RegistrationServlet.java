@@ -1,5 +1,3 @@
-<<<<<<< HEAD
-=======
 package com.studentregistration.servlets;
 
 import com.studentregistration.util.FileHandler;
@@ -40,4 +38,3 @@ public class RegistrationServlet extends HttpServlet {
         }
     }
 }
->>>>>>> 371633be2d62f4b187038b8cd48de0e1c5b353ce
