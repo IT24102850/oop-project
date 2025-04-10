@@ -688,6 +688,7 @@
 <div class="sidebar">
     <div class="logo">NexoraSkill</div>
 
+<<<<<<< HEAD
     <div class="user-profile">
         <div class="user-avatar">JD</div>
         <div class="user-info">
@@ -695,6 +696,16 @@
             <p>Computer Science</p>
         </div>
     </div>
+=======
+
+    <!-- Add this to the navigation menu -->
+    <li class="nav-item">
+        <a href="#" class="nav-link" data-section="profile">
+            <i class="fas fa-user"></i> <span>Profile</span>
+        </a>
+    </li>
+
+>>>>>>> 46e1e2b8d8f122b0013b218def02e97058748a75
 
     <ul class="nav-menu">
         <li class="nav-item">
@@ -732,7 +743,115 @@
 </div>
 
 <!-- Main Content -->
+<<<<<<< HEAD
 <div class="main-content">
+=======
+
+
+
+
+<div class="main-content">
+    <!-- Profile Section -->
+    <section id="profile" class="content-section">
+        <div class="dashboard-header">
+            <div class="greeting">
+                <h1>Student Profile</h1>
+                <p>Manage your personal information and account settings</p>
+            </div>
+        </div>
+
+        <div class="profile-container">
+            <div class="profile-card">
+                <div class="profile-header">
+                    <div class="user-avatar-large">
+                        <img src="https://via.placeholder.com/150" alt="Profile Picture">
+                        <button class="btn btn-outline avatar-upload">
+                            <i class="fas fa-camera"></i> Update Photo
+                        </button>
+                    </div>
+                    <div class="profile-info">
+                        <h2>John Doe</h2>
+                        <p class="student-id">NS20230045</p>
+                        <div class="status-badge">
+                            <i class="fas fa-check-circle"></i> Verified Student
+                        </div>
+                    </div>
+                </div>
+
+                <div class="profile-details">
+                    <div class="detail-group">
+                        <h3>Personal Information</h3>
+                        <div class="detail-item">
+                            <label>Full Name:</label>
+                            <p>John Michael Doe</p>
+                        </div>
+                        <div class="detail-item">
+                            <label>Date of Birth:</label>
+                            <p>15 March 2001</p>
+                        </div>
+                        <div class="detail-item">
+                            <label>Contact Email:</label>
+                            <p>john.doe@nexora.edu</p>
+                        </div>
+                        <div class="detail-item">
+                            <label>Phone Number:</label>
+                            <p>+94 77 123 4567</p>
+                        </div>
+                    </div>
+
+                    <div class="detail-group">
+                        <h3>Academic Information</h3>
+                        <div class="detail-item">
+                            <label>Program:</label>
+                            <p>BSc in Computer Science</p>
+                        </div>
+                        <div class="detail-item">
+                            <label>Enrollment Year:</label>
+                            <p>2020</p>
+                        </div>
+                        <div class="detail-item">
+                            <label>Current Semester:</label>
+                            <p>Semester 6</p>
+                        </div>
+                        <div class="detail-item">
+                            <label>Academic Advisor:</label>
+                            <p>Dr. Samantha Smith</p>
+                        </div>
+                    </div>
+
+                    <div class="detail-group">
+                        <h3>Account Security</h3>
+                        <div class="detail-item">
+                            <label>Password:</label>
+                            <p>••••••••</p>
+                            <button class="btn btn-outline">
+                                <i class="fas fa-lock"></i> Change Password
+                            </button>
+                        </div>
+                        <div class="detail-item">
+                            <label>Two-Factor Auth:</label>
+                            <p>Not Enabled</p>
+                            <button class="btn btn-outline">
+                                <i class="fas fa-shield-alt"></i> Enable 2FA
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="profile-actions">
+                    <button class="btn btn-primary">
+                        <i class="fas fa-save"></i> Save Changes
+                    </button>
+                    <button class="btn btn-outline">
+                        <i class="fas fa-file-pdf"></i> Download Academic Record
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+>>>>>>> 46e1e2b8d8f122b0013b218def02e97058748a75
     <!-- Dashboard Section -->
     <section id="dashboard" class="content-section active">
         <div class="dashboard-header">
@@ -1305,6 +1424,813 @@
                     </select>
                 </div>
 
+                <!-- Profile Section -->
+                <section id="profile" class="content-section">
+                    <div class="dashboard-header">
+                        <div class="greeting">
+                            <h1>Student Profile</h1>
+                            <p>Manage your personal information and academic details</p>
+                        </div>
+                        <div class="user-actions">
+                            <button class="btn btn-primary">
+                                <i class="fas fa-sync-alt"></i> Refresh Data
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="profile-container">
+                        <div class="profile-card">
+                            <!-- Profile Header with Holographic Avatar -->
+                            <div class="profile-header">
+                                <div class="user-avatar-holographic">
+                                    <div class="hologram-effect"></div>
+                                    <img src="https://via.placeholder.com/150" alt="Profile Picture" class="avatar-image">
+                                    <div class="avatar-actions">
+                                        <button class="btn btn-outline avatar-upload">
+                                            <i class="fas fa-camera"></i> Update
+                                        </button>
+                                        <button class="btn btn-outline avatar-edit">
+                                            <i class="fas fa-magic"></i> Customize
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="profile-info">
+                                    <h2>John Michael Doe</h2>
+                                    <div class="student-id-badge">
+                                        <i class="fas fa-id-card"></i> NS20230045
+                                    </div>
+                                    <div class="verification-status">
+                                        <i class="fas fa-shield-check verified"></i> Verified Student
+                                    </div>
+                                    <div class="academic-level">
+                                        <div class="level-progress">
+                                            <div class="progress-fill" style="width: 78%"></div>
+                                        </div>
+                                        <span>Level 3 Student (78%)</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Profile Tabs -->
+                            <div class="profile-tabs">
+                                <div class="tab active" data-tab="personal">Personal</div>
+                                <div class="tab" data-tab="academic">Academic</div>
+                                <div class="tab" data-tab="security">Security</div>
+                                <div class="tab" data-tab="achievements">Achievements</div>
+                                <div class="tab" data-tab="analytics">Analytics</div>
+                            </div>
+
+                            <!-- Tab Content -->
+                            <div class="tab-content">
+                                <!-- Personal Information Tab -->
+                                <div class="tab-pane active" id="personal-tab">
+                                    <div class="detail-grid">
+                                        <div class="detail-card">
+                                            <h3><i class="fas fa-user-tag"></i> Basic Information</h3>
+                                            <div class="detail-item">
+                                                <label>Full Name:</label>
+                                                <p>John Michael Doe</p>
+                                                <button class="btn-edit"><i class="fas fa-pencil-alt"></i></button>
+                                            </div>
+                                            <div class="detail-item">
+                                                <label>Date of Birth:</label>
+                                                <p>March 15, 2001 (22 years)</p>
+                                            </div>
+                                            <div class="detail-item">
+                                                <label>Gender:</label>
+                                                <p>Male</p>
+                                            </div>
+                                            <div class="detail-item">
+                                                <label>Nationality:</label>
+                                                <p>Sri Lankan</p>
+                                            </div>
+                                        </div>
+
+                                        <div class="detail-card">
+                                            <h3><i class="fas fa-address-book"></i> Contact Details</h3>
+                                            <div class="detail-item">
+                                                <label>Primary Email:</label>
+                                                <p>john.doe@nexora.edu <span class="verified-badge">Verified</span></p>
+                                            </div>
+                                            <div class="detail-item">
+                                                <label>Secondary Email:</label>
+                                                <p>johndoe@gmail.com <span class="unverified-badge">Unverified</span></p>
+                                            </div>
+                                            <div class="detail-item">
+                                                <label>Phone Number:</label>
+                                                <p>+94 77 123 4567 <span class="verified-badge">Verified</span></p>
+                                            </div>
+                                            <div class="detail-item">
+                                                <label>Emergency Contact:</label>
+                                                <p>Jane Doe (Mother) +94 76 987 6543</p>
+                                            </div>
+                                        </div>
+
+                                        <div class="detail-card">
+                                            <h3><i class="fas fa-map-marker-alt"></i> Address Information</h3>
+                                            <div class="detail-item">
+                                                <label>Current Address:</label>
+                                                <p>123 University Dorm, Colombo 03, Sri Lanka</p>
+                                            </div>
+                                            <div class="detail-item">
+                                                <label>Permanent Address:</label>
+                                                <p>456 Main Street, Kandy, Sri Lanka</p>
+                                            </div>
+                                        </div>
+
+                                        <div class="detail-card">
+                                            <h3><i class="fas fa-heart"></i> Social Profiles</h3>
+                                            <div class="social-links">
+                                                <a href="#" class="social-link linkedin"><i class="fab fa-linkedin"></i> LinkedIn</a>
+                                                <a href="#" class="social-link github"><i class="fab fa-github"></i> GitHub</a>
+                                                <a href="#" class="social-link twitter"><i class="fab fa-twitter"></i> Twitter</a>
+                                                <button class="btn btn-outline add-social">
+                                                    <i class="fas fa-plus"></i> Add Profile
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Academic Information Tab -->
+                                <div class="tab-pane" id="academic-tab">
+                                    <div class="detail-grid">
+                                        <div class="detail-card">
+                                            <h3><i class="fas fa-graduation-cap"></i> Program Details</h3>
+                                            <div class="detail-item">
+                                                <label>Degree Program:</label>
+                                                <p>BSc in Computer Science</p>
+                                            </div>
+                                            <div class="detail-item">
+                                                <label>Specialization:</label>
+                                                <p>Artificial Intelligence</p>
+                                            </div>
+                                            <div class="detail-item">
+                                                <label>Enrollment Date:</label>
+                                                <p>September 15, 2020</p>
+                                            </div>
+                                            <div class="detail-item">
+                                                <label>Expected Graduation:</label>
+                                                <p>June 2024</p>
+                                            </div>
+                                        </div>
+
+                                        <div class="detail-card">
+                                            <h3><i class="fas fa-calendar-alt"></i> Current Semester</h3>
+                                            <div class="detail-item">
+                                                <label>Semester:</label>
+                                                <p>Semester 6 of 8</p>
+                                            </div>
+                                            <div class="detail-item">
+                                                <label>Status:</label>
+                                                <p><span class="status active">Active</span></p>
+                                            </div>
+                                            <div class="detail-item">
+                                                <label>GPA:</label>
+                                                <p>3.72/4.00 <span class="positive">(Top 15%)</span></p>
+                                            </div>
+                                            <div class="detail-item">
+                                                <label>Credits Completed:</label>
+                                                <p>92 of 120</p>
+                                            </div>
+                                        </div>
+
+                                        <div class="detail-card">
+                                            <h3><i class="fas fa-user-tie"></i> Academic Support</h3>
+                                            <div class="detail-item">
+                                                <label>Academic Advisor:</label>
+                                                <p>Dr. Samantha Smith</p>
+                                            </div>
+                                            <div class="detail-item">
+                                                <label>Department:</label>
+                                                <p>Computer Science</p>
+                                            </div>
+                                            <div class="detail-item">
+                                                <label>Advisor Contact:</label>
+                                                <p>s.smith@nexora.edu</p>
+                                            </div>
+                                            <div class="detail-item">
+                                                <label>Next Meeting:</label>
+                                                <p>November 15, 2023 <a href="#" class="schedule-link">(Reschedule)</a></p>
+                                            </div>
+                                        </div>
+
+                                        <div class="detail-card">
+                                            <h3><i class="fas fa-award"></i> Academic History</h3>
+                                            <div class="academic-history">
+                                                <div class="history-item">
+                                                    <div class="history-year">2022-2023</div>
+                                                    <div class="history-details">
+                                                        <p>Dean's List - Semester 4</p>
+                                                        <p>Best Project Award - CS301</p>
+                                                    </div>
+                                                </div>
+                                                <div class="history-item">
+                                                    <div class="history-year">2021-2022</div>
+                                                    <div class="history-details">
+                                                        <p>Academic Excellence Scholarship</p>
+                                                    </div>
+                                                </div>
+                                                <button class="btn btn-outline view-full-history">
+                                                    <i class="fas fa-history"></i> View Full History
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Security Tab -->
+                                <div class="tab-pane" id="security-tab">
+                                    <div class="detail-grid">
+                                        <div class="detail-card security-card">
+                                            <h3><i class="fas fa-lock"></i> Account Security</h3>
+                                            <div class="security-item">
+                                                <div class="security-info">
+                                                    <i class="fas fa-key"></i>
+                                                    <div>
+                                                        <h4>Password</h4>
+                                                        <p>Last changed 3 months ago</p>
+                                                    </div>
+                                                </div>
+                                                <button class="btn btn-outline">
+                                                    <i class="fas fa-sync-alt"></i> Change Password
+                                                </button>
+                                            </div>
+
+                                            <div class="security-item">
+                                                <div class="security-info">
+                                                    <i class="fas fa-shield-alt"></i>
+                                                    <div>
+                                                        <h4>Two-Factor Authentication</h4>
+                                                        <p>Currently disabled</p>
+                                                    </div>
+                                                </div>
+                                                <button class="btn btn-primary">
+                                                    <i class="fas fa-toggle-on"></i> Enable 2FA
+                                                </button>
+                                            </div>
+
+                                            <div class="security-item">
+                                                <div class="security-info">
+                                                    <i class="fas fa-desktop"></i>
+                                                    <div>
+                                                        <h4>Active Sessions</h4>
+                                                        <p>2 devices currently active</p>
+                                                    </div>
+                                                </div>
+                                                <button class="btn btn-outline">
+                                                    <i class="fas fa-list"></i> View All
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        <div class="detail-card security-card">
+                                            <h3><i class="fas fa-bell"></i> Login Alerts</h3>
+                                            <div class="switch-item">
+                                                <div>
+                                                    <h4>Email Notifications</h4>
+                                                    <p>Receive alerts for new logins</p>
+                                                </div>
+                                                <label class="switch">
+                                                    <input type="checkbox" checked>
+                                                    <span class="slider round"></span>
+                                                </label>
+                                            </div>
+
+                                            <div class="switch-item">
+                                                <div>
+                                                    <h4>SMS Notifications</h4>
+                                                    <p>Receive text message alerts</p>
+                                                </div>
+                                                <label class="switch">
+                                                    <input type="checkbox">
+                                                    <span class="slider round"></span>
+                                                </label>
+                                            </div>
+
+                                            <div class="switch-item">
+                                                <div>
+                                                    <h4>Unusual Activity</h4>
+                                                    <p>Alert for suspicious logins</p>
+                                                </div>
+                                                <label class="switch">
+                                                    <input type="checkbox" checked>
+                                                    <span class="slider round"></span>
+                                                </label>
+                                            </div>
+                                        </div>
+
+                                        <div class="detail-card security-card danger-zone">
+                                            <h3><i class="fas fa-exclamation-triangle"></i> Danger Zone</h3>
+                                            <div class="danger-item">
+                                                <div>
+                                                    <h4>Deactivate Account</h4>
+                                                    <p>Temporarily disable your account</p>
+                                                </div>
+                                                <button class="btn btn-danger">
+                                                    <i class="fas fa-power-off"></i> Deactivate
+                                                </button>
+                                            </div>
+
+                                            <div class="danger-item">
+                                                <div>
+                                                    <h4>Request Data Export</h4>
+                                                    <p>Download all your personal data</p>
+                                                </div>
+                                                <button class="btn btn-outline">
+                                                    <i class="fas fa-file-export"></i> Request
+                                                </button>
+                                            </div>
+
+                                            <div class="danger-item">
+                                                <div>
+                                                    <h4>Delete Account</h4>
+                                                    <p>Permanently remove your account</p>
+                                                </div>
+                                                <button class="btn btn-danger">
+                                                    <i class="fas fa-trash-alt"></i> Delete
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Profile Actions -->
+                            <div class="profile-actions">
+                                <button class="btn btn-outline">
+                                    <i class="fas fa-file-pdf"></i> Export Profile
+                                </button>
+                                <button class="btn btn-primary">
+                                    <i class="fas fa-save"></i> Save Changes
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <style>
+                    /* Profile Section Specific Styles */
+                    .profile-container {
+                        max-width: 1200px;
+                        margin: 0 auto;
+                    }
+
+                    .profile-card {
+                        background: var(--card-bg);
+                        border-radius: var(--border-radius);
+                        padding: 30px;
+                        box-shadow: var(--box-shadow);
+                    }
+
+                    .profile-header {
+                        display: flex;
+                        align-items: flex-start;
+                        gap: 30px;
+                        margin-bottom: 30px;
+                        padding-bottom: 30px;
+                        border-bottom: 1px solid rgba(0, 242, 254, 0.1);
+                    }
+
+                    .user-avatar-holographic {
+                        position: relative;
+                        width: 180px;
+                        height: 180px;
+                        border-radius: 50%;
+                        overflow: hidden;
+                        border: 3px solid var(--primary-color);
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                    }
+
+                    .hologram-effect {
+                        position: absolute;
+                        width: 100%;
+                        height: 100%;
+                        background: linear-gradient(135deg,
+                        rgba(0, 242, 254, 0.2) 0%,
+                        rgba(79, 172, 254, 0.2) 50%,
+                        rgba(255, 77, 126, 0.2) 100%);
+                        border-radius: 50%;
+                        animation: hologramPulse 6s infinite alternate;
+                    }
+
+                    @keyframes hologramPulse {
+                        0% { opacity: 0.3; }
+                        100% { opacity: 0.7; }
+                    }
+
+                    .avatar-image {
+                        width: 94%;
+                        height: 94%;
+                        border-radius: 50%;
+                        object-fit: cover;
+                        position: relative;
+                        z-index: 1;
+                    }
+
+                    .avatar-actions {
+                        position: absolute;
+                        bottom: -20px;
+                        left: 0;
+                        right: 0;
+                        display: flex;
+                        justify-content: center;
+                        gap: 10px;
+                        z-index: 2;
+                    }
+
+                    .profile-info {
+                        flex: 1;
+                    }
+
+                    .profile-info h2 {
+                        font-size: 2.2rem;
+                        margin-bottom: 10px;
+                        background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+                        -webkit-background-clip: text;
+                        -webkit-text-fill-color: transparent;
+                    }
+
+                    .student-id-badge {
+                        display: inline-block;
+                        background: rgba(0, 242, 254, 0.1);
+                        padding: 5px 15px;
+                        border-radius: 20px;
+                        font-family: 'Orbitron', sans-serif;
+                        margin-bottom: 15px;
+                    }
+
+                    .verification-status {
+                        display: flex;
+                        align-items: center;
+                        gap: 8px;
+                        margin-bottom: 20px;
+                    }
+
+                    .verification-status .verified {
+                        color: var(--success-color);
+                    }
+
+                    .academic-level {
+                        margin-top: 20px;
+                    }
+
+                    .level-progress {
+                        height: 8px;
+                        background: var(--glass-bg);
+                        border-radius: 4px;
+                        margin-bottom: 5px;
+                    }
+
+                    .level-progress .progress-fill {
+                        height: 100%;
+                        background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+                        border-radius: 4px;
+                    }
+
+                    /* Profile Tabs */
+                    .profile-tabs {
+                        display: flex;
+                        border-bottom: 1px solid rgba(0, 242, 254, 0.1);
+                        margin-bottom: 25px;
+                    }
+
+                    .profile-tabs .tab {
+                        padding: 12px 25px;
+                        cursor: pointer;
+                        position: relative;
+                        font-weight: 500;
+                        color: var(--text-muted);
+                    }
+
+                    .profile-tabs .tab.active {
+                        color: var(--primary-color);
+                    }
+
+                    .profile-tabs .tab.active::after {
+                        content: '';
+                        position: absolute;
+                        bottom: -1px;
+                        left: 0;
+                        right: 0;
+                        height: 3px;
+                        background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+                    }
+
+                    /* Detail Grid Layout */
+                    .detail-grid {
+                        display: grid;
+                        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+                        gap: 25px;
+                        margin-bottom: 30px;
+                    }
+
+                    .detail-card {
+                        background: rgba(15, 23, 42, 0.7);
+                        border-radius: var(--border-radius);
+                        padding: 20px;
+                        border: 1px solid rgba(0, 242, 254, 0.1);
+                    }
+
+                    .detail-card h3 {
+                        font-size: 1.1rem;
+                        margin-bottom: 20px;
+                        padding-bottom: 10px;
+                        border-bottom: 1px solid rgba(0, 242, 254, 0.1);
+                        display: flex;
+                        align-items: center;
+                        gap: 10px;
+                    }
+
+                    .detail-item {
+                        margin-bottom: 15px;
+                        padding: 10px;
+                        background: var(--glass-bg);
+                        border-radius: 8px;
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                    }
+
+                    .detail-item label {
+                        font-weight: 500;
+                        color: var(--primary-color);
+                        margin-right: 10px;
+                        min-width: 120px;
+                    }
+
+                    .detail-item p {
+                        flex: 1;
+                    }
+
+                    .btn-edit {
+                        background: none;
+                        border: none;
+                        color: var(--text-muted);
+                        cursor: pointer;
+                        transition: var(--transition);
+                    }
+
+                    .btn-edit:hover {
+                        color: var(--primary-color);
+                    }
+
+                    /* Verification Badges */
+                    .verified-badge {
+                        display: inline-block;
+                        background: rgba(76, 175, 80, 0.2);
+                        color: var(--success-color);
+                        padding: 2px 8px;
+                        border-radius: 10px;
+                        font-size: 0.7rem;
+                        margin-left: 8px;
+                    }
+
+                    .unverified-badge {
+                        display: inline-block;
+                        background: rgba(255, 152, 0, 0.2);
+                        color: var(--warning-color);
+                        padding: 2px 8px;
+                        border-radius: 10px;
+                        font-size: 0.7rem;
+                        margin-left: 8px;
+                    }
+
+                    /* Social Links */
+                    .social-links {
+                        display: flex;
+                        flex-direction: column;
+                        gap: 10px;
+                    }
+
+                    .social-link {
+                        display: flex;
+                        align-items: center;
+                        gap: 8px;
+                        text-decoration: none;
+                        padding: 8px 12px;
+                        border-radius: 6px;
+                        transition: var(--transition);
+                    }
+
+                    .social-link:hover {
+                        transform: translateX(5px);
+                    }
+
+                    .social-link.linkedin {
+                        background: rgba(10, 102, 194, 0.1);
+                        color: #0a66c2;
+                    }
+
+                    .social-link.github {
+                        background: rgba(23, 21, 21, 0.1);
+                        color: #171515;
+                    }
+
+                    .social-link.twitter {
+                        background: rgba(29, 161, 242, 0.1);
+                        color: #1da1f2;
+                    }
+
+                    /* Security Items */
+                    .security-item {
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                        padding: 15px 0;
+                        border-bottom: 1px solid rgba(0, 242, 254, 0.1);
+                    }
+
+                    .security-info {
+                        display: flex;
+                        align-items: center;
+                        gap: 15px;
+                    }
+
+                    .security-info i {
+                        font-size: 1.2rem;
+                        color: var(--primary-color);
+                    }
+
+                    .security-info h4 {
+                        margin-bottom: 5px;
+                    }
+
+                    .security-info p {
+                        font-size: 0.8rem;
+                        color: var(--text-muted);
+                    }
+
+                    /* Switch Items */
+                    .switch-item {
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                        padding: 15px 0;
+                        border-bottom: 1px solid rgba(0, 242, 254, 0.1);
+                    }
+
+                    .switch-item h4 {
+                        margin-bottom: 5px;
+                    }
+
+                    .switch-item p {
+                        font-size: 0.8rem;
+                        color: var(--text-muted);
+                    }
+
+                    .switch {
+                        position: relative;
+                        display: inline-block;
+                        width: 50px;
+                        height: 24px;
+                    }
+
+                    .switch input {
+                        opacity: 0;
+                        width: 0;
+                        height: 0;
+                    }
+
+                    .slider {
+                        position: absolute;
+                        cursor: pointer;
+                        top: 0;
+                        left: 0;
+                        right: 0;
+                        bottom: 0;
+                        background-color: var(--glass-bg);
+                        transition: .4s;
+                    }
+
+                    .slider:before {
+                        position: absolute;
+                        content: "";
+                        height: 16px;
+                        width: 16px;
+                        left: 4px;
+                        bottom: 4px;
+                        background-color: var(--text-muted);
+                        transition: .4s;
+                    }
+
+                    input:checked + .slider {
+                        background-color: var(--primary-color);
+                    }
+
+                    input:checked + .slider:before {
+                        transform: translateX(26px);
+                    }
+
+                    .slider.round {
+                        border-radius: 34px;
+                    }
+
+                    .slider.round:before {
+                        border-radius: 50%;
+                    }
+
+                    /* Danger Zone */
+                    .danger-zone {
+                        border: 1px solid rgba(255, 77, 126, 0.3);
+                    }
+
+                    .danger-zone h3 {
+                        color: var(--accent-color);
+                    }
+
+                    .danger-item {
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                        padding: 15px 0;
+                        border-bottom: 1px solid rgba(255, 77, 126, 0.1);
+                    }
+
+                    .danger-item h4 {
+                        margin-bottom: 5px;
+                    }
+
+                    .danger-item p {
+                        font-size: 0.8rem;
+                        color: var(--text-muted);
+                    }
+
+                    .btn-danger {
+                        background: linear-gradient(135deg, var(--accent-color), #ff2d5a);
+                        color: white;
+                    }
+
+                    .btn-danger:hover {
+                        transform: translateY(-2px);
+                        box-shadow: 0 5px 15px rgba(255, 77, 126, 0.3);
+                    }
+
+                    /* Profile Actions */
+                    .profile-actions {
+                        display: flex;
+                        justify-content: flex-end;
+                        gap: 15px;
+                        margin-top: 30px;
+                        padding-top: 20px;
+                        border-top: 1px solid rgba(0, 242, 254, 0.1);
+                    }
+
+                    /* Responsive Adjustments */
+                    @media (max-width: 992px) {
+                        .profile-header {
+                            flex-direction: column;
+                            align-items: center;
+                            text-align: center;
+                        }
+
+                        .profile-info {
+                            text-align: center;
+                        }
+
+                        .avatar-actions {
+                            position: relative;
+                            bottom: auto;
+                            margin-top: 15px;
+                        }
+                    }
+
+                    @media (max-width: 768px) {
+                        .profile-tabs {
+                            overflow-x: auto;
+                            white-space: nowrap;
+                        }
+
+                        .detail-grid {
+                            grid-template-columns: 1fr;
+                        }
+                    }
+                </style>
+
+                <script>
+                    // Profile Tab Switching
+                    document.querySelectorAll('.profile-tabs .tab').forEach(tab => {
+                        tab.addEventListener('click', () => {
+                            const tabId = tab.getAttribute('data-tab');
+
+                            // Update active tab
+                            document.querySelectorAll('.profile-tabs .tab').forEach(t => t.classList.remove('active'));
+                            tab.classList.add('active');
+
+                            // Hide all tab panes
+                            document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
+
+                            // Show selected pane
+                            document.getElementById(`${tabId}-tab`).classList.add('active');
+                        });
+                    });
+
+                    // Initialize with first tab active
+                    document.querySelector('.profile-tabs .tab').click();
+                </script>
+
                 <div class="form-group">
                     <label>Bio</label>
                     <textarea class="form-control" rows="3">Computer Science student specializing in AI and Machine Learning</textarea>
@@ -1355,3 +2281,4 @@
 </script>
 </body>
 </html>
+arrange code correctly
