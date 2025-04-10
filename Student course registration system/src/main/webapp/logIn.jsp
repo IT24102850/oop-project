@@ -3,6 +3,7 @@
 <head>
     <title>Login - NexoraSkill</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="icon" type="image/png" href="./images/favicon.ico">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
         /* Minimal CSS for functionality; integrate with your existing styles */
