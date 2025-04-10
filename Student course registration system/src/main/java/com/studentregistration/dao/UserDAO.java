@@ -24,7 +24,6 @@ public class UserDAO {
                 throw new IllegalArgumentException("User with the same username already exists.");
             }
         }
-
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_PATH, true))) {
             writer.write(user.getId() + "," + user.getUsername() + "," + user.getPassword() + "," + user.getRole());
             writer.newLine();

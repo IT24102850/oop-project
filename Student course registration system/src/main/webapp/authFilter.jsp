@@ -2,7 +2,7 @@
 <%
     String username = (String) session.getAttribute("username");
     if(username == null || username.isEmpty()) {
-        response.sendRedirect("login.jsp");
+        response.sendRedirect("logIn.jsp");
         return;
     }
 %>

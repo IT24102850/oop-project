@@ -1,5 +1,7 @@
 package com.studentregistration.model;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
 public class User {
@@ -10,12 +12,29 @@ public class User {
     private String email;
     private String fullName;
     private boolean active;
+    private LocalDateTime lastLogin;
 
-    // Add the Constructors
+    private static final DateTimeFormatter DATE_TIME_FORMATTER =
+            DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
+    // Default Constructor
     public User() {
         this.active = true;
+        this.lastLogin = null;
     }
 
+    // Constructor for registration (matches Admin's needs)
+    public User(String email, String password, String fullName, String role, boolean isVerified) {
+        this();
+        this.email = email;
+        this.password = password;
+        this.fullName = fullName;
+        this.role = role;
+        this.active = isVerified;
+        this.username = email; // Assume email as username
+    }
+
+    // Existing Constructors
     public User(int id, String username, String password, String role) {
         this();
         this.id = id;
@@ -24,8 +43,7 @@ public class User {
         this.role = role;
     }
 
-    public User(int id, String username, String password, String role,
-                String email, String fullName) {
+    public User(int id, String username, String password, String role, String email, String fullName) {
         this(id, username, password, role);
         this.email = email;
         this.fullName = fullName;
@@ -41,13 +59,11 @@ public class User {
     }
 
     public String getPassword() { return password; }
-    public void setPassword(String password) {
-        this.password = password;
-    }
+    public void setPassword(String password) { this.password = password; }
 
     public String getRole() { return role; }
     public void setRole(String role) {
-        if ("student".equalsIgnoreCase(role) || "admin".equalsIgnoreCase(role)) {
+        if ("student".equalsIgnoreCase(role) || "admin".equalsIgnoreCase(role) || "superadmin".equalsIgnoreCase(role)) {
             this.role = role.toLowerCase();
         } else {
             throw new IllegalArgumentException("Invalid role specified");
@@ -70,9 +86,12 @@ public class User {
     public boolean isActive() { return active; }
     public void setActive(boolean active) { this.active = active; }
 
+    public LocalDateTime getLastLogin() { return lastLogin; }
+    public void setLastLogin(LocalDateTime lastLogin) { this.lastLogin = lastLogin; }
+
     // Business Logic Methods
     public boolean hasPermission(String requiredPermission) {
-        if ("admin".equals(role)) {
+        if ("admin".equals(role) || "superadmin".equals(role)) {
             return true;
         }
         return "student".equals(role) && !requiredPermission.startsWith("admin:");
@@ -80,13 +99,20 @@ public class User {
 
     // File Storage Format
     public String toFileString() {
-        return String.format("%d|%s|%s|%s|%s|%s|%b",
-                id, username, password, role, email, fullName, active);
+        return String.format("%d|%s|%s|%s|%s|%s|%b|%s",
+                id,
+                username,
+                password,
+                role,
+                email,
+                fullName,
+                active,
+                lastLogin != null ? lastLogin.format(DATE_TIME_FORMATTER) : "null");
     }
 
     public static User fromFileString(String fileLine) {
         String[] parts = fileLine.split("\\|");
-        if (parts.length >= 7) {
+        if (parts.length >= 8) {
             User user = new User();
             user.setId(Integer.parseInt(parts[0]));
             user.setUsername(parts[1]);
@@ -95,6 +121,10 @@ public class User {
             user.setEmail(parts[4]);
             user.setFullName(parts[5]);
             user.setActive(Boolean.parseBoolean(parts[6]));
+            if (!"null".equals(parts[7])) {
+                user.setLastLogin(LocalDateTime.parse(parts[7],
+                        DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+            }
             return user;
         }
         throw new IllegalArgumentException("Invalid user data format");
@@ -125,6 +155,7 @@ public class User {
                 ", email='" + email + '\'' +
                 ", fullName='" + fullName + '\'' +
                 ", active=" + active +
+                ", lastLogin=" + lastLogin +
                 '}';
     }
 }
