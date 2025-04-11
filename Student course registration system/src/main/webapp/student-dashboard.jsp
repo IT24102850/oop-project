@@ -4,9 +4,6 @@
 <html lang="en">
 <head>
 
-
-
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NexoraSkill | Student Dashboard</title>
@@ -691,6 +688,15 @@
 <div class="sidebar">
     <div class="logo">NexoraSkill</div>
 
+<<<<<<< HEAD
+    <div class="user-profile">
+        <div class="user-avatar">JD</div>
+        <div class="user-info">
+            <h3>John Doe</h3>
+            <p>Computer Science</p>
+        </div>
+    </div>
+=======
 
     <!-- Add this to the navigation menu -->
     <li class="nav-item">
@@ -699,6 +705,7 @@
         </a>
     </li>
 
+>>>>>>> 46e1e2b8d8f122b0013b218def02e97058748a75
 
     <ul class="nav-menu">
         <li class="nav-item">
@@ -736,6 +743,9 @@
 </div>
 
 <!-- Main Content -->
+<<<<<<< HEAD
+<div class="main-content">
+=======
 
 
 
@@ -841,6 +851,7 @@
     </section>
 
 
+>>>>>>> 46e1e2b8d8f122b0013b218def02e97058748a75
     <!-- Dashboard Section -->
     <section id="dashboard" class="content-section active">
         <div class="dashboard-header">
