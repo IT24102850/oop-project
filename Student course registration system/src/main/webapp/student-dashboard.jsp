@@ -1785,9 +1785,15 @@
                 <p>Your academic journey awaits</p>
             </div>
 
-            <a href="logout" class="btn btn-outline">
-                <i class="fas fa-sign-out-alt"></i> Logout
-            </a>
+            <div class="user-actions">
+                <div class="notification-bell">
+                    <i class="fas fa-bell"></i>
+                    <span class="notification-count">2</span>
+                </div>
+                <button class="btn btn-outline">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </div>
         </div>
 
         <div class="stats-grid">
