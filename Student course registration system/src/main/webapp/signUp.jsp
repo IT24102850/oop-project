@@ -84,7 +84,7 @@
 
     // Method to save student data
     private boolean saveStudent(String studentId, String name, String email, String password) {
-        String filePath = getServletContext().getRealPath("/") + "students.txt";
+        String filePath = getServletContext().getRealPath("/") + "WEB-INF/data/students.txt";
         File file = new File(filePath);
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(file, true))) {
