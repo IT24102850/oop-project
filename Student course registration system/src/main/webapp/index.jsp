@@ -1232,7 +1232,7 @@
             <ul>
                 <li><a href="#home">Home</a></li>
                 <li><a href="courses.jsp">Courses</a></li>
-                <li><a href="registration.jsp">Registration</a></li>
+                <li><a href="Apply%20Course.jsp">Apply Course</a></li>
                 <li><a href="aboutus.jsp">About Us</a></li>
                 <li><a href="contact.jsp">Contact</a></li>
             </ul>
