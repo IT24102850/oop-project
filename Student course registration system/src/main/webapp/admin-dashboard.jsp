@@ -253,7 +253,7 @@
     <div class="stats-grid">
         <div class="stat-card">
             <h3>Total Students</h3>
-            <p class="stat-value">1,234</p>
+            <p class="stat-value">124</p>
         </div>
         <div class="stat-card">
             <h3>Active Courses</h3>
