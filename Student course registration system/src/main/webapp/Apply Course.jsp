@@ -648,13 +648,7 @@
             border: 1px solid rgba(0, 242, 254, 0.1);
         }
 
-        .social-link:hover {
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            color: var(--dark-color);
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0, 242, 254, 0.3);
-            border-color: transparent;
-        }
+
 
         .footer-title {
             font-size: 1.5rem;
@@ -712,12 +706,13 @@
 
         .footer-bottom {
             text-align: center;
-            padding-top: 50px;
+            padding: 20px 0 0;
             border-top: 1px solid rgba(0, 242, 254, 0.1);
             color: var(--text-muted);
             font-size: 1rem;
             position: relative;
             z-index: 1;
+            margin-bottom: 0;
         }
 
         .footer-bottom a {
@@ -1026,11 +1021,6 @@
     </div>
 </footer>
 
-<!-- Scroll To Top Button -->
-<div class="scroll-top">
-    <i class="fas fa-arrow-up"></i>
-</div>
-
 <!-- Scripts -->
 <script>
     // Preloader
@@ -1050,23 +1040,6 @@
         } else {
             header.classList.remove('scrolled');
         }
-    });
-
-    // Scroll To Top Button
-    const scrollTop = document.querySelector('.scroll-top');
-    window.addEventListener('scroll', function() {
-        if (window.scrollY > 300) {
-            scrollTop.classList.add('active');
-        } else {
-            scrollTop.classList.remove('active');
-        }
-    });
-
-    scrollTop.addEventListener('click', function() {
-        window.scrollTo({
-            top: 0,
-            behavior: 'smooth'
-        });
     });
 
     // Mobile Menu Toggle
@@ -1102,7 +1075,7 @@
             },
             'BC201': {
                 title: 'Blockchain Development',
-                image: 'https://images.unsplash.com/photo-1677442136019-21780ecad339',
+                image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTGQiGZ30sOOM3-c02iz8-d1q0tVSwJxpxXZg&s',
                 duration: '10 Weeks',
                 level: 'Intermediate',
                 instructor: 'Prof. Michael Lee',
@@ -1111,7 +1084,7 @@
             },
             'QC301': {
                 title: 'Quantum Computing',
-                image: 'https://images.unsplash.com/photo-1616832880335-6b06ab888077',
+                image: 'https://dwg31ai31okv0.cloudfront.net/images/Article_Images/ImageForArticle_519_17140003651563270.jpg',
                 duration: '14 Weeks',
                 level: 'Advanced',
                 instructor: 'Dr. Emily Watson',

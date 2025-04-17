@@ -845,7 +845,7 @@
             <ul>
                 <li><a href="index.jsp">Home</a></li>
                 <li><a href="courses.jsp" class="active">Courses</a></li>
-                <li><a href="registration.jsp">Registration</a></li>
+                <li><a href="Apply%20Course.jsp">Registration</a></li>
                 <li><a href="aboutus.jsp">About Us</a></li>
                 <li><a href="contact.jsp">Contact</a></li>
             </ul>
