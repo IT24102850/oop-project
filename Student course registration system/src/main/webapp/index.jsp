@@ -1253,8 +1253,8 @@
             <a href="${pageContext.request.contextPath}/courses.jsp" class="cta-button primary-cta">
                 <i class="fas fa-rocket"></i> Explore Courses
             </a>
-            <a href="${pageContext.request.contextPath}/registration.jsp" class="cta-button secondary-cta">
-                <i class="fas fa-user-graduate"></i> Register Now
+            <a href="${pageContext.request.contextPath}/Apply%20Course.jsp" class="cta-button secondary-cta">
+                <i class="fas fa-user-graduate"></i> Apply Now
             </a>
         </div>
     </div>
