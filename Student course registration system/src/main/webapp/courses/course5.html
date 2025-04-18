@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Database Management | NexoraSkill</title>
+    <title>Cybersecurity Fundamentals | NexoraSkill</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="icon" type="image/png" href="./images/favicon.ico">
     <!-- Google Fonts -->
@@ -20,7 +20,7 @@
             --dark-color: #0a0f24;
             --darker-color: #050916;
             --text-color: #ffffff;
-            --text-muted: rgba(255, 255, 255, 0.7);
+            --text-muted: rgba(255,255,255,0.7);
             --hover-color: #00c6fb;
             --glow-color: rgba(0, 242, 254, 0.6);
             --card-bg: rgba(15, 23, 42, 0.8);
@@ -113,6 +113,7 @@
             z-index: 1000;
             background: var(--glass-bg);
             backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
             border-bottom: 1px solid rgba(0, 242, 254, 0.1);
             box-shadow: 0 5px 30px rgba(0, 0, 0, 0.2);
             transition: var(--transition);
@@ -141,6 +142,7 @@
             color: var(--text-color);
             text-decoration: none;
             transition: var(--transition);
+            position: relative;
         }
 
         .logo:hover {
@@ -150,7 +152,13 @@
 
         .logo img {
             height: 45px;
+            transition: var(--transition);
             filter: drop-shadow(0 0 5px var(--glow-color));
+        }
+
+        .logo:hover img {
+            transform: rotate(15deg) scale(1.1);
+            filter: drop-shadow(0 0 10px var(--glow-color));
         }
 
         .navbar ul {
@@ -160,6 +168,7 @@
         }
 
         .navbar ul li a {
+            position: relative;
             font-family: 'Poppins', sans-serif;
             text-decoration: none;
             color: var(--text-color);
@@ -167,7 +176,7 @@
             font-size: 1.1rem;
             transition: var(--transition);
             padding: 8px 0;
-            position: relative;
+            overflow: hidden;
         }
 
         .navbar ul li a:before {
@@ -179,6 +188,11 @@
             left: -100%;
             background: linear-gradient(90deg, transparent, var(--primary-color));
             transition: var(--transition);
+        }
+
+        .navbar ul li a:hover {
+            color: var(--primary-color);
+            text-shadow: 0 0 10px var(--glow-color);
         }
 
         .navbar ul li a:hover:before {
@@ -230,6 +244,8 @@
         .btn-login:hover {
             color: var(--dark-color);
             border-color: transparent;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 242, 254, 0.3);
         }
 
         .btn-signup {
@@ -242,6 +258,8 @@
             background: transparent;
             color: var(--primary-color);
             border-color: var(--primary-color);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 242, 254, 0.3);
         }
 
         /* Main Content */
@@ -261,11 +279,6 @@
             background: radial-gradient(circle, rgba(0, 242, 254, 0.05) 0%, transparent 70%);
             animation: rotate 60s linear infinite;
             z-index: -1;
-        }
-
-        @keyframes rotate {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
         }
 
         /* Course Top Section */
@@ -291,6 +304,7 @@
         .course-image:hover {
             transform: translateY(-10px);
             box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            border-color: rgba(0, 242, 254, 0.4);
         }
 
         .course-image img {
@@ -320,6 +334,7 @@
         .course-description:hover {
             transform: translateY(-10px);
             box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            border-color: rgba(0, 242, 254, 0.4);
         }
 
         .course-description h1 {
@@ -328,7 +343,7 @@
             background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            text-shadow: 0 0 20px var(--glow-color);
+            text-shadow: 0 0 30px rgba(0, 242, 254, 0.3);
             position: relative;
         }
 
@@ -382,6 +397,7 @@
         .review-section:hover {
             transform: translateY(-10px);
             box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            border-color: rgba(0, 242, 254, 0.4);
         }
 
         .review-section h2 {
@@ -460,6 +476,7 @@
         .instructors-description:hover {
             transform: translateY(-10px);
             box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            border-color: rgba(0, 242, 254, 0.4);
         }
 
         .instructors-description h2 {
@@ -534,6 +551,7 @@
         .why-choose:hover {
             transform: translateY(-10px);
             box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            border-color: rgba(0, 242, 254, 0.4);
         }
 
         .why-choose h2 {
@@ -604,6 +622,7 @@
         .enroll-card:hover {
             transform: translateY(-10px);
             box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            border-color: rgba(0, 242, 254, 0.4);
         }
 
         .enroll-card h3 {
@@ -750,6 +769,7 @@
             color: var(--dark-color);
             transform: translateY(-5px);
             box-shadow: 0 10px 20px rgba(0, 242, 254, 0.3);
+            border-color: transparent;
         }
 
         .footer-title {
@@ -857,12 +877,24 @@
 
         .scroll-top:hover {
             transform: translateY(-5px) scale(1.1);
+            box-shadow: 0 10px 25px rgba(0, 242, 254, 0.6);
         }
 
         /* Animations */
         @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
 
         /* Responsive Design */
@@ -883,17 +915,41 @@
         }
 
         @media (max-width: 768px) {
-            .navbar { display: none; }
-            .course-description h1 { font-size: 2.2rem; }
-            .course-meta { flex-direction: column; gap: 15px; }
-            .enroll-button { padding: 15px; font-size: 1rem; }
+            .navbar {
+                display: none;
+            }
+
+            .course-description h1 {
+                font-size: 2.2rem;
+            }
+
+            .course-meta {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .enroll-button {
+                padding: 15px;
+                font-size: 1rem;
+            }
         }
 
         @media (max-width: 576px) {
-            .auth-buttons { display: none; }
-            .course-description h1 { font-size: 1.8rem; }
-            .course-description p { font-size: 1rem; }
-            .why-choose li { font-size: 1rem; }
+            .auth-buttons {
+                display: none;
+            }
+
+            .course-description h1 {
+                font-size: 1.8rem;
+            }
+
+            .course-description p {
+                font-size: 1rem;
+            }
+
+            .why-choose li {
+                font-size: 1rem;
+            }
         }
     </style>
 </head>
@@ -910,6 +966,7 @@
             <img src="./images/favicon-32x32.png" alt="NexoraSkill Logo">
             <span>NexoraSkill</span>
         </a>
+
         <nav class="navbar">
             <ul>
                 <li><a href="index.jsp">Home</a></li>
@@ -930,15 +987,16 @@
 <main class="main-content">
     <!-- Course Top Section -->
     <section class="course-top-section">
-        <!-- Course Image -->
+        <!-- Left Side: Course Image -->
         <div class="course-image">
-            <img src="./images/database.jpg" alt="Database Management Course Illustration">
+            <img src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80" alt="Cybersecurity Fundamentals">
         </div>
 
-        <!-- Course Description -->
+        <!-- Middle: Course Description -->
         <div class="course-description">
-            <h1>Database Management</h1>
-            <p>Master the fundamentals of database management with our comprehensive course designed for beginners and professionals alike. Learn to design, query, and optimize databases using SQL and NoSQL technologies. Through hands-on projects, you'll gain practical skills in data modeling, performance tuning, and real-world database applications, preparing you for a career in data management.</p>
+            <h1>Cybersecurity Fundamentals</h1>
+            <p>Dive into the world of cybersecurity with our comprehensive course designed for beginners and professionals. Learn to protect systems and networks from cyber threats using tools and techniques like encryption, firewalls, and ethical hacking. Through hands-on labs, you'll gain practical skills in threat detection, risk assessment, and securing digital assets.</p>
+
             <div class="course-meta">
                 <div class="meta-item">
                     <i class="fas fa-clock"></i>
@@ -955,21 +1013,21 @@
             </div>
         </div>
 
-        <!-- Review Section -->
+        <!-- Right Side: Review Section -->
         <div class="review-section">
             <h2>Student Reviews</h2>
             <div class="review-slideshow">
-                <div class="review-card">
-                    <p>"An excellent course for understanding database systems. The instructors are very knowledgeable!"</p>
-                    <h4>- Michael Brown</h4>
+                <div class="review-card active">
+                    <p>"This course opened my eyes to the importance of cybersecurity. The labs were incredibly practical!"</p>
+                    <h4>- Rachel Lee</h4>
                 </div>
                 <div class="review-card">
-                    <p>"The hands-on projects helped me apply what I learned in real-world scenarios. Highly recommended!"</p>
-                    <h4>- Laura Smith</h4>
+                    <p>"The instructors made complex topics like encryption easy to understand. Highly recommend!"</p>
+                    <h4>- Ethan Carter</h4>
                 </div>
                 <div class="review-card">
-                    <p>"I loved the flexibility of this course. It fit perfectly into my busy schedule."</p>
-                    <h4>- James Wilson</h4>
+                    <p>"I feel confident in my ability to identify and mitigate cyber threats after this course."</p>
+                    <h4>- Priya Sharma</h4>
                 </div>
             </div>
         </div>
@@ -977,37 +1035,46 @@
 
     <!-- Course Bottom Section -->
     <section class="course-bottom-section">
-        <!-- Instructors Description -->
+        <!-- Left Side: Instructors Description -->
         <div class="instructors-description">
             <h2>Meet Your Instructors</h2>
             <div class="instructor-list">
                 <div class="instructor-item">
                     <div class="instructor-image">
-                        <img src="./images/teacher1.jpg" alt="Sam David">
+                        <img src="https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80" alt="Sarah Williams">
                     </div>
                     <div class="instructor-info">
-                        <h3>Sam David</h3>
-                        <p>Expert in Data Science with 12+ years of experience in database management and analytics.</p>
+                        <h3>Sarah Williams</h3>
+                        <p>Cybersecurity Expert with 10+ years in threat analysis</p>
+                    </div>
+                </div>
+                <div class="instructor-item">
+                    <div class="instructor-image">
+                        <img src="https://images.unsplash.com/photo-1506794778202-6d8d665e388b?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80" alt="James Carter">
+                    </div>
+                    <div class="instructor-info">
+                        <h3>James Carter</h3>
+                        <p>Ethical Hacker & Penetration Testing Specialist</p>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Why Choose This Course -->
+        <!-- Middle: Why Choose This Course -->
         <div class="why-choose">
             <h2>Why Choose This Course?</h2>
             <ul>
-                <li>Comprehensive curriculum covering SQL, NoSQL, and database design.</li>
-                <li>Hands-on projects to build and optimize real-world databases.</li>
-                <li>Expert instructors with extensive industry experience.</li>
-                <li>Flexible learning schedule with lifetime access to materials.</li>
-                <li>Supportive community and mentorship opportunities.</li>
-                <li>Preparation for database certifications like Oracle and MongoDB.</li>
-                <li>Cutting-edge learning platform with interactive tools.</li>
+                <li>Comprehensive curriculum covering encryption, firewalls, and ethical hacking</li>
+                <li>Hands-on labs to simulate real-world cyber threats</li>
+                <li>Expert instructors with extensive cybersecurity experience</li>
+                <li>Flexible learning schedule with lifetime access to materials</li>
+                <li>Supportive community and mentorship opportunities</li>
+                <li>Preparation for certifications like CompTIA Security+</li>
+                <li>Cutting-edge learning platform with interactive tools</li>
             </ul>
         </div>
 
-        <!-- Enroll Section -->
+        <!-- Right Side: Enroll Section -->
         <div class="enroll-section">
             <div class="enroll-card">
                 <h3>Start Learning Today</h3>

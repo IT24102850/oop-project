@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI & Machine Learning | NexoraSkill</title>
+    <title>Data Analytics Essentials | NexoraSkill</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="icon" type="image/png" href="./images/favicon.ico">
     <!-- Google Fonts -->
@@ -20,7 +20,7 @@
             --dark-color: #0a0f24;
             --darker-color: #050916;
             --text-color: #ffffff;
-            --text-muted: rgba(255, 255, 255, 0.7);
+            --text-muted: rgba(255,255,255,0.7);
             --hover-color: #00c6fb;
             --glow-color: rgba(0, 242, 254, 0.6);
             --card-bg: rgba(15, 23, 42, 0.8);
@@ -113,6 +113,7 @@
             z-index: 1000;
             background: var(--glass-bg);
             backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
             border-bottom: 1px solid rgba(0, 242, 254, 0.1);
             box-shadow: 0 5px 30px rgba(0, 0, 0, 0.2);
             transition: var(--transition);
@@ -141,6 +142,7 @@
             color: var(--text-color);
             text-decoration: none;
             transition: var(--transition);
+            position: relative;
         }
 
         .logo:hover {
@@ -150,7 +152,13 @@
 
         .logo img {
             height: 45px;
+            transition: var(--transition);
             filter: drop-shadow(0 0 5px var(--glow-color));
+        }
+
+        .logo:hover img {
+            transform: rotate(15deg) scale(1.1);
+            filter: drop-shadow(0 0 10px var(--glow-color));
         }
 
         .navbar ul {
@@ -160,6 +168,7 @@
         }
 
         .navbar ul li a {
+            position: relative;
             font-family: 'Poppins', sans-serif;
             text-decoration: none;
             color: var(--text-color);
@@ -167,7 +176,7 @@
             font-size: 1.1rem;
             transition: var(--transition);
             padding: 8px 0;
-            position: relative;
+            overflow: hidden;
         }
 
         .navbar ul li a:before {
@@ -179,6 +188,11 @@
             left: -100%;
             background: linear-gradient(90deg, transparent, var(--primary-color));
             transition: var(--transition);
+        }
+
+        .navbar ul li a:hover {
+            color: var(--primary-color);
+            text-shadow: 0 0 10px var(--glow-color);
         }
 
         .navbar ul li a:hover:before {
@@ -230,6 +244,8 @@
         .btn-login:hover {
             color: var(--dark-color);
             border-color: transparent;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 242, 254, 0.3);
         }
 
         .btn-signup {
@@ -242,6 +258,8 @@
             background: transparent;
             color: var(--primary-color);
             border-color: var(--primary-color);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 242, 254, 0.3);
         }
 
         /* Main Content */
@@ -261,11 +279,6 @@
             background: radial-gradient(circle, rgba(0, 242, 254, 0.05) 0%, transparent 70%);
             animation: rotate 60s linear infinite;
             z-index: -1;
-        }
-
-        @keyframes rotate {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
         }
 
         /* Course Top Section */
@@ -291,6 +304,7 @@
         .course-image:hover {
             transform: translateY(-10px);
             box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            border-color: rgba(0, 242, 254, 0.4);
         }
 
         .course-image img {
@@ -320,6 +334,7 @@
         .course-description:hover {
             transform: translateY(-10px);
             box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            border-color: rgba(0, 242, 254, 0.4);
         }
 
         .course-description h1 {
@@ -328,7 +343,7 @@
             background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            text-shadow: 0 0 20px var(--glow-color);
+            text-shadow: 0 0 30px rgba(0, 242, 254, 0.3);
             position: relative;
         }
 
@@ -382,6 +397,7 @@
         .review-section:hover {
             transform: translateY(-10px);
             box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            border-color: rgba(0, 242, 254, 0.4);
         }
 
         .review-section h2 {
@@ -460,6 +476,7 @@
         .instructors-description:hover {
             transform: translateY(-10px);
             box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            border-color: rgba(0, 242, 254, 0.4);
         }
 
         .instructors-description h2 {
@@ -534,6 +551,7 @@
         .why-choose:hover {
             transform: translateY(-10px);
             box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            border-color: rgba(0, 242, 254, 0.4);
         }
 
         .why-choose h2 {
@@ -604,6 +622,7 @@
         .enroll-card:hover {
             transform: translateY(-10px);
             box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            border-color: rgba(0, 242, 254, 0.4);
         }
 
         .enroll-card h3 {
@@ -750,6 +769,7 @@
             color: var(--dark-color);
             transform: translateY(-5px);
             box-shadow: 0 10px 20px rgba(0, 242, 254, 0.3);
+            border-color: transparent;
         }
 
         .footer-title {
@@ -857,12 +877,24 @@
 
         .scroll-top:hover {
             transform: translateY(-5px) scale(1.1);
+            box-shadow: 0 10px 25px rgba(0, 242, 254, 0.6);
         }
 
         /* Animations */
         @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
 
         /* Responsive Design */
@@ -883,17 +915,41 @@
         }
 
         @media (max-width: 768px) {
-            .navbar { display: none; }
-            .course-description h1 { font-size: 2.2rem; }
-            .course-meta { flex-direction: column; gap: 15px; }
-            .enroll-button { padding: 15px; font-size: 1rem; }
+            .navbar {
+                display: none;
+            }
+
+            .course-description h1 {
+                font-size: 2.2rem;
+            }
+
+            .course-meta {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .enroll-button {
+                padding: 15px;
+                font-size: 1rem;
+            }
         }
 
         @media (max-width: 576px) {
-            .auth-buttons { display: none; }
-            .course-description h1 { font-size: 1.8rem; }
-            .course-description p { font-size: 1rem; }
-            .why-choose li { font-size: 1rem; }
+            .auth-buttons {
+                display: none;
+            }
+
+            .course-description h1 {
+                font-size: 1.8rem;
+            }
+
+            .course-description p {
+                font-size: 1rem;
+            }
+
+            .why-choose li {
+                font-size: 1rem;
+            }
         }
     </style>
 </head>
@@ -910,6 +966,7 @@
             <img src="./images/favicon-32x32.png" alt="NexoraSkill Logo">
             <span>NexoraSkill</span>
         </a>
+
         <nav class="navbar">
             <ul>
                 <li><a href="index.jsp">Home</a></li>
@@ -930,23 +987,24 @@
 <main class="main-content">
     <!-- Course Top Section -->
     <section class="course-top-section">
-        <!-- Course Image -->
+        <!-- Left Side: Course Image -->
         <div class="course-image">
-            <img src="./images/ai-ml.jpg" alt="AI & Machine Learning Course Illustration">
+            <img src="https://images.unsplash.com/photo-1551288049-b011e0de2a4e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80" alt="Data Analytics Essentials">
         </div>
 
-        <!-- Course Description -->
+        <!-- Middle: Course Description -->
         <div class="course-description">
-            <h1>AI & Machine Learning</h1>
-            <p>Dive into the transformative world of artificial intelligence and machine learning. This comprehensive course covers fundamental algorithms, neural networks, deep learning, and practical applications using real-world datasets. Build intelligent systems and solve complex problems with cutting-edge AI technologies.</p>
+            <h1>Data Analytics Essentials</h1>
+            <p>Unlock the power of data with our Data Analytics Essentials course. Learn to analyze, visualize, and interpret data using tools like Python, SQL, and Tableau. This course covers data cleaning, statistical analysis, and creating impactful dashboards, equipping you with skills to drive data-driven decisions.</p>
+
             <div class="course-meta">
                 <div class="meta-item">
                     <i class="fas fa-clock"></i>
-                    <span>12 Weeks</span>
+                    <span>10 Weeks</span>
                 </div>
                 <div class="meta-item">
                     <i class="fas fa-chart-line"></i>
-                    <span>Intermediate Level</span>
+                    <span>Beginner to Intermediate</span>
                 </div>
                 <div class="meta-item">
                     <i class="fas fa-certificate"></i>
@@ -955,21 +1013,21 @@
             </div>
         </div>
 
-        <!-- Review Section -->
+        <!-- Right Side: Review Section -->
         <div class="review-section">
             <h2>Student Reviews</h2>
             <div class="review-slideshow">
-                <div class="review-card">
-                    <p>"Transformed my understanding of what AI can achieve."</p>
-                    <h4>- David Kim</h4>
+                <div class="review-card active">
+                    <p>"This course gave me the confidence to work with data and present insights effectively."</p>
+                    <h4>- Anika Patel</h4>
                 </div>
                 <div class="review-card">
-                    <p>"The projects helped me build a strong portfolio."</p>
-                    <h4>- Maria Garcia</h4>
+                    <p>"The hands-on projects with real datasets were incredibly valuable."</p>
+                    <h4>- Michael Brown</h4>
                 </div>
                 <div class="review-card">
-                    <p>"Perfect balance of theory and practical implementation."</p>
-                    <h4>- James Wilson</h4>
+                    <p>"I learned how to use Tableau and Python for data analysis – highly recommend!"</p>
+                    <h4>- Sophia Nguyen</h4>
                 </div>
             </div>
         </div>
@@ -977,39 +1035,50 @@
 
     <!-- Course Bottom Section -->
     <section class="course-bottom-section">
-        <!-- Instructors Description -->
+        <!-- Left Side: Instructors Description -->
         <div class="instructors-description">
             <h2>Meet Your Instructors</h2>
             <div class="instructor-list">
                 <div class="instructor-item">
                     <div class="instructor-image">
-                        <img src="./images/teacher3.jpg" alt="Dr. Alan Turing">
+                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80" alt="Dr. Emma Carter">
                     </div>
                     <div class="instructor-info">
-                        <h3>Dr. Alan Turing</h3>
-                        <p>AI Research Scientist with 15+ years of experience in machine learning.</p>
+                        <h3>Dr. Emma Carter</h3>
+                        <p>Data Scientist with 12+ years of experience in analytics</p>
+                    </div>
+                </div>
+                <div class="instructor-item">
+                    <div class="instructor-image">
+                        <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80" alt="Liam Foster">
+                    </div>
+                    <div class="instructor-info">
+                        <h3>Liam Foster</h3>
+                        <p>Data Visualization Expert & Tableau Specialist</p>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Why Choose This Course -->
+        <!-- Middle: Why Choose This Course -->
         <div class="why-choose">
             <h2>Why Choose This Course?</h2>
             <ul>
-                <li>Hands-on projects with real-world datasets to build intelligent systems.</li>
-                <li>Comprehensive coverage of classical and modern AI techniques.</li>
-                <li>Guidance from leading AI researchers with industry expertise.</li>
-                <li>Career-focused curriculum with portfolio-building opportunities.</li>
-                <li>Flexible learning schedule with lifetime access to materials.</li>
+                <li>Master data analysis with Python, SQL, and Tableau</li>
+                <li>Hands-on projects with real-world datasets</li>
+                <li>Learn from industry experts with extensive analytics experience</li>
+                <li>Flexible schedule with lifetime access to course materials</li>
+                <li>Create impactful data visualizations and dashboards</li>
+                <li>Join a supportive community of data enthusiasts</li>
+                <li>Career guidance to kickstart your analytics journey</li>
             </ul>
         </div>
 
-        <!-- Enroll Section -->
+        <!-- Right Side: Enroll Section -->
         <div class="enroll-section">
             <div class="enroll-card">
                 <h3>Start Learning Today</h3>
-                <div class="price">$199.99</div>
+                <div class="price">$149.99</div>
                 <button class="enroll-button">
                     <i class="fas fa-user-graduate"></i> Enroll Now
                 </button>
