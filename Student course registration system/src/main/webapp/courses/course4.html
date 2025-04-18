@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cybersecurity Fundamentals | NexoraSkill</title>
+    <title>Mobile App Development with Flutter | NexoraSkill</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="icon" type="image/png" href="./images/favicon.ico">
     <!-- Google Fonts -->
@@ -20,7 +20,7 @@
             --dark-color: #0a0f24;
             --darker-color: #050916;
             --text-color: #ffffff;
-            --text-muted: rgba(255, 255, 255, 0.7);
+            --text-muted: rgba(255,255,255,0.7);
             --hover-color: #00c6fb;
             --glow-color: rgba(0, 242, 254, 0.6);
             --card-bg: rgba(15, 23, 42, 0.8);
@@ -113,6 +113,7 @@
             z-index: 1000;
             background: var(--glass-bg);
             backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
             border-bottom: 1px solid rgba(0, 242, 254, 0.1);
             box-shadow: 0 5px 30px rgba(0, 0, 0, 0.2);
             transition: var(--transition);
@@ -141,6 +142,7 @@
             color: var(--text-color);
             text-decoration: none;
             transition: var(--transition);
+            position: relative;
         }
 
         .logo:hover {
@@ -149,8 +151,14 @@
         }
 
         .logo img {
-            height: 45px;
+            DCC height: 45px;
+            transition: var(--transition);
             filter: drop-shadow(0 0 5px var(--glow-color));
+        }
+
+        .logo:hover img {
+            transform: rotate(15deg) scale(1.1);
+            filter: drop-shadow(0 0 10px var(--glow-color));
         }
 
         .navbar ul {
@@ -160,6 +168,7 @@
         }
 
         .navbar ul li a {
+            position: relative;
             font-family: 'Poppins', sans-serif;
             text-decoration: none;
             color: var(--text-color);
@@ -167,7 +176,7 @@
             font-size: 1.1rem;
             transition: var(--transition);
             padding: 8px 0;
-            position: relative;
+            overflow: hidden;
         }
 
         .navbar ul li a:before {
@@ -179,6 +188,11 @@
             left: -100%;
             background: linear-gradient(90deg, transparent, var(--primary-color));
             transition: var(--transition);
+        }
+
+        .navbar ul li a:hover {
+            color: var(--primary-color);
+            text-shadow: 0 0 10px var(--glow-color);
         }
 
         .navbar ul li a:hover:before {
@@ -230,6 +244,8 @@
         .btn-login:hover {
             color: var(--dark-color);
             border-color: transparent;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 242, 254, 0.3);
         }
 
         .btn-signup {
@@ -242,6 +258,8 @@
             background: transparent;
             color: var(--primary-color);
             border-color: var(--primary-color);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 242, 254, 0.3);
         }
 
         /* Main Content */
@@ -261,11 +279,6 @@
             background: radial-gradient(circle, rgba(0, 242, 254, 0.05) 0%, transparent 70%);
             animation: rotate 60s linear infinite;
             z-index: -1;
-        }
-
-        @keyframes rotate {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
         }
 
         /* Course Top Section */
@@ -291,6 +304,7 @@
         .course-image:hover {
             transform: translateY(-10px);
             box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            border-color: rgba(0, 242, 254, 0.4);
         }
 
         .course-image img {
@@ -320,6 +334,7 @@
         .course-description:hover {
             transform: translateY(-10px);
             box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            border-color: rgba(0, 242, 254, 0.4);
         }
 
         .course-description h1 {
@@ -328,7 +343,7 @@
             background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            text-shadow: 0 0 20px var(--glow-color);
+            text-shadow: 0 0 30px rgba(0, 242, 254, 0.3);
             position: relative;
         }
 
@@ -382,6 +397,7 @@
         .review-section:hover {
             transform: translateY(-10px);
             box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            border-color: rgba(0, 242, 254, 0.4);
         }
 
         .review-section h2 {
@@ -460,6 +476,7 @@
         .instructors-description:hover {
             transform: translateY(-10px);
             box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            border-color: rgba(0, 242, 254, 0.4);
         }
 
         .instructors-description h2 {
@@ -534,6 +551,7 @@
         .why-choose:hover {
             transform: translateY(-10px);
             box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            border-color: rgba(0, 242, 254, 0.4);
         }
 
         .why-choose h2 {
@@ -604,6 +622,7 @@
         .enroll-card:hover {
             transform: translateY(-10px);
             box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            border-color: rgba(0, 242, 254, 0.4);
         }
 
         .enroll-card h3 {
@@ -750,6 +769,7 @@
             color: var(--dark-color);
             transform: translateY(-5px);
             box-shadow: 0 10px 20px rgba(0, 242, 254, 0.3);
+            border-color: transparent;
         }
 
         .footer-title {
@@ -857,12 +877,24 @@
 
         .scroll-top:hover {
             transform: translateY(-5px) scale(1.1);
+            box-shadow: 0 10px 25px rgba(0, 242, 254, 0.6);
         }
 
         /* Animations */
         @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
 
         /* Responsive Design */
@@ -883,17 +915,41 @@
         }
 
         @media (max-width: 768px) {
-            .navbar { display: none; }
-            .course-description h1 { font-size: 2.2rem; }
-            .course-meta { flex-direction: column; gap: 15px; }
-            .enroll-button { padding: 15px; font-size: 1rem; }
+            .navbar {
+                display: none;
+            }
+
+            .course-description h1 {
+                font-size: 2.2rem;
+            }
+
+            .course-meta {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .enroll-button {
+                padding: 15px;
+                font-size: 1rem;
+            }
         }
 
         @media (max-width: 576px) {
-            .auth-buttons { display: none; }
-            .course-description h1 { font-size: 1.8rem; }
-            .course-description p { font-size: 1rem; }
-            .why-choose li { font-size: 1rem; }
+            .auth-buttons {
+                display: none;
+            }
+
+            .course-description h1 {
+                font-size: 1.8rem;
+            }
+
+            .course-description p {
+                font-size: 1rem;
+            }
+
+            .why-choose li {
+                font-size: 1rem;
+            }
         }
     </style>
 </head>
@@ -910,6 +966,7 @@
             <img src="./images/favicon-32x32.png" alt="NexoraSkill Logo">
             <span>NexoraSkill</span>
         </a>
+
         <nav class="navbar">
             <ul>
                 <li><a href="index.jsp">Home</a></li>
@@ -930,23 +987,24 @@
 <main class="main-content">
     <!-- Course Top Section -->
     <section class="course-top-section">
-        <!-- Course Image -->
+        <!-- Left Side: Course Image -->
         <div class="course-image">
-            <img src="./images/cybersecurity.jpg" alt="Cybersecurity Course Illustration">
+            <img src="https://images.unsplash.com/photo-1516321310766-61f6f8c0e48f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80" alt="Mobile App Development with Flutter">
         </div>
 
-        <!-- Course Description -->
+        <!-- Middle: Course Description -->
         <div class="course-description">
-            <h1>Cybersecurity Fundamentals</h1>
-            <p>Master the art of protecting systems, networks, and programs from digital attacks. This course covers essential cybersecurity concepts, threat detection, penetration testing, and defense strategies to secure digital assets in an increasingly connected world. Learn from industry experts and prepare for real-world challenges.</p>
+            <h1>Mobile App Development with Flutter</h1>
+            <p>Build stunning, high-performance mobile apps for iOS and Android with Flutter, Google's open-source UI toolkit. This course guides you through creating responsive, feature-rich applications with hands-on projects, from UI design to state management and backend integration. Perfect for beginners and aspiring app developers!</p>
+
             <div class="course-meta">
                 <div class="meta-item">
                     <i class="fas fa-clock"></i>
-                    <span>10 Weeks</span>
+                    <span>12 Weeks</span>
                 </div>
                 <div class="meta-item">
                     <i class="fas fa-chart-line"></i>
-                    <span>Intermediate Level</span>
+                    <span>Beginner to Intermediate</span>
                 </div>
                 <div class="meta-item">
                     <i class="fas fa-certificate"></i>
@@ -955,21 +1013,21 @@
             </div>
         </div>
 
-        <!-- Review Section -->
+        <!-- Right Side: Review Section -->
         <div class="review-section">
             <h2>Student Reviews</h2>
             <div class="review-slideshow">
                 <div class="review-card">
-                    <p>"Eye-opening course that made me rethink digital security."</p>
-                    <h4>- Michael Chen</h4>
+                    <p>"Flutter made app development so approachable! This course helped me build my first app from scratch."</p>
+                    <h4>- Priya Sharma</h4>
                 </div>
                 <div class="review-card">
-                    <p>"Practical labs helped me understand real-world threats."</p>
-                    <h4>- Priya Patel</h4>
+                    <p>"The projects were fantastic, and the instructors explained complex concepts clearly."</p>
+                    <h4>- James Lee</h4>
                 </div>
                 <div class="review-card">
-                    <p>"Comprehensive coverage of security fundamentals."</p>
-                    <h4>- Robert Johnson</h4>
+                    <p>"I loved the hands-on approach. Now I’m confident in building cross-platform apps!"</p>
+                    <h4>- Aisha Khan</h4>
                 </div>
             </div>
         </div>
@@ -977,39 +1035,50 @@
 
     <!-- Course Bottom Section -->
     <section class="course-bottom-section">
-        <!-- Instructors Description -->
+        <!-- Left Side: Instructors Description -->
         <div class="instructors-description">
             <h2>Meet Your Instructors</h2>
             <div class="instructor-list">
                 <div class="instructor-item">
                     <div class="instructor-image">
-                        <img src="./images/teacher2.jpg" alt="Sarah Williams">
+                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80" alt="Mark Thompson">
                     </div>
                     <div class="instructor-info">
-                        <h3>Sarah Williams</h3>
-                        <p>Former Chief Security Officer with 20+ years of experience in cybersecurity.</p>
+                        <h3>Mark Thompson</h3>
+                        <p>Flutter Expert & Mobile App Developer with 10+ years of experience</p>
+                    </div>
+                </div>
+                <div class="instructor-item">
+                    <div class="instructor-image">
+                        <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80" alt="Sophie Chen">
+                    </div>
+                    <div class="instructor-info">
+                        <h3>Sophie Chen</h3>
+                        <p>UI/UX Specialist & Flutter Advocate</p>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Why Choose This Course -->
+        <!-- Middle: Why Choose This Course -->
         <div class="why-choose">
             <h2>Why Choose This Course?</h2>
             <ul>
-                <li>Hands-on penetration testing exercises to simulate real-world attacks.</li>
-                <li>Learn from industry security experts with extensive experience.</li>
-                <li>Comprehensive coverage of the latest cybersecurity threats and defenses.</li>
-                <li>Preparation for industry certifications like CompTIA Security+.</li>
-                <li>Flexible learning schedule with lifetime access to materials.</li>
+                <li>Master Flutter to build cross-platform apps for iOS and Android</li>
+                <li>Hands-on projects, including a fully functional app portfolio</li>
+                <li>Learn from expert instructors with real-world Flutter experience</li>
+                <li>Flexible schedule with lifetime access to course materials</li>
+                <li>Explore state management, animations, and API integration</li>
+                <li>Join a vibrant community of Flutter developers</li>
+                <li>Career guidance to launch your app development journey</li>
             </ul>
         </div>
 
-        <!-- Enroll Section -->
+        <!-- Right Side: Enroll Section -->
         <div class="enroll-section">
             <div class="enroll-card">
                 <h3>Start Learning Today</h3>
-                <div class="price">$149.99</div>
+                <div class="price">$129.99</div>
                 <button class="enroll-button">
                     <i class="fas fa-user-graduate"></i> Enroll Now
                 </button>
@@ -1065,7 +1134,7 @@
         </div>
     </div>
     <div class="footer-bottom">
-        <p>© 2023 NexoraSkill. All rights reserved. | Designed with <i class="fas fa-heart" style="color: var(--accent-color);"></i> for the future of education</p>
+        <p>&copy; 2023 NexoraSkill. All rights reserved. | Designed with <i class="fas fa-heart" style="color: var(--accent-color);"></i> for the future of education</p>
     </div>
 </footer>
 
