@@ -1,7 +1,6 @@
 // ContactServlet.java
 package com.studentregistration.servlets;
 
-import com.studentregistration.util.FileUtil;
 import javax.servlet.*;
 import javax.servlet.http.*;
 import javax.servlet.annotation.*;
