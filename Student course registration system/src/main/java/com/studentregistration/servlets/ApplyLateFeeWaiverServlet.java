@@ -1,6 +1,17 @@
+package com.studentregistration.servlets;
+
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import java.io.IOException;
+
 @WebServlet("/ApplyLateFeeWaiver")
 public class ApplyLateFeeWaiverServlet extends HttpServlet {
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
         // CSRF protection
         if (!validateCsrfToken(request)) {
             response.sendError(HttpServletResponse.SC_FORBIDDEN, "Invalid CSRF token");
@@ -13,14 +24,14 @@ public class ApplyLateFeeWaiverServlet extends HttpServlet {
 
         try {
             // Validate invoice ID format
-            if (!invoiceId.matches("INV-\\d{4}-\\d{3}")) {
+            if (invoiceId == null || !invoiceId.matches("INV-\\d{4}-\\d{3}")) {
                 request.setAttribute("notification", "error");
-                request.setAttribute("message", "Invalid Invoice ID format");
+                request.setAttribute("message", "Invalid Invoice ID format (should be INV-YYYY-NNN)");
                 request.getRequestDispatcher("fee-management.jsp").forward(request, response);
                 return;
             }
 
-            // Check if invoice exists and is eligible for waiver
+            // Check if invoice exists
             if (!InvoiceDAO.invoiceExists(invoiceId)) {
                 request.setAttribute("notification", "error");
                 request.setAttribute("message", "Invoice not found");
@@ -28,6 +39,7 @@ public class ApplyLateFeeWaiverServlet extends HttpServlet {
                 return;
             }
 
+            // Check if waiver already applied
             if (InvoiceDAO.isWaiverApplied(invoiceId)) {
                 request.setAttribute("notification", "error");
                 request.setAttribute("message", "Waiver already applied to this invoice");
@@ -49,13 +61,18 @@ public class ApplyLateFeeWaiverServlet extends HttpServlet {
                 request.setAttribute("message", "Failed to apply waiver");
             }
 
-            request.getRequestDispatcher("fee-management.jsp").forward(request, response);
-
         } catch (Exception e) {
-            log("Error applying late fee waiver", e);
             request.setAttribute("notification", "error");
-            request.setAttribute("message", "Error applying waiver");
-            request.getRequestDispatcher("fee-management.jsp").forward(request, response);
+            request.setAttribute("message", "Error processing waiver request");
+            log("Error applying late fee waiver", e);
         }
+
+        request.getRequestDispatcher("fee-management.jsp").forward(request, response);
+    }
+
+    private boolean validateCsrfToken(HttpServletRequest request) {
+        String sessionToken = (String) request.getSession().getAttribute("csrfToken");
+        String requestToken = request.getParameter("csrfToken");
+        return sessionToken != null && sessionToken.equals(requestToken);
     }
 }

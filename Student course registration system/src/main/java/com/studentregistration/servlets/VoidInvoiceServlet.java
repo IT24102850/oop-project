@@ -1,8 +1,21 @@
+package com.studentregistration.servlets;
+
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import java.io.IOException;
+
 @WebServlet("/VoidInvoice")
 public class VoidInvoiceServlet extends HttpServlet {
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
         // CSRF protection
-        if (!validateCsrfToken(request)) {
+        String sessionToken = (String) request.getSession().getAttribute("csrfToken");
+        String requestToken = request.getParameter("csrfToken");
+        if (sessionToken == null || !sessionToken.equals(requestToken)) {
             response.sendError(HttpServletResponse.SC_FORBIDDEN, "Invalid CSRF token");
             return;
         }
@@ -13,14 +26,14 @@ public class VoidInvoiceServlet extends HttpServlet {
 
         try {
             // Validate invoice ID format
-            if (!invoiceId.matches("INV-\\d{4}-\\d{3}")) {
+            if (invoiceId == null || !invoiceId.matches("INV-\\d{4}-\\d{3}")) {
                 request.setAttribute("notification", "error");
                 request.setAttribute("message", "Invalid Invoice ID format");
                 request.getRequestDispatcher("fee-management.jsp").forward(request, response);
                 return;
             }
 
-            // Check if invoice exists and can be voided
+            // Check if invoice exists
             if (!InvoiceDAO.invoiceExists(invoiceId)) {
                 request.setAttribute("notification", "error");
                 request.setAttribute("message", "Invoice not found");
@@ -28,6 +41,7 @@ public class VoidInvoiceServlet extends HttpServlet {
                 return;
             }
 
+            // Check if already voided
             if (InvoiceDAO.isInvoiceVoided(invoiceId)) {
                 request.setAttribute("notification", "error");
                 request.setAttribute("message", "Invoice is already voided");
@@ -49,13 +63,12 @@ public class VoidInvoiceServlet extends HttpServlet {
                 request.setAttribute("message", "Failed to void invoice");
             }
 
-            request.getRequestDispatcher("fee-management.jsp").forward(request, response);
-
         } catch (Exception e) {
             log("Error voiding invoice", e);
             request.setAttribute("notification", "error");
             request.setAttribute("message", "Error voiding invoice");
-            request.getRequestDispatcher("fee-management.jsp").forward(request, response);
         }
+
+        request.getRequestDispatcher("fee-management.jsp").forward(request, response);
     }
 }

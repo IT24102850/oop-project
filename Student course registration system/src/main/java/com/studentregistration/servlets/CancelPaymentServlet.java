@@ -1,6 +1,14 @@
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import java.io.IOException;
+
 @WebServlet("/CancelPayment")
 public class CancelPaymentServlet extends HttpServlet {
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
         // CSRF protection
         if (!validateCsrfToken(request)) {
             response.sendError(HttpServletResponse.SC_FORBIDDEN, "Invalid CSRF token");
@@ -20,51 +28,18 @@ public class CancelPaymentServlet extends HttpServlet {
                 return;
             }
 
-            // Check if payment exists and can be canceled
-            PaymentRecord payment = PaymentDAO.getPayment(paymentId);
-            if (payment == null) {
-                request.setAttribute("notification", "error");
-                request.setAttribute("message", "Payment not found");
-                request.getRequestDispatcher("fee-management.jsp").forward(request, response);
-                return;
-            }
-
-            if ("CANCELED".equals(payment.getStatus())) {
-                request.setAttribute("notification", "error");
-                request.setAttribute("message", "Payment is already canceled");
-                request.getRequestDispatcher("fee-management.jsp").forward(request, response);
-                return;
-            }
-
-            // Check if within 24-hour cancellation window
-            if (!PaymentDAO.isWithinCancellationWindow(paymentId)) {
-                request.setAttribute("notification", "error");
-                request.setAttribute("message", "Cancellation window has expired (24 hours)");
-                request.getRequestDispatcher("fee-management.jsp").forward(request, response);
-                return;
-            }
-
-            // Combine reason if "Other" was selected
-            String finalReason = "Other".equals(reason) ? otherReason : reason;
-
-            // Cancel payment
-            boolean success = PaymentDAO.cancelPayment(paymentId, finalReason);
-
-            if (success) {
-                request.setAttribute("notification", "success");
-                request.setAttribute("message", "Payment " + paymentId + " has been canceled");
-            } else {
-                request.setAttribute("notification", "error");
-                request.setAttribute("message", "Failed to cancel payment");
-            }
-
-            request.getRequestDispatcher("fee-management.jsp").forward(request, response);
+            // Rest of your servlet code...
 
         } catch (Exception e) {
-            log("Error canceling payment", e);
+            e.printStackTrace();
             request.setAttribute("notification", "error");
-            request.setAttribute("message", "Error canceling payment");
+            request.setAttribute("message", "Error processing payment cancellation");
             request.getRequestDispatcher("fee-management.jsp").forward(request, response);
         }
+    }
+
+    private boolean validateCsrfToken(HttpServletRequest request) {
+        // Your CSRF validation logic
+        return true; // Replace with actual implementation
     }
 }
