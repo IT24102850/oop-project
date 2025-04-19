@@ -6,6 +6,15 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%--
+Created by IntelliJ IDEA.
+User: user
+Date: 4/19/2025
+Time: 6:16 PM
+To change this template use File | Settings | File Templates.
+--%>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -273,6 +282,14 @@
             box-shadow: 0 15px 30px rgba(255, 77, 126, 0.4);
         }
 
+        .submit-button.cancel-payment-button {
+            background: var(--warning-color);
+        }
+
+        .submit-button.cancel-payment-button:hover {
+            box-shadow: 0 15px 30px rgba(255, 204, 0, 0.4);
+        }
+
         /* Tab navigation styles */
         .tab-container {
             display: flex;
@@ -381,6 +398,11 @@
             font-weight: 600;
         }
 
+        .status-canceled {
+            color: var(--accent-color);
+            font-weight: 600;
+        }
+
         /* Notification styles */
         .notification {
             padding: 15px 20px;
@@ -453,6 +475,18 @@
         .modal-actions .submit-button {
             margin-top: 0;
             flex: 1;
+        }
+
+        /* Countdown Timer */
+        .countdown-timer {
+            color: var(--warning-color);
+            font-weight: 600;
+            margin-left: 10px;
+        }
+
+        .countdown-expired {
+            color: var(--error-color);
+            font-weight: 600;
         }
 
         /* Floating elements */
@@ -573,6 +607,14 @@
 <div class="application-container">
     <h1 class="hud-header">Fee Management</h1>
 
+    <!-- Notification Display -->
+    <c:if test="${not empty message}">
+        <div class="notification ${notification}" aria-live="polite">
+            <i class="fas fa-${notification == 'success' ? 'check-circle' : notification == 'error' ? 'exclamation-circle' : 'exclamation-triangle'}"></i>
+            <div>${message}</div>
+        </div>
+    </c:if>
+
     <!-- Tab Navigation -->
     <div class="tab-container" role="tablist">
         <button class="tab-label active" data-tab="payment-history" role="tab" aria-controls="payment-history" aria-selected="true">
@@ -584,6 +626,9 @@
         <button class="tab-label" data-tab="void-invoice" role="tab" aria-controls="void-invoice" aria-selected="false">
             <i class="fas fa-times-circle"></i> Void Invoice
         </button>
+        <button class="tab-label" data-tab="cancel-payment" role="tab" aria-controls="cancel-payment" aria-selected="false">
+            <i class="fas fa-ban"></i> Cancel Payment
+        </button>
     </div>
 
     <!-- Payment History Section -->
@@ -592,11 +637,12 @@
             <i class="fas fa-history"></i> Payment History
         </h2>
 
-        <form id="payment-history-form" class="search-form">
+        <form id="payment-history-form" action="ViewPaymentHistory" method="get" class="search-form">
             <div class="input-holofield">
                 <label for="studentId"><i class="fas fa-user-graduate"></i> Student ID</label>
                 <input type="text" id="studentId" name="studentId" class="holo-input"
-                       placeholder="Enter Student ID (e.g., S1001)" pattern="S[0-9]{4}" required>
+                       placeholder="Enter Student ID (e.g., S1001)" pattern="S[0-9]{4}" required
+                       value="${studentId}">
             </div>
             <div class="input-holofield">
                 <label for="startDate"><i class="fas fa-calendar-alt"></i> Start Date</label>
@@ -611,64 +657,60 @@
             </button>
         </form>
 
-        <!-- Sample Notification -->
-        <div class="notification success" aria-live="polite">
-            <i class="fas fa-check-circle"></i>
-            <div>Payment history loaded successfully.</div>
-        </div>
-
-        <!-- Sample Payment Records -->
-        <div class="price-display">
-            <h3>
-                <i class="fas fa-receipt"></i> Payment Records for Student ID: S1001
-            </h3>
-            <table class="payment-table">
-                <thead>
-                <tr>
-                    <th>Invoice ID</th>
-                    <th>Date</th>
-                    <th>Amount</th>
-                    <th>Payment Method</th>
-                    <th>Status</th>
-                    <th>Details</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td>INV-2023-001</td>
-                    <td>2023-10-15</td>
-                    <td>$500.00</td>
-                    <td>Credit Card</td>
-                    <td class="status-paid"><i class="fas fa-circle"></i> Paid</td>
-                    <td>
-                        <button class="submit-button secondary payment-details-button">
-                            <i class="fas fa-info-circle"></i> Details
-                        </button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>INV-2023-002</td>
-                    <td>2023-11-01</td>
-                    <td>$300.00</td>
-                    <td>Bank Transfer</td>
-                    <td class="status-pending"><i class="fas fa-circle"></i> Pending</td>
-                    <td>
-                        <button class="submit-button secondary payment-details-button">
-                            <i class="fas fa-info-circle"></i> Details
-                        </button>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-            <div class="pagination">
-                <button class="submit-button secondary" disabled>Previous</button>
-                <button class="submit-button secondary">Next</button>
+        <c:if test="${not empty paymentRecords}">
+            <div class="price-display">
+                <h3>
+                    <i class="fas fa-receipt"></i> Payment Records for Student ID: ${studentId}
+                </h3>
+                <table class="payment-table">
+                    <thead>
+                    <tr>
+                        <th>Payment ID</th>
+                        <th>Date</th>
+                        <th>Amount</th>
+                        <th>Method</th>
+                        <th>Status</th>
+                        <th>Cancel Window</th>
+                        <th>Details</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <c:forEach var="record" items="${paymentRecords}">
+                        <tr>
+                            <td>${record.paymentId}</td>
+                            <td>${record.paymentDate}</td>
+                            <td>$${record.amount}</td>
+                            <td>${record.paymentMethod}</td>
+                            <td class="status-${record.status.toLowerCase()}"><i class="fas fa-circle"></i> ${record.status}</td>
+                            <td>
+                                <c:choose>
+                                    <c:when test="${record.status != 'CANCELED' && record.canCancel}">
+                                        <span class="countdown-timer" data-timestamp="${record.timestamp}"></span>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <span class="countdown-expired">Expired</span>
+                                    </c:otherwise>
+                                </c:choose>
+                            </td>
+                            <td>
+                                <button class="submit-button secondary payment-details-button">
+                                    <i class="fas fa-info-circle"></i> Details
+                                </button>
+                            </td>
+                        </tr>
+                    </c:forEach>
+                    </tbody>
+                </table>
+                <div class="pagination">
+                    <button class="submit-button secondary" disabled>Previous</button>
+                    <button class="submit-button secondary">Next</button>
+                </div>
+                <div class="price-line total">
+                    <span>Total Payments:</span>
+                    <span>$${totalPayments}</span>
+                </div>
             </div>
-            <div class="price-line total">
-                <span>Total Payments:</span>
-                <span>$800.00</span>
-            </div>
-        </div>
+        </c:if>
     </div>
 
     <!-- Apply Late Fee Waiver Section -->
@@ -677,7 +719,7 @@
             <i class="fas fa-hand-holding-heart"></i> Apply Late Fee Waiver
         </h2>
 
-        <form id="waiver-form">
+        <form id="waiver-form" action="ApplyLateFeeWaiver" method="post">
             <div class="input-holofield">
                 <label for="waiverInvoiceId"><i class="fas fa-file-invoice-dollar"></i> Invoice ID</label>
                 <input type="text" id="waiverInvoiceId" name="invoiceId" class="holo-input"
@@ -710,7 +752,7 @@
             <i class="fas fa-times-circle"></i> Void Invoice
         </h2>
 
-        <form id="void-form">
+        <form id="void-form" action="VoidInvoice" method="post">
             <div class="input-holofield">
                 <label for="voidInvoiceId"><i class="fas fa-file-invoice-dollar"></i> Invoice ID</label>
                 <input type="text" id="voidInvoiceId" name="invoiceId" class="holo-input"
@@ -741,6 +783,43 @@
         </form>
     </div>
 
+    <!-- Cancel Payment Section -->
+    <div id="cancel-payment" class="tab-section" role="tabpanel" aria-labelledby="cancel-payment-tab">
+        <h2 class="hud-header">
+            <i class="fas fa-ban"></i> Cancel Payment
+        </h2>
+
+        <form id="cancel-form" action="CancelPayment" method="post">
+            <div class="input-holofield">
+                <label for="paymentId"><i class="fas fa-file-invoice-dollar"></i> Payment ID</label>
+                <input type="text" id="paymentId" name="paymentId" class="holo-input"
+                       placeholder="Enter Payment ID (e.g., PAY-2023-001)" pattern="PAY-[0-9]{4}-[0-9]{3}" required>
+            </div>
+            <div class="input-holofield">
+                <label for="cancelReason"><i class="fas fa-comment-alt"></i> Reason for Cancellation</label>
+                <select id="cancelReason" name="reason" class="holo-input" required>
+                    <option value="">Select a reason...</option>
+                    <option value="Changed Mind">Changed Mind</option>
+                    <option value="Payment Error">Payment Error</option>
+                    <option value="Incorrect Amount">Incorrect Amount</option>
+                    <option value="Other">Other (please specify)</option>
+                </select>
+            </div>
+            <div class="input-holofield" id="cancelOtherReasonContainer" style="display: none;">
+                <label for="cancelOtherReason"><i class="fas fa-pen"></i> Specify Reason</label>
+                <textarea id="cancelOtherReason" name="otherReason" class="holo-input"
+                          placeholder="Please specify the reason for cancellation..." rows="3"></textarea>
+            </div>
+            <div class="notification warning" aria-live="polite">
+                <i class="fas fa-exclamation-triangle"></i>
+                <div><strong>Warning:</strong> Payments can only be canceled within 24 hours of processing.</div>
+            </div>
+            <button type="submit" class="submit-button cancel-payment-button">
+                <i class="fas fa-ban"></i> Confirm Cancel Payment
+            </button>
+        </form>
+    </div>
+
     <!-- Confirmation Modal -->
     <div id="confirmModal" class="modal" style="display: none;">
         <div class="modal-content">
@@ -754,7 +833,7 @@
     </div>
 
     <!-- Back to Dashboard -->
-    <a href="admin-dashboard.html" class="submit-button secondary">
+    <a href="admin-dashboard.jsp" class="submit-button secondary">
         <i class="fas fa-arrow-left"></i> Back to Dashboard
     </a>
 </div>
@@ -767,14 +846,12 @@
 
         tabLabels.forEach(label => {
             label.addEventListener('click', function() {
-                // Remove active class from all labels and sections
                 tabLabels.forEach(l => {
                     l.classList.remove('active');
                     l.setAttribute('aria-selected', 'false');
                 });
                 tabSections.forEach(s => s.classList.remove('active'));
 
-                // Add active class to clicked label and corresponding section
                 this.classList.add('active');
                 this.setAttribute('aria-selected', 'true');
                 const tabId = this.getAttribute('data-tab');
@@ -785,40 +862,22 @@
         // Form submission handling
         document.querySelectorAll('form').forEach(form => {
             form.addEventListener('submit', function(e) {
-                e.preventDefault();
                 const button = this.querySelector('.submit-button');
                 const originalContent = button.innerHTML;
                 button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
                 button.disabled = true;
 
-                // Simulate form submission
+                // Allow form submission to proceed (handled by servlet)
                 setTimeout(() => {
                     button.innerHTML = originalContent;
                     button.disabled = false;
-
-                    // Show success notification
-                    const notification = document.createElement('div');
-                    notification.className = 'notification success';
-                    notification.setAttribute('aria-live', 'polite');
-                    notification.innerHTML = `
-                        <i class="fas fa-check-circle"></i>
-                        <div>Operation completed successfully</div>
-                    `;
-                    this.parentNode.insertBefore(notification, this.nextSibling);
-
-                    // Remove notification after 5 seconds
-                    setTimeout(() => {
-                        notification.style.opacity = '0';
-                        setTimeout(() => notification.remove(), 300);
-                    }, 5000);
-                }, 1500);
+                }, 2000); // Reset button after 2 seconds (adjust as needed)
             });
         });
 
-        // Show/hide other reason field based on selection
+        // Show/hide other reason fields
         const waiverReason = document.getElementById('waiverReason');
         const otherReasonContainer = document.getElementById('otherReasonContainer');
-
         if (waiverReason && otherReasonContainer) {
             waiverReason.addEventListener('change', function() {
                 otherReasonContainer.style.display = this.value === 'Other' ? 'block' : 'none';
@@ -830,12 +889,22 @@
 
         const voidReason = document.getElementById('voidReason');
         const voidOtherReasonContainer = document.getElementById('voidOtherReasonContainer');
-
         if (voidReason && voidOtherReasonContainer) {
             voidReason.addEventListener('change', function() {
                 voidOtherReasonContainer.style.display = this.value === 'Other' ? 'block' : 'none';
                 if (this.value !== 'Other') {
                     document.getElementById('voidOtherReason').value = '';
+                }
+            });
+        }
+
+        const cancelReason = document.getElementById('cancelReason');
+        const cancelOtherReasonContainer = document.getElementById('cancelOtherReasonContainer');
+        if (cancelReason && cancelOtherReasonContainer) {
+            cancelReason.addEventListener('change', function() {
+                cancelOtherReasonContainer.style.display = this.value === 'Other' ? 'block' : 'none';
+                if (this.value !== 'Other') {
+                    document.getElementById('cancelOtherReason').value = '';
                 }
             });
         }
@@ -863,15 +932,31 @@
                 confirmModal.style.display = 'none';
                 voidForm.submit();
             });
+
+            confirmModal.addEventListener('click', function(e) {
+                if (e.target === confirmModal) {
+                    confirmModal.style.display = 'none';
+                }
+            });
         }
 
-        // Close modal when clicking outside
-        confirmModal.addEventListener('click', function(e) {
-            if (e.target === confirmModal) {
-                confirmModal.style.display = 'none';
-            }
-        });
-    });
-</script>
-</body>
-</html>
+        // Countdown timer for cancellation window
+        function startCountdown(element, timestamp) {
+            const paymentTime = new Date(timestamp).getTime();
+            const endTime = paymentTime + (24 * 60 * 60 * 1000); // 24 hours from payment
+
+            const interval = setInterval(() => {
+                const now = new Date().getTime();
+                const timeLeft = endTime - now;
+
+                if (timeLeft <= 0) {
+                    clearInterval(interval);
+                    element.textContent = 'Expired';
+                    element.classList.remove('countdown-timer');
+                    element.classList.add('countdown-expired');
+                    return;
+                }
+
+                const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((time
