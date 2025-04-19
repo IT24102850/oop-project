@@ -14,8 +14,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NexoraSkill | Fee Management</title>
-    <%-- Note: Consider hosting Font Awesome locally for production to reduce external dependencies --%>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" defer>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="icon" type="image/png" href="./images/favicon.ico">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Orbitron:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
@@ -24,17 +23,21 @@
             --secondary-color: #4facfe;
             --accent-color: #ff4d7e;
             --dark-color: #0a0f24;
+            --darker-color: #050916;
             --text-color: #ffffff;
             --text-muted: rgba(255,255,255,0.7);
             --glow-color: rgba(0,242,254,0.6);
-            --card-bg: rgba(15,23,42,0.9);
+            --card-bg: rgba(15,23,42,0.95);
             --border-radius: 12px;
-            --box-shadow: 0 8px 20px rgba(0,0,0,0.2);
-            --transition: all 0.3s ease;
+            --border-radius-sm: 8px;
+            --box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+            --box-shadow-hover: 0 12px 40px rgba(0,242,254,0.3);
+            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
             --success-color: #00ff88;
             --warning-color: #ffcc00;
             --error-color: #ff4d7e;
-            --modal-bg: rgba(10,15,36,0.95);
+            --modal-bg: rgba(10,15,36,0.98);
+            --input-focus-glow: 0 0 0 3px rgba(0, 242, 254, 0.3);
         }
 
         * {
@@ -45,139 +48,189 @@
 
         body {
             font-family: 'Poppins', sans-serif;
-            background: radial-gradient(ellipse at bottom, #050916 0%, var(--dark-color) 100%);
+            background: radial-gradient(ellipse at bottom, var(--darker-color) 0%, var(--dark-color) 100%);
             color: var(--text-color);
             min-height: 100vh;
             display: flex;
             justify-content: center;
-            padding: 16px;
-            line-height: 1.5;
+            padding: 20px;
+            line-height: 1.6;
             position: relative;
+            overflow-x: hidden;
         }
 
         body::before {
             content: '';
             position: absolute;
             inset: 0;
-            background: radial-gradient(circle at 20% 30%, rgba(0,242,254,0.1) 0%, transparent 20%), radial-gradient(circle at 80% 70%, rgba(79,172,254,0.1) 0%, transparent 20%);
-            opacity: 0.3;
+            background:
+                    radial-gradient(circle at 20% 30%, rgba(0,242,254,0.15) 0%, transparent 25%),
+                    radial-gradient(circle at 80% 70%, rgba(79,172,254,0.15) 0%, transparent 25%);
+            opacity: 0.4;
             z-index: -1;
+            pointer-events: none;
         }
 
         h1, h2, h3 {
             font-family: 'Orbitron', sans-serif;
             font-weight: 600;
             letter-spacing: 1px;
+            margin-bottom: 1.5rem;
         }
 
         .application-container {
             width: 100%;
-            max-width: 1100px;
+            max-width: 1200px;
             background: var(--card-bg);
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(12px);
             border-radius: var(--border-radius);
-            border: 1px solid rgba(0,242,254,0.2);
+            border: 1px solid rgba(0,242,254,0.25);
             box-shadow: var(--box-shadow);
-            padding: 24px;
+            padding: 2rem;
             position: relative;
+            overflow: hidden;
+        }
+
+        .application-container::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                    to bottom right,
+                    transparent 0%,
+                    transparent 50%,
+                    rgba(0, 242, 254, 0.05) 50%,
+                    rgba(0, 242, 254, 0.05) 100%
+            );
+            transform: rotate(30deg);
+            pointer-events: none;
+            z-index: -1;
         }
 
         .hud-header {
-            font-size: 2rem;
-            margin-bottom: 20px;
+            font-size: 2.2rem;
+            margin-bottom: 1.5rem;
             background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             position: relative;
+            display: inline-block;
+            padding-bottom: 0.5rem;
         }
 
         .hud-header::after {
             content: '';
             position: absolute;
-            bottom: -8px;
+            bottom: 0;
             left: 0;
             width: 60%;
-            height: 3px;
-            background: var(--primary-color);
+            height: 4px;
+            background: linear-gradient(to right, var(--primary-color), transparent);
             border-radius: 2px;
         }
 
+        .hud-header i {
+            margin-right: 0.8rem;
+            font-size: 1.8rem;
+        }
+
         .input-holofield {
-            margin-bottom: 20px;
+            margin-bottom: 1.5rem;
             position: relative;
         }
 
         .input-holofield label {
             display: block;
-            margin-bottom: 8px;
+            margin-bottom: 0.5rem;
             font-family: 'Orbitron', sans-serif;
             color: var(--primary-color);
             font-size: 1rem;
+            font-weight: 500;
+        }
+
+        .input-holofield label i {
+            margin-right: 0.5rem;
+            width: 1.2rem;
+            text-align: center;
         }
 
         .holo-input {
             width: 100%;
-            padding: 12px 16px;
-            background: rgba(10,15,36,0.6);
+            padding: 0.9rem 1.2rem;
+            background: rgba(10,15,36,0.7);
             border: 2px solid rgba(0,242,254,0.3);
-            border-radius: var(--border-radius);
+            border-radius: var(--border-radius-sm);
             color: var(--text-color);
             font-size: 1rem;
             transition: var(--transition);
+            font-family: 'Poppins', sans-serif;
         }
 
         .holo-input:focus {
             border-color: var(--primary-color);
-            box-shadow: 0 0 15px var(--glow-color);
+            box-shadow: var(--input-focus-glow);
             outline: none;
         }
 
         .holo-input::placeholder {
             color: var(--text-muted);
+            opacity: 0.7;
         }
 
         .input-error {
             color: var(--error-color);
-            font-size: 0.9rem;
-            margin-top: 4px;
+            font-size: 0.85rem;
+            margin-top: 0.5rem;
             display: none;
+            padding-left: 0.5rem;
+        }
+
+        .tooltip {
+            position: relative;
         }
 
         .tooltip::after {
             content: attr(data-tooltip);
             position: absolute;
-            top: 100%;
-            left: 50%;
-            transform: translateX(-50%);
-            background: var(--dark-color);
+            top: calc(100% + 5px);
+            left: 0;
+            background: rgba(0,0,0,0.8);
             color: var(--text-color);
-            padding: 6px 12px;
-            border-radius: 6px;
-            font-size: 0.9rem;
+            padding: 0.5rem 1rem;
+            border-radius: var(--border-radius-sm);
+            font-size: 0.85rem;
             white-space: nowrap;
             opacity: 0;
             visibility: hidden;
             transition: var(--transition);
             z-index: 10;
+            pointer-events: none;
+            font-family: 'Poppins', sans-serif;
+            border: 1px solid rgba(0,242,254,0.2);
         }
 
         .tooltip:hover::after {
             opacity: 1;
             visibility: visible;
+            transform: translateY(5px);
         }
 
         .price-display {
-            background: rgba(0,242,254,0.1);
-            padding: 20px;
+            background: linear-gradient(135deg, rgba(0,242,254,0.1), rgba(79,172,254,0.1));
+            padding: 1.5rem;
             border-radius: var(--border-radius);
             border: 1px solid var(--primary-color);
-            margin: 24px 0;
+            margin: 2rem 0;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
         }
 
         .price-line {
             display: flex;
             justify-content: space-between;
-            padding: 8px 0;
+            padding: 0.8rem 0;
             border-bottom: 1px solid rgba(0,242,254,0.2);
             font-size: 1rem;
         }
@@ -186,16 +239,17 @@
             font-weight: 600;
             color: var(--primary-color);
             border-bottom: 2px solid var(--primary-color);
-            padding-bottom: 12px;
-            margin-top: 20px;
+            padding-bottom: 1rem;
+            margin-top: 1.5rem;
+            font-size: 1.1rem;
         }
 
         .submit-button {
             width: 100%;
-            padding: 14px;
+            padding: 1rem;
             background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
             border: none;
-            border-radius: var(--border-radius);
+            border-radius: var(--border-radius-sm);
             color: var(--dark-color);
             font-family: 'Orbitron', sans-serif;
             font-size: 1rem;
@@ -205,13 +259,37 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
+            gap: 0.8rem;
             touch-action: manipulation;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .submit-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+            opacity: 0;
+            transition: var(--transition);
+            z-index: -1;
         }
 
         .submit-button:hover {
             transform: translateY(-3px);
-            box-shadow: 0 10px 20px var(--glow-color);
+            box-shadow: var(--box-shadow-hover);
+        }
+
+        .submit-button:hover::before {
+            opacity: 1;
+        }
+
+        .submit-button i {
+            font-size: 1.1rem;
         }
 
         .submit-button.secondary {
@@ -222,22 +300,25 @@
 
         .submit-button.secondary:hover {
             background: rgba(0,242,254,0.1);
+            color: var(--text-color);
         }
 
         .submit-button.void-invoice-button {
-            background: var(--error-color);
+            background: linear-gradient(135deg, var(--error-color), #ff2d5e);
         }
 
         .submit-button.cancel-payment-button {
-            background: var(--warning-color);
+            background: linear-gradient(135deg, var(--warning-color), #ffb700);
         }
 
         .tab-container {
             display: flex;
             justify-content: center;
-            gap: 16px;
-            margin-bottom: 24px;
+            gap: 1rem;
+            margin-bottom: 2rem;
             flex-wrap: wrap;
+            border-bottom: 1px solid rgba(0,242,254,0.1);
+            padding-bottom: 1rem;
         }
 
         .tab-label {
@@ -245,11 +326,19 @@
             font-size: 1rem;
             color: var(--text-muted);
             cursor: pointer;
-            padding: 10px 20px;
+            padding: 0.8rem 1.5rem;
             border-radius: 30px;
             background: none;
             border: none;
             transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+            position: relative;
+        }
+
+        .tab-label i {
+            font-size: 1.1rem;
         }
 
         .tab-label:hover {
@@ -259,12 +348,25 @@
 
         .tab-label.active {
             color: var(--primary-color);
-            background: rgba(0,242,254,0.1);
+            background: rgba(0,242,254,0.2);
+            box-shadow: 0 0 15px rgba(0,242,254,0.1);
+        }
+
+        .tab-label.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1.1rem;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60%;
+            height: 3px;
+            background: var(--primary-color);
+            border-radius: 2px;
         }
 
         .tab-section {
             display: none;
-            animation: fadeInUp 0.5s ease-out;
+            animation: fadeInUp 0.4s ease-out;
         }
 
         .tab-section.active {
@@ -275,29 +377,39 @@
             width: 100%;
             border-collapse: separate;
             border-spacing: 0;
-            margin: 16px 0;
-            border-radius: var(--border-radius);
+            margin: 1.5rem 0;
+            border-radius: var(--border-radius-sm);
             overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
 
         .payment-table th {
-            background: rgba(0,242,254,0.2);
+            background: linear-gradient(to right, rgba(0,242,254,0.2), rgba(79,172,254,0.2));
             color: var(--primary-color);
             font-family: 'Orbitron', sans-serif;
-            padding: 12px;
+            padding: 1rem;
             text-align: left;
             font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         .payment-table td {
-            padding: 12px;
+            padding: 1rem;
             border-bottom: 1px solid rgba(0,242,254,0.1);
-            background: rgba(10,15,36,0.5);
-            font-size: 0.9rem;
+            background: rgba(10,15,36,0.6);
+            font-size: 0.95rem;
+            transition: var(--transition);
+        }
+
+        .payment-table tr:last-child td {
+            border-bottom: none;
         }
 
         .payment-table tr:hover td {
-            background: rgba(0,242,254,0.1);
+            background: rgba(0,242,254,0.15);
+            transform: translateX(5px);
         }
 
         .status-paid { color: var(--success-color); }
@@ -306,86 +418,161 @@
         .status-canceled { color: var(--accent-color); }
 
         .notification {
-            padding: 12px 16px;
-            border-radius: var(--border-radius);
-            margin: 16px 0;
+            padding: 1rem;
+            border-radius: var(--border-radius-sm);
+            margin: 1.5rem 0;
             display: flex;
             align-items: center;
-            gap: 12px;
-            animation: slideIn 0.5s ease-out;
+            gap: 1rem;
+            animation: slideIn 0.4s ease-out;
+            border-left: 4px solid transparent;
+            background: rgba(255,255,255,0.05);
+        }
+
+        .notification i {
+            font-size: 1.3rem;
         }
 
         .notification.success {
             background: rgba(0,255,136,0.1);
-            border-left: 4px solid var(--success-color);
+            border-left-color: var(--success-color);
         }
 
         .notification.error {
             background: rgba(255,77,126,0.1);
-            border-left: 4px solid var(--error-color);
+            border-left-color: var(--error-color);
         }
 
         .notification.warning {
             background: rgba(255,204,0,0.1);
-            border-left: 4px solid var(--warning-color);
+            border-left-color: var(--warning-color);
         }
 
         .pagination {
             display: flex;
             justify-content: center;
-            gap: 12px;
-            margin: 16px 0;
+            align-items: center;
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .pagination button {
+            padding: 0.7rem 1.2rem;
+            min-width: 100px;
+        }
+
+        .pagination span {
+            font-size: 0.95rem;
+            color: var(--text-muted);
         }
 
         .modal {
             display: none;
             position: fixed;
             inset: 0;
-            background: rgba(0,0,0,0.7);
+            background: rgba(0,0,0,0.8);
             z-index: 1000;
             align-items: center;
             justify-content: center;
+            backdrop-filter: blur(5px);
+            animation: fadeIn 0.3s ease-out;
         }
 
         .modal-content {
             background: var(--modal-bg);
-            padding: 24px;
+            padding: 2rem;
             border-radius: var(--border-radius);
             width: 90%;
-            max-width: 450px;
+            max-width: 500px;
             border: 1px solid var(--primary-color);
             box-shadow: var(--box-shadow);
+            animation: scaleIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .modal-content::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+        }
+
+        .modal-content h3 {
+            margin-bottom: 1.5rem;
+            color: var(--primary-color);
+        }
+
+        .modal-content p {
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
         }
 
         .modal-actions {
             display: flex;
-            gap: 12px;
-            margin-top: 20px;
+            gap: 1rem;
+            margin-top: 1.5rem;
         }
 
-        .countdown-timer { color: var(--warning-color); font-weight: 600; }
-        .countdown-timer.warning { color: var(--error-color); }
-        .countdown-expired { color: var(--error-color); font-weight: 600; }
+        .modal-actions button {
+            flex: 1;
+        }
+
+        .countdown-timer {
+            color: var(--warning-color);
+            font-weight: 600;
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        .countdown-timer.warning {
+            color: var(--error-color);
+            animation: pulse 1s infinite;
+        }
+
+        .countdown-expired {
+            color: var(--error-color);
+            font-weight: 600;
+            opacity: 0.7;
+        }
 
         .loading-overlay {
             display: none;
             position: fixed;
             inset: 0;
-            background: rgba(0,0,0,0.5);
+            background: rgba(0,0,0,0.7);
             z-index: 2000;
             align-items: center;
             justify-content: center;
+            backdrop-filter: blur(5px);
         }
 
         .loading-spinner {
-            border: 4px solid var(--text-muted);
+            border: 4px solid rgba(255,255,255,0.1);
             border-top: 4px solid var(--primary-color);
             border-radius: 50%;
-            width: 40px;
-            height: 40px;
+            width: 50px;
+            height: 50px;
             animation: spin 1s linear infinite;
+            position: relative;
         }
 
+        .loading-spinner::after {
+            content: '';
+            position: absolute;
+            top: -4px;
+            left: -4px;
+            right: -4px;
+            bottom: -4px;
+            border: 4px solid transparent;
+            border-top-color: var(--secondary-color);
+            border-radius: 50%;
+            animation: spin 1.5s linear infinite;
+        }
+
+        /* Animations */
         @keyframes fadeIn {
             from { opacity: 0; }
             to { opacity: 1; }
@@ -405,27 +592,59 @@
             to { transform: rotate(360deg); }
         }
 
+        @keyframes scaleIn {
+            from { transform: scale(0.9); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        /* Responsive adjustments */
         @media (max-width: 992px) {
-            .application-container { padding: 20px; }
+            .application-container { padding: 1.5rem; }
             .hud-header { font-size: 1.8rem; }
         }
 
         @media (max-width: 768px) {
-            .application-container { padding: 16px; }
-            .tab-container { flex-direction: column; gap: 8px; }
-            .tab-label { width: 100%; text-align: center; padding: 12px; }
-            .payment-table { display: block; overflow-x: auto; white-space: nowrap; }
-            .modal-content { padding: 16px; }
+            body { padding: 1rem; }
+            .application-container { padding: 1.2rem; }
+            .tab-container {
+                flex-direction: row;
+                overflow-x: auto;
+                padding-bottom: 0.5rem;
+                justify-content: flex-start;
+                scrollbar-width: none;
+            }
+            .tab-container::-webkit-scrollbar { display: none; }
+            .tab-label {
+                padding: 0.7rem 1.2rem;
+                white-space: nowrap;
+            }
+            .tab-label.active::after {
+                bottom: -0.5rem;
+            }
+            .payment-table { display: block; overflow-x: auto; }
+            .modal-content { padding: 1.5rem; }
             .modal-actions { flex-direction: column; }
-            .submit-button { font-size: 0.9rem; padding: 12px; }
+            .submit-button { padding: 0.9rem; }
+        }
+
+        @media (max-width: 480px) {
+            .hud-header { font-size: 1.6rem; }
+            .tab-label { padding: 0.6rem 1rem; font-size: 0.9rem; }
+            .tab-label i { font-size: 1rem; }
+            .modal-content { width: 95%; padding: 1.2rem; }
         }
     </style>
 </head>
 <body>
-<%-- Floating background elements removed to reduce rendering overhead --%>
 
 <div class="application-container">
-    <h1 class="hud-header">Fee Management</h1>
+    <h1 class="hud-header"><i class="fas fa-money-bill-wave"></i> Fee Management</h1>
 
     <%-- Notification Display --%>
     <c:if test="${not empty message}">
@@ -476,7 +695,7 @@
                 <i class="fas fa-search"></i> View Payment History
             </button>
             <button type="button" id="export-csv" class="submit-button secondary" style="margin-top: 10px;">
-                <i class="fas fa-download"></i> Export as CSV
+                <i class="fas fa-file-csv"></i> Export as CSV
             </button>
         </form>
         <c:if test="${not empty paymentRecords}">
@@ -523,9 +742,13 @@
                 </table>
                 <div class="pagination">
                     <c:set var="totalPages" value="${(fn:length(paymentRecords) + pageSize - 1) div pageSize}"/>
-                    <button class="submit-button secondary" id="prev-page" <c:if test="${page <= 1}">disabled</c:if> aria-label="Previous page">Previous</button>
+                    <button class="submit-button secondary" id="prev-page" <c:if test="${page <= 1}">disabled</c:if> aria-label="Previous page">
+                        <i class="fas fa-chevron-left"></i> Previous
+                    </button>
                     <span>Page <c:out value="${page}"/> of <c:out value="${totalPages}"/></span>
-                    <button class="submit-button secondary" id="next-page" <c:if test="${page >= totalPages}">disabled</c:if> aria-label="Next page">Next</button>
+                    <button class="submit-button secondary" id="next-page" <c:if test="${page >= totalPages}">disabled</c:if> aria-label="Next page">
+                        Next <i class="fas fa-chevron-right"></i>
+                    </button>
                 </div>
                 <div class="price-line total">
                     <span>Total Payments:</span>
@@ -642,11 +865,15 @@
     <%-- Confirmation Modal for Void Invoice --%>
     <div id="confirmModal" class="modal" style="display: none;" role="dialog" aria-labelledby="confirmModalTitle" tabindex="-1">
         <div class="modal-content">
-            <h3 id="confirmModalTitle">Confirm Void Invoice</h3>
-            <p>Are you sure you want to void invoice <span id="modalInvoiceId"></span>? This action cannot be undone.</p>
+            <h3 id="confirmModalTitle"><i class="fas fa-exclamation-triangle"></i> Confirm Void Invoice</h3>
+            <p>Are you sure you want to void invoice <span id="modalInvoiceId" class="text-highlight"></span>? This action cannot be undone.</p>
             <div class="modal-actions">
-                <button id="cancelVoid" class="submit-button secondary" aria-label="Cancel void action">Cancel</button>
-                <button id="confirmVoid" class="submit-button void-invoice-button" aria-label="Confirm void action">Confirm</button>
+                <button id="cancelVoid" class="submit-button secondary" aria-label="Cancel void action">
+                    <i class="fas fa-times"></i> Cancel
+                </button>
+                <button id="confirmVoid" class="submit-button void-invoice-button" aria-label="Confirm void action">
+                    <i class="fas fa-check"></i> Confirm
+                </button>
             </div>
         </div>
     </div>
@@ -654,10 +881,12 @@
     <%-- Payment Details Modal --%>
     <div id="paymentDetailsModal" class="modal" style="display: none;" role="dialog" aria-labelledby="paymentDetailsTitle" tabindex="-1">
         <div class="modal-content">
-            <h3 id="paymentDetailsTitle">Payment Details</h3>
-            <div id="paymentDetailsContent"></div>
+            <h3 id="paymentDetailsTitle"><i class="fas fa-info-circle"></i> Payment Details</h3>
+            <div id="paymentDetailsContent" class="payment-details-content"></div>
             <div class="modal-actions">
-                <button id="closeDetails" class="submit-button secondary" aria-label="Close payment details">Close</button>
+                <button id="closeDetails" class="submit-button secondary" aria-label="Close payment details">
+                    <i class="fas fa-times"></i> Close
+                </button>
             </div>
         </div>
     </div>
@@ -668,7 +897,7 @@
     </div>
 
     <%-- Back to Dashboard --%>
-    <a href="admin-dashboard.jsp" class="submit-button secondary" aria-label="Return to admin dashboard">
+    <a href="admin-dashboard.jsp" class="submit-button secondary" aria-label="Return to admin dashboard" style="margin-top: 2rem;">
         <i class="fas fa-arrow-left"></i> Back to Dashboard
     </a>
 </div>
@@ -889,15 +1118,15 @@
                         });
                         const result = await response.json();
                         detailsContent.innerHTML = `
-                            <p><strong>Payment ID:</strong> ${utils.sanitizeInput(result.paymentId)}</p>
-                            <p><strong>Student ID:</strong> ${utils.sanitizeInput(result.studentId)}</p>
-                            <p><strong>Amount:</strong> $${utils.sanitizeInput(result.amount)}</p>
-                            <p><strong>Date:</strong> ${utils.sanitizeInput(result.paymentDate)}</p>
-                            <p><strong>Method:</strong> ${utils.sanitizeInput(result.paymentMethod)}</p>
-                            <p><strong>Status:</strong> ${utils.sanitizeInput(result.status)}</p>
+                            <div class="detail-row"><strong>Payment ID:</strong> <span>${utils.sanitizeInput(result.paymentId)}</span></div>
+                            <div class="detail-row"><strong>Student ID:</strong> <span>${utils.sanitizeInput(result.studentId)}</span></div>
+                            <div class="detail-row"><strong>Amount:</strong> <span>$${utils.sanitizeInput(result.amount)}</span></div>
+                            <div class="detail-row"><strong>Date:</strong> <span>${utils.sanitizeInput(result.paymentDate)}</span></div>
+                            <div class="detail-row"><strong>Method:</strong> <span>${utils.sanitizeInput(result.paymentMethod)}</span></div>
+                            <div class="detail-row"><strong>Status:</strong> <span class="status-${result.status.toLowerCase()}">${utils.sanitizeInput(result.status)}</span></div>
                         `;
                     } catch {
-                        detailsContent.innerHTML = `<p>Error loading details for Payment ID: ${paymentId}</p>`;
+                        detailsContent.innerHTML = `<div class="notification error"><i class="fas fa-exclamation-circle"></i> Error loading details for Payment ID: ${paymentId}</div>`;
                     }
                     utils.toggleElement(detailsModal, true);
                     utils.trapFocus(detailsModal);
