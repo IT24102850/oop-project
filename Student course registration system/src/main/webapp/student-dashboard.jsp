@@ -2211,3 +2211,42 @@
 </script>
 </body>
 </html>
+
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<html>
+<head>
+    <title>Student Dashboard</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<h2>Welcome, <%= session.getAttribute("fullName") %></h2>
+<% if (request.getAttribute("error") != null) { %>
+<p style="color: red;"><%= request.getAttribute("error") %></p>
+<% } %>
+<% if (request.getAttribute("message") != null) { %>
+<p style="color: green;"><%= request.getAttribute("message") %></p>
+<% } %>
+<form action="auth" method="post">
+    <input type="hidden" name="action" value="logout">
+    <input type="submit" value="Logout">
+</form>
+<h3>Enrollment Actions</h3>
+<a href="enrollment?action=viewEnrollments">View My Enrollments</a>
+<h3>Change Course Section</h3>
+<form action="enrollment" method="post">
+    <input type="hidden" name="action" value="changeSection">
+    <label for="oldCourseId">Current Course ID:</label>
+    <input type="text" id="oldCourseId" name="oldCourseId" required><br>
+    <label for="newCourseId">New Course ID:</label>
+    <input type="text" id="newCourseId" name="newCourseId" required><br>
+    <input type="submit" value="Change Section">
+</form>
+<h3>Drop Course</h3>
+<form action="enrollment" method="post">
+    <input type="hidden" name="action" value="dropCourse">
+    <label for="courseId">Course ID:</label>
+    <input type="text" id="courseId" name="courseId" required>
+    <input type="submit" value="Drop Course">
+</form>
+</body>
+</html>
