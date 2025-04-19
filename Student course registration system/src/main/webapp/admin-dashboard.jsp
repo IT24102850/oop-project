@@ -441,3 +441,45 @@
 </script>
 </body>
 </html>
+
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<html>
+<head>
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<h2>Admin Dashboard</h2>
+<% if (request.getAttribute("error") != null) { %>
+<p style="color: red;"><%= request.getAttribute("error") %></p>
+<% } %>
+<% if (request.getAttribute("message") != null) { %>
+<p style="color: green;"><%= request.getAttribute("message") %></p>
+<% } %>
+<form action="auth" method="post">
+    <input type="hidden" name="action" value="logout">
+    <input type="submit" value="Logout">
+</form>
+<h3>Monitor Active Sessions</h3>
+<a href="admin?action=monitorSessions">View Active Admin Sessions</a>
+<h3>Force Password Reset</h3>
+<form action="admin" method="post">
+    <input type="hidden" name="action" value="forceReset">
+    <label for="resetUsername">Username:</label>
+    <input type="text" id="resetUsername" name="username" required>
+    <input type="submit" value="Force Reset">
+</form>
+<h3>Deactivate Account</h3>
+<form action="admin" method="post">
+    <input type="hidden" name="action" value="deactivate">
+    <label for="deactivateUsername">Username:</label>
+    <input type="text" id="deactivateUsername" name="username" required>
+    <input type="submit" value="Deactivate">
+</form>
+<h3>Purge Expired Unverified Accounts</h3>
+<form action="admin" method="post">
+    <input type="hidden" name="action" value="purgeUnverified">
+    <input type="submit" value="Purge Unverified Accounts">
+</form>
+</body>
+</html>
