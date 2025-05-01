@@ -1,17 +1,9 @@
 Course ID: AI101
-<<<<<<< HEAD
 Full Name: Nethmika Saman
-=======
-Full Name: Nethmika Rajakaruna
->>>>>>> 0ca7d413789dd2d271765992c60a7946b7cc180a
 Email: nethmika2004@gmail.com
 Phone: 07788443311
 Education Level: phd
 Programming Experience: 5+
-<<<<<<< HEAD
 Learning Goals: Become advanced ai proffetional
-=======
-Learning Goals: Become advanced AI profesional
->>>>>>> 0ca7d413789dd2d271765992c60a7946b7cc180a
 Terms Accepted: Yes
 Submission Time: Thu May 01 12:31:19 IST 2025

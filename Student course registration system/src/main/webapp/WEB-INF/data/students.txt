@@ -7,9 +7,5 @@ AB480BDF,Iraj Perera,iraj2004@gmail.com,iraj2004
 CB22FF44,Damith Asanka,damith2004@gmail.com,hasiru2006
 64F12262,Bharatha Thennakon,bharatha2004@gmail.com,bharatha2004
 60B2A35B,Mahinda Rajapaksa,mahinda2004@gmail.com,mahinda2004
-<<<<<<< HEAD
 STU20230001,John Doe,john.doe@nexora.edu
 STU20230002,Jane Smith,jane.smith@nexora.edu
-=======
-2A984ADC,Nethmi Hashara,Hashara2004@gmail.com,Nethmi2004
->>>>>>> 0ca7d413789dd2d271765992c60a7946b7cc180a

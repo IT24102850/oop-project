@@ -1,4 +1,4 @@
-package main.java.com.studentregistration.servlets;
+package com.studentregistration.servlets;
 
 import com.studentregistration.dao.StudentDAO;
 import com.studentregistration.model.Student;
