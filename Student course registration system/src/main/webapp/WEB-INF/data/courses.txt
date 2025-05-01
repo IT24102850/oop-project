@@ -1,0 +1,3 @@
+CS401,CS401,Advanced Algorithms,Prof. Smith
+AI301,AI301,Machine Learning,Dr. Johnson
+DB202,DB202,Database Systems,Prof. Williams

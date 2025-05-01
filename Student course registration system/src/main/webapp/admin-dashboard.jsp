@@ -1,5 +1,5 @@
-<%@ page import="java.util.*" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page import="java.util.*" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -102,6 +102,13 @@
             margin-bottom: 40px;
         }
 
+        .admin-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        /* Stats Grid */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -116,12 +123,43 @@
             border: 1px solid rgba(0, 242, 254, 0.2);
         }
 
+        .stat-card h3 {
+            margin-bottom: 10px;
+            font-size: 1rem;
+            color: var(--text-muted);
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Action Cards */
+        .action-card {
+            background: var(--card-bg);
+            padding: 25px;
+            border-radius: var(--border-radius);
+            border: 1px solid rgba(0, 242, 254, 0.2);
+            margin-bottom: 20px;
+        }
+
+        .action-card h3 {
+            margin-bottom: 15px;
+            font-family: 'Orbitron', sans-serif;
+            letter-spacing: 1px;
+        }
+
+        /* Data Tables */
         .data-table {
             width: 100%;
             background: var(--card-bg);
             border-radius: var(--border-radius);
             border-collapse: collapse;
             overflow: hidden;
+            margin-bottom: 20px;
         }
 
         .data-table th, .data-table td {
@@ -136,20 +174,18 @@
             letter-spacing: 1px;
         }
 
-        .action-buttons {
-            display: flex;
-            gap: 10px;
-        }
-
+        /* Buttons */
         .btn {
             padding: 8px 15px;
             border-radius: 6px;
             border: none;
             cursor: pointer;
             transition: var(--transition);
-            display: flex;
+            display: inline-flex;
             align-items: center;
             gap: 8px;
+            text-decoration: none;
+            font-family: 'Poppins', sans-serif;
         }
 
         .btn-primary {
@@ -165,6 +201,81 @@
         .btn-warning {
             background: #ffc107;
             color: var(--dark-color);
+        }
+
+        /* Form Elements */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text-muted);
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="password"],
+        input[type="tel"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 12px;
+            background: var(--glass-bg);
+            border: 1px solid rgba(0, 242, 254, 0.3);
+            border-radius: var(--border-radius);
+            color: var(--text-color);
+        }
+
+        /* Messages */
+        .message {
+            padding: 10px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .message.success {
+            background: rgba(0, 255, 0, 0.1);
+            color: #00ff00;
+        }
+
+        .message.error {
+            background: rgba(255, 0, 0, 0.1);
+            color: #ff0000;
+        }
+
+        /* Status Indicators */
+        .status {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .status.active {
+            background: rgba(0, 255, 0, 0.1);
+            color: #00ff00;
+        }
+
+        .status.inactive {
+            background: rgba(255, 0, 0, 0.1);
+            color: #ff0000;
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        /* Section Header */
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
         }
 
         /* Modal */
@@ -189,24 +300,16 @@
             margin: 5% auto;
         }
 
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        input, select, textarea {
-            width: 100%;
-            padding: 12px;
-            background: var(--glass-bg);
-            border: 1px solid rgba(0, 242, 254, 0.3);
-            border-radius: var(--border-radius);
-            color: var(--text-color);
-            margin-top: 8px;
-        }
-
+        /* Emergency Contact Form */
         .emergency-contact-form {
             display: grid;
-            grid-template-columns: repeat(2, 1fr));
+            grid-template-columns: repeat(2, 1fr);
             gap: 20px;
+        }
+
+        /* Content Sections */
+        .content-section {
+            display: none;
         }
     </style>
 </head>
@@ -235,6 +338,11 @@
                 <i class="fas fa-exclamation-triangle"></i> Emergency Contacts
             </a>
         </li>
+        <li class="nav-item">
+            <a href="#" class="nav-link" data-section="admin-tools">
+                <i class="fas fa-tools"></i> Admin Tools
+            </a>
+        </li>
     </ul>
 </div>
 
@@ -245,25 +353,41 @@
         <h1>Admin Dashboard</h1>
         <div class="admin-info">
             <span>Admin User</span>
-            <button class="btn btn-danger"><i class="fas fa-sign-out-alt"></i> Logout</button>
+            <form action="auth" method="post" style="display: inline;">
+                <input type="hidden" name="action" value="logout">
+                <button type="submit" class="btn btn-danger">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </form>
         </div>
     </div>
 
-    <!-- Dashboard Stats -->
-    <div class="stats-grid">
-        <div class="stat-card">
-            <h3>Total Students</h3>
-            <p class="stat-value">124</p>
+    <!-- Messages -->
+    <% if (request.getAttribute("error") != null) { %>
+    <div class="message error"><%= request.getAttribute("error") %></div>
+    <% } %>
+    <% if (request.getAttribute("message") != null) { %>
+    <div class="message success"><%= request.getAttribute("message") %></div>
+    <% } %>
+
+    <!-- Dashboard Section -->
+    <section id="dashboard" class="content-section">
+        <!-- Dashboard Stats -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <h3>Total Students</h3>
+                <p class="stat-value">124</p>
+            </div>
+            <div class="stat-card">
+                <h3>Active Courses</h3>
+                <p class="stat-value">45</p>
+            </div>
+            <div class="stat-card">
+                <h3>Pending Requests</h3>
+                <p class="stat-value">12</p>
+            </div>
         </div>
-        <div class="stat-card">
-            <h3>Active Courses</h3>
-            <p class="stat-value">45</p>
-        </div>
-        <div class="stat-card">
-            <h3>Pending Requests</h3>
-            <p class="stat-value">12</p>
-        </div>
-    </div>
+    </section>
 
     <!-- Student Management Section -->
     <section id="students" class="content-section" style="display:none;">
@@ -358,6 +482,60 @@
             <button class="btn btn-primary">Update Contacts</button>
         </div>
     </section>
+
+    <!-- Admin Tools Section -->
+    <section id="admin-tools" class="content-section" style="display:none;">
+        <h2><i class="fas fa-tools"></i> Admin Tools</h2>
+
+        <!-- Monitor Active Sessions -->
+        <div class="action-card">
+            <h3>Monitor Active Sessions</h3>
+            <a href="admin?action=monitorSessions" class="btn btn-primary">
+                <i class="fas fa-eye"></i> View Active Admin Sessions
+            </a>
+        </div>
+
+        <!-- Force Password Reset -->
+        <div class="action-card">
+            <h3>Force Password Reset</h3>
+            <form action="admin" method="post">
+                <input type="hidden" name="action" value="forceReset">
+                <div class="form-group">
+                    <label for="resetUsername">Username:</label>
+                    <input type="text" id="resetUsername" name="username" required>
+                </div>
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-lock"></i> Force Reset
+                </button>
+            </form>
+        </div>
+
+        <!-- Deactivate Account -->
+        <div class="action-card">
+            <h3>Deactivate Account</h3>
+            <form action="admin" method="post">
+                <input type="hidden" name="action" value="deactivate">
+                <div class="form-group">
+                    <label for="deactivateUsername">Username:</label>
+                    <input type="text" id="deactivateUsername" name="username" required>
+                </div>
+                <button type="submit" class="btn btn-danger">
+                    <i class="fas fa-ban"></i> Deactivate
+                </button>
+            </form>
+        </div>
+
+        <!-- Purge Expired Unverified Accounts -->
+        <div class="action-card">
+            <h3>Purge Expired Unverified Accounts</h3>
+            <form action="admin" method="post">
+                <input type="hidden" name="action" value="purgeUnverified">
+                <button type="submit" class="btn btn-danger">
+                    <i class="fas fa-trash-alt"></i> Purge Unverified Accounts
+                </button>
+            </form>
+        </div>
+    </section>
 </div>
 
 <!-- Modals -->
@@ -419,14 +597,12 @@
             document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
             link.classList.add('active');
 
-            if(section === 'dashboard') {
-                document.querySelector('.stats-grid').style.display = 'grid';
-            } else {
-                document.querySelector('.stats-grid').style.display = 'none';
-                document.getElementById(section).style.display = 'block';
-            }
+            document.getElementById(section).style.display = 'block';
         });
     });
+
+    // Show dashboard by default
+    document.getElementById('dashboard').style.display = 'block';
 
     // Modal Script
     function openModal(modalId) {

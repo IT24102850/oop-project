@@ -1,1 +1,3 @@
 1,Hasiru,$2a$10$QuBIuKE9ZUKD1ZO5SytRpeb/GaH6FwioJnMk7C43xhFKvVBnthcHa,admin
+0,Hasiru,$2a$10$itosD7Po81xRzQEflzyCm.riCo6k.1CQVvY8FTk1Y1WR/1Mv1bSAu,admin
+0,Hasiru,$2a$10$CKdrr5MKHMtABfE6XzDZ3O7HY6xShorVb1Ay1EtYJW2.U/GtxIC9.,admin
