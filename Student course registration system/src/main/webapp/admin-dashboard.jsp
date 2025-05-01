@@ -53,7 +53,11 @@
             while ((line = reader.readLine()) != null) {
                 if (line.trim().isEmpty()) continue;
                 String[] parts = line.split(",");
+<<<<<<< HEAD
                 if (parts.length >= 3) { // Expecting 3 fields: id,name,email
+=======
+                if (parts.length >= 6) { // Ensure the line has at least 6 fields (id,name,email,department,contactInfo,password)
+>>>>>>> 0ca7d413789dd2d271765992c60a7946b7cc180a
                     students.add(parts);
                 }
             }
@@ -79,9 +83,12 @@
             case "invalid_input":
                 errorMessage = "Input contains invalid characters (e.g., commas).";
                 break;
+<<<<<<< HEAD
             case "student_not_found":
                 errorMessage = "The student was not found.";
                 break;
+=======
+>>>>>>> 0ca7d413789dd2d271765992c60a7946b7cc180a
             default:
                 errorMessage = "An unexpected error occurred.";
         }
@@ -92,6 +99,7 @@
     String successMessage = null;
     String message = request.getParameter("message");
     if (message != null) {
+<<<<<<< HEAD
         switch (message) {
             case "student_added":
                 successMessage = "Student successfully added!";
@@ -102,6 +110,10 @@
             case "student_deleted":
                 successMessage = "Student successfully deleted!";
                 break;
+=======
+        if (message.equals("student_added")) {
+            successMessage = "Student successfully added!";
+>>>>>>> 0ca7d413789dd2d271765992c60a7946b7cc180a
         }
         request.setAttribute("message", successMessage);
     }
@@ -332,6 +344,7 @@
             box-shadow: 0 2px 8px rgba(255, 193, 7, 0.3);
         }
 
+<<<<<<< HEAD
         .btn-primary:hover {
             transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(0, 242, 254, 0.5);
@@ -354,6 +367,8 @@
             box-shadow: 0 2px 8px rgba(255, 193, 7, 0.3);
         }
 
+=======
+>>>>>>> 0ca7d413789dd2d271765992c60a7946b7cc180a
         .btn-warning:hover {
             transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(255, 193, 7, 0.5);
@@ -667,6 +682,7 @@
             margin-top: 10px;
         }
 
+<<<<<<< HEAD
         .update-student-form {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -698,6 +714,8 @@
             color: #63b3ed;
         }
 
+=======
+>>>>>>> 0ca7d413789dd2d271765992c60a7946b7cc180a
         .update-course-form {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -769,6 +787,7 @@
             gap: 20px;
         }
 
+<<<<<<< HEAD
         .inline-student-form {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -790,6 +809,8 @@
             margin-top: 10px;
         }
 
+=======
+>>>>>>> 0ca7d413789dd2d271765992c60a7946b7cc180a
         .content-section {
             display: none;
         }
@@ -886,6 +907,7 @@
             margin-top: 30px;
         }
 
+<<<<<<< HEAD
         .search-bar {
             display: flex;
             align-items: center;
@@ -910,6 +932,8 @@
             box-shadow: 0 0 8px rgba(0, 242, 254, 0.3);
         }
 
+=======
+>>>>>>> 0ca7d413789dd2d271765992c60a7946b7cc180a
         @media (max-width: 768px) {
             .sidebar {
                 width: 100%;
@@ -934,9 +958,13 @@
             .update-course-form,
             .create-course-form,
             .emergency-contact-form,
+<<<<<<< HEAD
             .add-student-form,
             .update-student-form,
             .inline-student-form {
+=======
+            .add-student-form {
+>>>>>>> 0ca7d413789dd2d271765992c60a7946b7cc180a
                 grid-template-columns: 1fr;
             }
 
@@ -1020,6 +1048,12 @@
     <section id="students" class="content-section">
         <div class="section-header">
             <h2><i class="fas fa-users-cog"></i> Student Management</h2>
+<<<<<<< HEAD
+=======
+            <button class="btn btn-primary" onclick="openModal('addStudent')" aria-label="Add New Student">
+                <i class="fas fa-user-plus"></i> Add Student
+            </button>
+>>>>>>> 0ca7d413789dd2d271765992c60a7946b7cc180a
         </div>
 
         <div class="course-container">
@@ -1065,6 +1099,7 @@
                 if (students != null && !students.isEmpty()) {
                     for (String[] student : students) {
             %>
+<<<<<<< HEAD
             <tr class="student-row">
                 <td><%= student[0] %></td>
                 <td class="student-name"><%= student[1] %></td>
@@ -1076,6 +1111,17 @@
                     <a href="studentRegistration?action=delete&id=<%= student[0] %>" class="btn-futuristic btn-futuristic-delete" data-tooltip="Delete this student" onclick="return confirmStudentDelete('<%= student[0] %>')" aria-label="Delete Student">
                         <i class="fas fa-trash-can"></i> Delete
                     </a>
+=======
+            <tr>
+                <td><%= student[0] %></td>
+                <td><%= student[1] %></td>
+                <td><%= student[2] %></td>
+                <td><span class="status active">Active</span></td>
+                <td class="action-buttons">
+                    <button class="btn btn-primary" aria-label="Edit Student"><i class="fas fa-edit"></i></button>
+                    <button class="btn btn-danger" aria-label="Ban Student"><i class="fas fa-ban"></i></button>
+                    <button class="btn btn-warning" aria-label="Warn Student"><i class="fas fa-exclamation-triangle"></i></button>
+>>>>>>> 0ca7d413789dd2d271765992c60a7946b7cc180a
                 </td>
             </tr>
             <%
@@ -1083,7 +1129,11 @@
             } else {
             %>
             <tr>
+<<<<<<< HEAD
                 <td colspan="4" style="text-align: center;">No students available.</td>
+=======
+                <td colspan="5" style="text-align: center;">No students available.</td>
+>>>>>>> 0ca7d413789dd2d271765992c60a7946b7cc180a
             </tr>
             <% } %>
             </tbody>
@@ -1296,7 +1346,10 @@
         <button class="modal-close" onclick="closeModal('addStudent')" aria-label="Close Modal"><i class="fas fa-times"></i></button>
         <h2>Add New Student</h2>
         <form action="studentRegistration" method="post" class="add-student-form" onsubmit="return handleAddStudentSubmission(event)">
+<<<<<<< HEAD
             <input type="hidden" name="action" value="add">
+=======
+>>>>>>> 0ca7d413789dd2d271765992c60a7946b7cc180a
             <div class="form-group">
                 <label for="studentId" class="required">Student ID</label>
                 <input type="text" id="studentId" name="id" required placeholder="e.g., STU20230001">
@@ -1309,6 +1362,21 @@
                 <label for="studentEmail" class="required">Email</label>
                 <input type="email" id="studentEmail" name="email" required placeholder="e.g., john.doe@nexora.edu">
             </div>
+<<<<<<< HEAD
+=======
+            <div class="form-group">
+                <label for="department" class="required">Department</label>
+                <input type="text" id="department" name="department" required placeholder="e.g., Computer Science">
+            </div>
+            <div class="form-group">
+                <label for="contactInfo" class="required">Contact Info</label>
+                <input type="text" id="contactInfo" name="contactInfo" required placeholder="e.g., +94 77 123 4567">
+            </div>
+            <div class="form-group">
+                <label for="studentPassword" class="required">Password</label>
+                <input type="password" id="studentPassword" name="password" required placeholder="Enter password">
+            </div>
+>>>>>>> 0ca7d413789dd2d271765992c60a7946b7cc180a
             <div class="button-group">
                 <button type="submit" id="addStudentBtn" class="btn-futuristic btn-futuristic-create" data-tooltip="Add this student" aria-label="Add Student">
                     <i class="fas fa-user-plus"></i> Add Student
@@ -1318,6 +1386,7 @@
     </div>
 </div>
 
+<<<<<<< HEAD
 <div id="updateStudent" class="modal">
     <div class="modal-content">
         <button class="modal-close" onclick="closeModal('updateStudent')" aria-label="Close Modal"><i class="fas fa-times"></i></button>
@@ -1362,6 +1431,24 @@
                 <input type="text" id="updateTitle" name="title" required>
             </div>
             <div class="form-group">
+=======
+<div id="updateCourse" class="modal">
+    <div class="modal-content">
+        <button class="modal-close" onclick="closeModal('updateCourse')" aria-label="Close Modal"><i class="fas fa-times"></i></button>
+        <h2>Update Course</h2>
+        <form id="updateCourseForm" action="course" method="post" onsubmit="return validateUpdateForm()" class="update-course-form">
+            <input type="hidden" name="action" value="update">
+            <input type="hidden" name="originalCourseCode" id="updateOriginalCourseCode">
+            <div class="form-group">
+                <label for="updateCourseCode" class="required">Course Code</label>
+                <input type="text" id="updateCourseCode" name="courseCode" required>
+            </div>
+            <div class="form-group">
+                <label for="updateTitle" class="required">Title</label>
+                <input type="text" id="updateTitle" name="title" required>
+            </div>
+            <div class="form-group">
+>>>>>>> 0ca7d413789dd2d271765992c60a7946b7cc180a
                 <label for="updateCredits" class="required">Credits</label>
                 <input type="number" id="updateCredits" name="credits" required min="1">
             </div>
@@ -1383,9 +1470,13 @@
                 <textarea id="updateSyllabus" name="syllabus" placeholder="e.g., Basic programming concepts" rows="4"></textarea>
             </div>
             <div class="button-group">
+<<<<<<< HEAD
                 <button type="submit" class="btn-futuristic btn-futuristic-update" data-tooltip="Update this course" aria-label="Update Course">
                     <i class="fas fa-pen-nib"></i> Update Course
                 </button>
+=======
+                <button type="submit" class="btn-update" aria-label="Update Course">Update</button>
+>>>>>>> 0ca7d413789dd2d271765992c60a7946b7cc180a
             </div>
         </form>
     </div>
@@ -1453,6 +1544,7 @@
         document.getElementById('updateProfessor').value = professor;
         document.getElementById('updateSyllabus').value = syllabus;
         openModal('updateCourse');
+<<<<<<< HEAD
     }
 
     function openUpdateStudentModal(id, name, email) {
@@ -1461,11 +1553,14 @@
         document.getElementById('updateStudentName').value = name;
         document.getElementById('updateStudentEmail').value = email;
         openModal('updateStudent');
+=======
+>>>>>>> 0ca7d413789dd2d271765992c60a7946b7cc180a
     }
 
     window.onclick = function(e) {
         if (e.target.className === 'modal') {
             closeModal(e.target.id);
+<<<<<<< HEAD
         }
     }
 
@@ -1636,7 +1731,108 @@
             } else {
                 rows[i].style.display = 'none';
             }
+=======
+>>>>>>> 0ca7d413789dd2d271765992c60a7946b7cc180a
         }
+    }
+
+    function toggleCourseSection(sectionId) {
+        const content = document.getElementById(sectionId);
+        content.classList.toggle('active');
+    }
+
+    function validateUpdateForm() {
+        const courseCode = document.getElementById('updateCourseCode').value.trim();
+        const title = document.getElementById('updateTitle').value.trim();
+        const credits = document.getElementById('updateCredits').value.trim();
+        const department = document.getElementById('updateDepartment').value.trim();
+
+        if (!courseCode || !title || !credits || !department) {
+            alert('Please fill in all required fields.');
+            return false;
+        }
+
+        if (credits <= 0) {
+            alert('Credits must be a positive number.');
+            return false;
+        }
+
+        const confirmUpdate = confirm('Are you sure you want to update this course?');
+        if (!confirmUpdate) {
+            return false;
+        }
+
+        closeModal('updateCourse');
+        return true;
+    }
+
+    function confirmDelete(courseCode) {
+        return confirm('Are you sure you want to delete the course ' + courseCode + '? This action cannot be undone.');
+    }
+
+    function handleCreateSubmission(event) {
+        event.preventDefault();
+
+        const courseCode = document.getElementById('courseCode').value.trim();
+        const title = document.getElementById('title').value.trim();
+        const credits = document.getElementById('credits').value.trim();
+        const department = document.getElementById('department').value.trim();
+
+        if (!courseCode || !title || !credits || !department) {
+            alert('Please fill in all required fields.');
+            return false;
+        }
+
+        if (credits <= 0) {
+            alert('Credits must be a positive number.');
+            return false;
+        }
+
+        const confirmCreate = confirm('Are you sure you want to create the course "' + title + '"?');
+        if (!confirmCreate) {
+            return false;
+        }
+
+        const createBtn = document.getElementById('createCourseBtn');
+        createBtn.disabled = true;
+        createBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creating...';
+
+        setTimeout(() => {
+            event.target.submit();
+        }, 500);
+
+        return true;
+    }
+
+    function handleAddStudentSubmission(event) {
+        event.preventDefault();
+
+        const id = document.getElementById('studentId').value.trim();
+        const name = document.getElementById('studentName').value.trim();
+        const email = document.getElementById('studentEmail').value.trim();
+        const department = document.getElementById('department').value.trim();
+        const contactInfo = document.getElementById('contactInfo').value.trim();
+        const password = document.getElementById('studentPassword').value.trim();
+
+        if (!id || !name || !email || !department || !contactInfo || !password) {
+            alert('Please fill in all required fields.');
+            return false;
+        }
+
+        const confirmAdd = confirm('Are you sure you want to add the student "' + name + '"?');
+        if (!confirmAdd) {
+            return false;
+        }
+
+        const addBtn = document.getElementById('addStudentBtn');
+        addBtn.disabled = true;
+        addBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Adding...';
+
+        setTimeout(() => {
+            event.target.submit();
+        }, 500);
+
+        return true;
     }
 </script>
 </body>
