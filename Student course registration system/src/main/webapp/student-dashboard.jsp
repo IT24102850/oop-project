@@ -992,12 +992,12 @@
 
 <%
     // Retrieve email and studentId from session
-    String email = (String) session.getAttribute("email"); // Changed to "email" as set in AuthServlet
+    String email = (String) session.getAttribute("email");
     String studentId = (String) session.getAttribute("studentId");
     String displayName = "Guest";
     String firstName = "Guest";
     String initials = "G";
-    String studentIdBadge = "NS20230045"; // Default student ID
+    String studentIdBadge = "NS20230045";
 
     if (email != null) {
         String studentsFilePath = application.getRealPath("/WEB-INF/data/students.txt");
@@ -1006,15 +1006,15 @@
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(",");
                 if (parts.length >= 3 && parts[2].equals(email)) {
-                    studentId = parts[0]; // e.g., STD001
-                    session.setAttribute("studentId", studentId); // Ensure studentId is set in session
-                    displayName = parts[1].trim(); // Full name (e.g., "Rishni Rimandi")
+                    studentId = parts[0];
+                    session.setAttribute("studentId", studentId);
+                    displayName = parts[1].trim();
                     String[] nameParts = displayName.split("\\s+");
-                    firstName = nameParts[0]; // First name (e.g., "Rishni")
+                    firstName = nameParts[0];
                     initials = nameParts.length > 1
                             ? nameParts[0].substring(0, 1).toUpperCase() + nameParts[1].substring(0, 1).toUpperCase()
                             : nameParts[0].substring(0, 1).toUpperCase();
-                    studentIdBadge = "NS" + studentId.substring(3); // e.g., NS20230045
+                    studentIdBadge = "NS" + studentId.substring(3);
                     break;
                 }
             }
@@ -1035,7 +1035,7 @@
         while ((line = reader.readLine()) != null) {
             String[] parts = line.split(",");
             if (parts.length >= 4) {
-                courseDetailsMap.put(parts[0], new String[]{parts[1], parts[2], parts[3]}); // courseId -> [courseCode, courseTitle, instructor]
+                courseDetailsMap.put(parts[0], new String[]{parts[1], parts[2], parts[3]});
             }
         }
     } catch (IOException e) {
@@ -1050,7 +1050,7 @@
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(",");
                 if (parts.length >= 6 && parts[1].equals(studentId)) {
-                    enrolledCourses.add(parts); // Add enrollment record to the list
+                    enrolledCourses.add(parts);
                 }
             }
         } catch (IOException e) {
@@ -1058,7 +1058,7 @@
         }
     }
 
-    // Hardcoded progress for demonstration (in a real app, fetch from a progress file or database)
+    // Hardcoded progress for demonstration
     Map<String, String> courseProgress = new HashMap<>();
     courseProgress.put("CS401", "65%");
     courseProgress.put("AI301", "82%");
@@ -1511,6 +1511,13 @@
                     <button class="btn btn-primary">
                         <i class="fas fa-save"></i> Save
                     </button>
+                </div>
+                <div class="form-group">
+                    <form action="delete-account.jsp" method="get">
+                        <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to proceed with deleting your account?');">
+                            <i class="fas fa-trash-alt"></i> Delete Account
+                        </button>
+                    </form>
                 </div>
             </div>
         </div>

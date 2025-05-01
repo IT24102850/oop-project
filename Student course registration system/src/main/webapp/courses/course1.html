@@ -1,4 +1,5 @@
 
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Python Programming Basics | NexoraSkill</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link rel="icon" type="image/png" href="./images/favicon.ico">
+    <link rel="icon" type="image/png" href="../images/favicon.ico">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Orbitron:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
     <style>
@@ -309,6 +310,106 @@
             font-style: italic;
         }
         .review-card h4 { font-size: 1.1rem; color: var(--primary-color); }
+        .review-form-section {
+            max-width: 600px;
+            margin: 40px auto;
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border-radius: var(--border-radius);
+            padding: 30px;
+            border: 1px solid rgba(0, 242, 254, 0.2);
+            box-shadow: var(--box-shadow);
+            transition: var(--transition);
+        }
+        .review-form-section:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            border-color: rgba(0, 242, 254, 0.4);
+        }
+        .review-form-section h2 {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            color: var(--text-color);
+            position: relative;
+        }
+        .review-form-section h2:after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 60px;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            border-radius: 2px;
+        }
+        .review-form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .form-group label {
+            font-size: 1.1rem;
+            color: var(--text-color);
+        }
+        .form-group input,
+        .form-group textarea {
+            padding: 12px;
+            font-size: 1rem;
+            font-family: 'Poppins', sans-serif;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(0, 242, 254, 0.2);
+            border-radius: 8px;
+            color: var(--text-color);
+            transition: var(--transition);
+        }
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 10px var(--glow-color);
+        }
+        .form-group textarea { resize: vertical; min-height: 100px; }
+        .submit-review-btn {
+            padding: 14px 28px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: var(--dark-color);
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: var(--transition);
+            align-self: flex-start;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+        .submit-review-btn:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 100%;
+            background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+            transition: var(--transition);
+            z-index: -1;
+        }
+        .submit-review-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 242, 254, 0.4);
+        }
+        .submit-review-btn:hover:before { width: 100%; }
+        .error-message {
+            color: var(--accent-color);
+            font-size: 0.9rem;
+            display: none;
+        }
         .course-bottom-section {
             display: flex;
             justify-content: space-between;
@@ -487,7 +588,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: url('./images/grid-pattern.png') center/cover;
+            background: url('../images/grid-pattern.png') center/cover;
             opacity: 0.03;
             z-index: 0;
         }
@@ -638,18 +739,22 @@
             .course-top-section, .course-bottom-section { flex-direction: column; }
             .course-image, .review-section, .enroll-card { width: 100%; max-width: 600px; margin: 0 auto; }
             .course-description, .instructors-description, .why-choose { width: 100%; }
+            .review-form-section { max-width: 100%; }
         }
         @media (max-width: 768px) {
             .navbar { display: none; }
             .course-description h1 { font-size: 2.2rem; }
             .course-meta { flex-direction: column; gap: 15px; }
             .enroll-button { padding: 15px; font-size: 1rem; }
+            .review-form-section h2 { font-size: 1.5rem; }
         }
         @media (max-width: 576px) {
             .auth-buttons { display: none; }
             .course-description h1 { font-size: 1.8rem; }
             .course-description p { font-size: 1rem; }
             .why-choose li { font-size: 1rem; }
+            .review-form-section { padding: 20px; }
+            .submit-review-btn { padding: 12px 24px; font-size: 1rem; }
         }
     </style>
 </head>
@@ -659,22 +764,22 @@
 </div>
 <header class="header">
     <div class="container">
-        <a href="index.jsp" class="logo">
-            <img src="./images/favicon-32x32.png" alt="NexoraSkill Logo">
+        <a href="../index.jsp" class="logo">
+            <img src="../images/favicon-32x32.png" alt="NexoraSkill Logo">
             <span>NexoraSkill</span>
         </a>
         <nav class="navbar">
             <ul>
-                <li><a href="index.jsp">Home</a></li>
-                <li><a href="courses.jsp">Courses</a></li>
-                <li><a href="Apply%20Course.jsp">Apply Course</a></li>
-                <li><a href="aboutus.jsp">About Us</a></li>
-                <li><a href="contact.jsp">Contact</a></li>
+                <li><a href="../index.jsp">Home</a></li>
+                <li><a href="../courses.jsp">Courses</a></li>
+                <li><a href="../Apply%20Course.jsp">Apply Course</a></li>
+                <li><a href="../aboutus.jsp">About Us</a></li>
+                <li><a href="../contact.jsp">Contact</a></li>
             </ul>
         </nav>
         <div class="auth-buttons">
-            <a href="logIn.jsp" class="btn btn-login"><i class="fas fa-sign-in-alt"></i> Login</a>
-            <a href="signUp.jsp" class="btn btn-signup"><i class="fas fa-user-plus"></i> Sign Up</a>
+            <a href="../logIn.jsp" class="btn btn-login"><i class="fas fa-sign-in-alt"></i> Login</a>
+            <a href="../signUp.jsp" class="btn btn-signup"><i class="fas fa-user-plus"></i> Sign Up</a>
         </div>
     </div>
 </header>
@@ -719,13 +824,29 @@
             </div>
         </div>
     </section>
+    <section class="review-form-section">
+        <h2>Submit Your Review</h2>
+        <form class="review-form" id="reviewForm">
+            <div class="form-group">
+                <label for="reviewerName">Your Name</label>
+                <input type="text" id="reviewerName" name="reviewerName" placeholder="Enter your name" required>
+                <span class="error-message" id="nameError">Please enter your name.</span>
+            </div>
+            <div class="form-group">
+                <label for="reviewText">Your Review</label>
+                <textarea id="reviewText" name="reviewText" placeholder="Write your review here" required></textarea>
+                <span class="error-message" id="reviewError">Please enter your review.</span>
+            </div>
+            <button type="submit" class="submit-review-btn">Submit Review</button>
+        </form>
+    </section>
     <section class="course-bottom-section">
         <div class="instructors-description">
             <h2>Meet Your Instructors</h2>
             <div class="instructor-list">
                 <div class="instructor-item">
                     <div class="instructor-image">
-                        <img src="./images/instructor1.jpg" alt="Dr. Alan Turing">
+                        <img src="../images/instructor1.jpg" alt="Dr. Alan Turing">
                     </div>
                     <div class="instructor-info">
                         <h3>Dr. Alan Turing</h3>
@@ -734,7 +855,7 @@
                 </div>
                 <div class="instructor-item">
                     <div class="instructor-image">
-                        <img src="./images/instructor2.jpg" alt="Ada Lovelace">
+                        <img src="../images/instructor2.jpg" alt="Ada Lovelace">
                     </div>
                     <div class="instructor-info">
                         <h3>Ada Lovelace</h3>
@@ -759,7 +880,7 @@
             <div class="enroll-card">
                 <h3>Start Learning Today</h3>
                 <div class="price">$89.99</div>
-                <a href="Apply%20Course.jsp" class="enroll-button">
+                <a href="../Apply%20Course.jsp" class="enroll-button">
                     <i class="fas fa-user-graduate"></i> Enroll Now
                 </a>
                 <p style="margin-top: 20px; color: var(--text-muted); font-size: 0.9rem;">30-day money back guarantee</p>
@@ -770,7 +891,7 @@
 <footer class="footer">
     <div class="footer-grid">
         <div class="footer-col">
-            <a href="index.jsp" class="footer-logo">NexoraSkill</a>
+            <a href="../index.jsp" class="footer-logo">NexoraSkill</a>
             <p class="footer-about">The premier platform for future-ready education. We're revolutionizing how the world learns technology through immersive, interactive experiences.</p>
             <div class="social-links">
                 <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
@@ -783,11 +904,11 @@
         <div class="footer-col">
             <h3 class="footer-title">Quick Links</h3>
             <ul class="footer-links">
-                <li><a href="index.jsp">Home</a></li>
-                <li><a href="courses.jsp">Courses</a></li>
-                <li><a href="Apply%20Course.jsp">Apply Course</a></li>
-                <li><a href="aboutus.jsp">About Us</a></li>
-                <li><a href="contact.jsp">Contact</a></li>
+                <li><a href="../index.jsp">Home</a></li>
+                <li><a href="../courses.jsp">Courses</a></li>
+                <li><a href="../Apply%20Course.jsp">Apply Course</a></li>
+                <li><a href="../aboutus.jsp">About Us</a></li>
+                <li><a href="../contact.jsp">Contact</a></li>
             </ul>
         </div>
         <div class="footer-col">
@@ -842,6 +963,69 @@
     });
     scrollTop.addEventListener('click', function() {
         window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    // Review Form Submission
+    const reviewForm = document.getElementById('reviewForm');
+    const reviewerNameInput = document.getElementById('reviewerName');
+    const reviewTextInput = document.getElementById('reviewText');
+    const nameError = document.getElementById('nameError');
+    const reviewError = document.getElementById('reviewError');
+    const reviewSlideshow = document.querySelector('.review-slideshow');
+
+    reviewForm.addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        // Reset error messages
+        nameError.style.display = 'none';
+        reviewError.style.display = 'none';
+
+        // Validate inputs
+        let isValid = true;
+        if (!reviewerNameInput.value.trim()) {
+            nameError.style.display = 'block';
+            isValid = false;
+        }
+        if (!reviewTextInput.value.trim()) {
+            reviewError.style.display = 'block';
+            isValid = false;
+        }
+
+        if (isValid) {
+            const name = reviewerNameInput.value.trim();
+            const review = reviewTextInput.value.trim();
+
+            // Create new review card
+            const reviewCard = document.createElement('div');
+            reviewCard.className = 'review-card';
+            reviewCard.innerHTML = `
+                <p>"${review}"</p>
+                <h4>- ${name}</h4>
+            `;
+            reviewSlideshow.appendChild(reviewCard);
+
+            // Send review to server
+            fetch('../saveReview.jsp', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `reviewerName=${encodeURIComponent(name)}&reviewText=${encodeURIComponent(review)}`
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Review submitted successfully!');
+                        reviewForm.reset();
+                    } else {
+                        alert('Error saving review: ' + data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('An error occurred while submitting the review.');
+                });
+        }
     });
 </script>
 </body>
