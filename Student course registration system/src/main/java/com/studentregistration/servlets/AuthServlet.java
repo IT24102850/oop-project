@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 package com.studentregistration.servlets;
 
 import com.studentregistration.dao.StudentDAO;
@@ -397,3 +398,5 @@ public class AuthServlet extends HttpServlet {
         request.getRequestDispatcher(page).forward(request, response);
     }
 }
+=======
+>>>>>>> 0078e1f3e4be7d9b51724a87c2eba7514a9e19c5
