@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -300,6 +299,12 @@
 
         .submit-button.cancel-payment-button {
             background: linear-gradient(135deg, var(--warning-color), #ffb700);
+        }
+
+        .submit-button:disabled {
+            background: linear-gradient(135deg, #666, #888);
+            cursor: not-allowed;
+            color: var(--text-muted);
         }
 
         .tab-container {
@@ -633,10 +638,8 @@
     </style>
 </head>
 <body>
-
 <div class="application-container">
     <h1 class="hud-header"><i class="fas fa-money-bill-wave"></i> Fee Management</h1>
-
 
     <c:if test="${not empty message}">
         <div class="notification ${notification}" aria-live="polite" role="alert">
@@ -645,22 +648,20 @@
         </div>
     </c:if>
 
-
     <div class="tab-container" role="tablist">
-        <button class="tab-label active" data-tab="payment-history" role="tab" aria-controls="payment-history" aria-selected="true">
+        <button class="tab-label active" data-tab="payment-history" role="tab" aria-controls="payment-history" aria-selected="true" id="payment-history-tab">
             <i class="fas fa-history"></i> Payment History
         </button>
-        <button class="tab-label" data-tab="apply-waiver" role="tab" aria-controls="apply-waiver" aria-selected="false">
+        <button class="tab-label" data-tab="apply-waiver" role="tab" aria-controls="apply-waiver" aria-selected="false" id="apply-waiver-tab">
             <i class="fas fa-hand-holding-heart"></i> Apply Waiver
         </button>
-        <button class="tab-label" data-tab="void-invoice" role="tab" aria-controls="void-invoice" aria-selected="false">
+        <button class="tab-label" data-tab="void-invoice" role="tab" aria-controls="void-invoice" aria-selected="false" id="void-invoice-tab">
             <i class="fas fa-times-circle"></i> Void Invoice
         </button>
-        <button class="tab-label" data-tab="cancel-payment" role="tab" aria-controls="cancel-payment" aria-selected="false">
+        <button class="tab-label" data-tab="cancel-payment" role="tab" aria-controls="cancel-payment" aria-selected="false" id="cancel-payment-tab">
             <i class="fas fa-ban"></i> Cancel Payment
         </button>
     </div>
-
 
     <div id="payment-history" class="tab-section active" role="tabpanel" aria-labelledby="payment-history-tab">
         <h2 class="hud-header"><i class="fas fa-history"></i> Payment History</h2>
@@ -671,7 +672,7 @@
                 <input type="text" id="studentId" name="studentId" class="holo-input"
                        placeholder="Enter Student ID (e.g., S1001)" pattern="S[0-9]{4}" required
                        aria-required="true" value="<c:out value='${studentId}' />">
-                <div class="input-error" id="studentId-error">Invalid Student ID</div>
+                <div class="input-error" id="studentId-error">Invalid Student ID format</div>
             </div>
             <div class="input-holofield">
                 <label for="startDate"><i class="fas fa-calendar-alt"></i> Start Date</label>
@@ -749,7 +750,6 @@
         </c:if>
     </div>
 
-
     <div id="apply-waiver" class="tab-section" role="tabpanel" aria-labelledby="apply-waiver-tab">
         <h2 class="hud-header"><i class="fas fa-hand-holding-heart"></i> Apply Late Fee Waiver</h2>
         <form id="waiver-form" action="ApplyLateFeeWaiver" method="post">
@@ -780,7 +780,6 @@
             </button>
         </form>
     </div>
-
 
     <div id="void-invoice" class="tab-section" role="tabpanel" aria-labelledby="void-invoice-tab">
         <h2 class="hud-header"><i class="fas fa-times-circle"></i> Void Invoice</h2>
@@ -817,7 +816,6 @@
         </form>
     </div>
 
-
     <div id="cancel-payment" class="tab-section" role="tabpanel" aria-labelledby="cancel-payment-tab">
         <h2 class="hud-header"><i class="fas fa-ban"></i> Cancel Payment</h2>
         <form id="cancel-form" action="CancelPayment" method="post">
@@ -827,6 +825,11 @@
                 <input type="text" id="paymentId" name="paymentId" class="holo-input"
                        placeholder="Enter Payment ID (e.g., PAY-2023-001)" pattern="PAY-[0-9]{4}-[0-9]{3}" required aria-required="true">
                 <div class="input-error" id="paymentId-error">Invalid or non-existent Payment ID</div>
+            </div>
+            <div class="input-holofield">
+                <label for="cancelPaymentTimer"><i class="fas fa-clock"></i> Time Remaining to Cancel</label>
+                <span id="cancelPaymentTimer" class="countdown-timer" style="display: none;"></span>
+                <span id="cancelPaymentExpired" class="countdown-expired" style="display: none;">Expired</span>
             </div>
             <div class="input-holofield">
                 <label for="cancelReason"><i class="fas fa-comment-alt"></i> Reason for Cancellation</label>
@@ -847,12 +850,11 @@
                 <i class="fas fa-exclamation-triangle"></i>
                 <div><strong>Warning:</strong> Payments can only be canceled within 24 hours of processing.</div>
             </div>
-            <button type="submit" class="submit-button cancel-payment-button">
+            <button type="submit" class="submit-button cancel-payment-button" id="cancelPaymentButton" disabled>
                 <i class="fas fa-ban"></i> Confirm Cancel Payment
             </button>
         </form>
     </div>
-
 
     <div id="confirmModal" class="modal" style="display: none;" role="dialog" aria-labelledby="confirmModalTitle" tabindex="-1">
         <div class="modal-content">
@@ -869,7 +871,6 @@
         </div>
     </div>
 
-
     <div id="paymentDetailsModal" class="modal" style="display: none;" role="dialog" aria-labelledby="paymentDetailsTitle" tabindex="-1">
         <div class="modal-content">
             <h3 id="paymentDetailsTitle"><i class="fas fa-info-circle"></i> Payment Details</h3>
@@ -882,18 +883,16 @@
         </div>
     </div>
 
-
     <div class="loading-overlay" id="loading-overlay">
         <div class="loading-spinner"></div>
     </div>
 
-   
     <a href="admin-dashboard.jsp" class="submit-button secondary" aria-label="Return to admin dashboard" style="margin-top: 2rem;">
         <i class="fas fa-arrow-left"></i> Back to Dashboard
     </a>
 </div>
 
-<script defer>
+<script>
     (function() {
         // Utility functions
         const utils = {
@@ -903,6 +902,8 @@
             showNotification: (container, status, message) => {
                 const notification = document.createElement('div');
                 notification.className = `notification ${status}`;
+                notification.setAttribute('role', 'alert');
+                notification.setAttribute('aria-live', 'polite');
                 notification.innerHTML = `<i class="fas fa-${status === 'success' ? 'check-circle' : 'exclamation-circle'}"></i><div>${message}</div>`;
                 container.prepend(notification);
                 setTimeout(() => notification.remove(), 5000);
@@ -951,11 +952,23 @@
             });
         };
 
+        // Client-side input validation
+        const validateInput = (input, errorElement) => {
+            input.addEventListener('input', () => {
+                if (!input.checkValidity()) {
+                    errorElement.textContent = `Invalid format for ${input.name}. Please match the pattern.`;
+                    utils.toggleElement(errorElement, true);
+                } else {
+                    utils.toggleElement(errorElement, false);
+                }
+            });
+        };
+
         // Validate ID via AJAX
         const validateId = async (input, errorElement, endpoint) => {
             const value = utils.sanitizeInput(input.value);
             if (!input.checkValidity()) {
-                errorElement.textContent = `Invalid format for ${input.name}`;
+                errorElement.textContent = `Invalid format for ${input.name}. Please match the pattern.`;
                 utils.toggleElement(errorElement, true);
                 return false;
             }
@@ -963,6 +976,9 @@
                 const response = await fetch(`${endpoint}?id=${encodeURIComponent(value)}`, {
                     headers: { 'Accept': 'application/json' }
                 });
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
                 const result = await response.json();
                 if (!result.exists) {
                     errorElement.textContent = `No ${input.name} found with ID ${value}`;
@@ -971,13 +987,14 @@
                 }
                 utils.toggleElement(errorElement, false);
                 return true;
-            } catch {
+            } catch (error) {
+                utils.showNotification(input.closest('form'), 'error', 'Validation failed. Please try again.');
                 utils.toggleElement(errorElement, false);
-                return true; // Assume valid if server error
+                return false;
             }
         };
 
-        // Form submission
+        // Form submission with improved error handling
         const handleFormSubmit = (form) => {
             form.addEventListener('submit', async (e) => {
                 e.preventDefault();
@@ -1012,14 +1029,27 @@
                         body: formData,
                         headers: { 'Accept': 'application/json' }
                     });
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
                     const result = await response.json();
+                    if (result.status === 'error' && result.message === 'Invalid CSRF token') {
+                        utils.showNotification(form, 'error', 'Session expired. Please log in again.');
+                        setTimeout(() => window.location.href = 'login.jsp', 3000);
+                        return;
+                    }
                     utils.showNotification(form, result.status, result.message);
-                    if (result.status === 'success') form.reset();
+                    if (result.status === 'success') {
+                        form.reset();
+                        if (form.id !== 'payment-history-form') {
+                            window.location.reload(); // Refresh to show updated status
+                        }
+                    }
                 } catch (error) {
                     utils.showNotification(form, 'error', 'Submission failed. Please try again.');
                 } finally {
                     button.innerHTML = originalContent;
-                    button.disabled = false;
+                    button.disabled = form.id === 'cancel-form'; // Re-disable if it's the cancel form
                     utils.toggleElement(document.getElementById('loading-overlay'), false);
                 }
             });
@@ -1049,9 +1079,13 @@
             const container = document.getElementById(containerId);
             if (select && container) {
                 select.addEventListener('change', () => {
-                    utils.toggleElement(container, select.value === 'Other');
-                    if (select.value !== 'Other') {
+                    const show = select.value === 'Other';
+                    utils.toggleElement(container, show);
+                    if (!show) {
                         document.getElementById(textareaId).value = '';
+                    }
+                    if (show) {
+                        document.getElementById(textareaId).focus();
                     }
                 });
             }
@@ -1080,7 +1114,7 @@
                 cancelVoid.addEventListener('click', () => utils.toggleElement(confirmModal, false));
                 confirmVoid.addEventListener('click', () => {
                     utils.toggleElement(confirmModal, false);
-                    voidForm.submit();
+                    voidForm.dispatchEvent(new Event('submit', { cancelable: true }));
                 });
 
                 confirmModal.addEventListener('click', (e) => {
@@ -1107,7 +1141,13 @@
                         const response = await fetch(`PaymentDetails?paymentId=${encodeURIComponent(paymentId)}`, {
                             headers: { 'Accept': 'application/json' }
                         });
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
                         const result = await response.json();
+                        if (result.error) {
+                            throw new Error(result.error);
+                        }
                         detailsContent.innerHTML = `
                             <div class="detail-row"><strong>Payment ID:</strong> <span>${utils.sanitizeInput(result.paymentId)}</span></div>
                             <div class="detail-row"><strong>Student ID:</strong> <span>${utils.sanitizeInput(result.studentId)}</span></div>
@@ -1116,8 +1156,8 @@
                             <div class="detail-row"><strong>Method:</strong> <span>${utils.sanitizeInput(result.paymentMethod)}</span></div>
                             <div class="detail-row"><strong>Status:</strong> <span class="status-${result.status.toLowerCase()}">${utils.sanitizeInput(result.status)}</span></div>
                         `;
-                    } catch {
-                        detailsContent.innerHTML = `<div class="notification error"><i class="fas fa-exclamation-circle"></i> Error loading details for Payment ID: ${paymentId}</div>`;
+                    } catch (error) {
+                        detailsContent.innerHTML = `<div class="notification error"><i class="fas fa-exclamation-circle"></i> Error loading details for Payment ID: ${paymentId}. ${error.message}</div>`;
                     }
                     utils.toggleElement(detailsModal, true);
                     utils.trapFocus(detailsModal);
@@ -1135,8 +1175,8 @@
             });
         };
 
-        // Countdown timer
-        const startCountdown = (element, timestamp) => {
+        // Countdown timer (used for both Payment History and Cancel Payment)
+        const startCountdown = (element, timestamp, onExpire) => {
             const paymentTime = new Date(timestamp).getTime();
             const endTime = paymentTime + (24 * 60 * 60 * 1000); // 24 hours
             const oneHour = 60 * 60 * 1000;
@@ -1150,6 +1190,7 @@
                     element.textContent = 'Expired';
                     element.classList.remove('countdown-timer', 'warning');
                     element.classList.add('countdown-expired');
+                    if (onExpire) onExpire();
                     return;
                 }
 
@@ -1164,11 +1205,96 @@
             }, 1000);
         };
 
-        // Initialize countdown timers
+        // Initialize countdown timers for Payment History
         const initCountdownTimers = () => {
-            document.querySelectorAll('.countdown-timer').forEach(timer => {
+            document.querySelectorAll('#payment-records .countdown-timer').forEach(timer => {
                 const timestamp = timer.dataset.timestamp;
                 if (timestamp) startCountdown(timer, timestamp);
+            });
+        };
+
+        // Initialize countdown timer for Cancel Payment
+        const initCancelPaymentTimer = () => {
+            const paymentIdInput = document.getElementById('paymentId');
+            const cancelTimer = document.getElementById('cancelPaymentTimer');
+            const cancelExpired = document.getElementById('cancelPaymentExpired');
+            const cancelButton = document.getElementById('cancelPaymentButton');
+
+            if (!paymentIdInput || !cancelTimer || !cancelExpired || !cancelButton) return;
+
+            paymentIdInput.addEventListener('input', async () => {
+                const paymentId = utils.sanitizeInput(paymentIdInput.value);
+                const errorElement = document.getElementById('paymentId-error');
+
+                // Reset timer display
+                utils.toggleElement(cancelTimer, false);
+                utils.toggleElement(cancelExpired, false);
+                cancelButton.disabled = true;
+
+                if (!paymentIdInput.checkValidity()) {
+                    errorElement.textContent = `Invalid format for paymentId. Please match the pattern.`;
+                    utils.toggleElement(errorElement, true);
+                    return;
+                }
+
+                // Validate payment ID and fetch details
+                const isValid = await validateId(paymentIdInput, errorElement, 'ValidatePayment');
+                if (!isValid) return;
+
+                try {
+                    const response = await fetch(`PaymentDetails?paymentId=${encodeURIComponent(paymentId)}`, {
+                        headers: { 'Accept': 'application/json' }
+                    });
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    const result = await response.json();
+                    if (result.error) {
+                        throw new Error(result.error);
+                    }
+
+                    // Check payment status
+                    if (result.status.toUpperCase() === 'CANCELED') {
+                        utils.showNotification(paymentIdInput.closest('form'), 'error', 'This payment has already been canceled.');
+                        utils.toggleElement(cancelTimer, false);
+                        utils.toggleElement(cancelExpired, true);
+                        cancelButton.disabled = true;
+                        return;
+                    }
+
+                    // Parse payment date and calculate timestamp
+                    const paymentDate = new Date(result.paymentDate);
+                    if (isNaN(paymentDate.getTime())) {
+                        throw new Error('Invalid payment date');
+                    }
+                    const timestamp = paymentDate.getTime();
+
+                    // Check if the 24-hour window has expired
+                    const now = Date.now();
+                    const endTime = timestamp + (24 * 60 * 60 * 1000);
+                    if (now >= endTime) {
+                        utils.toggleElement(cancelTimer, false);
+                        utils.toggleElement(cancelExpired, true);
+                        cancelButton.disabled = true;
+                        return;
+                    }
+
+                    // Start countdown
+                    utils.toggleElement(cancelTimer, true);
+                    utils.toggleElement(cancelExpired, false);
+                    cancelButton.disabled = false;
+                    startCountdown(cancelTimer, timestamp, () => {
+                        utils.toggleElement(cancelTimer, false);
+                        utils.toggleElement(cancelExpired, true);
+                        cancelButton.disabled = true;
+                    });
+
+                } catch (error) {
+                    utils.showNotification(paymentIdInput.closest('form'), 'error', 'Failed to fetch payment details. Please try again.');
+                    utils.toggleElement(cancelTimer, false);
+                    utils.toggleElement(cancelExpired, true);
+                    cancelButton.disabled = true;
+                }
             });
         };
 
@@ -1242,8 +1368,17 @@
             initVoidModal();
             initPaymentDetails();
             initCountdownTimers();
+            initCancelPaymentTimer();
             initPagination();
             initCsvExport();
+
+            // Add client-side validation to inputs
+            document.querySelectorAll('input[pattern]').forEach(input => {
+                const errorElement = input.parentElement.querySelector('.input-error');
+                if (errorElement) {
+                    validateInput(input, errorElement);
+                }
+            });
         };
 
         document.addEventListener('DOMContentLoaded', init);

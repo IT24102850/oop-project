@@ -1,3 +1,40 @@
-CS401,CS401,Advanced Algorithms,Prof. Smith
-AI301,AI301,Machine Learning,Dr. Johnson
-DB202,DB202,Database Systems,Prof. Williams
+CS401,Advanced Algorithms,3,Computer Science,Prof. Smith,Algorithm structures,true
+AI301,Machine Learning,4,Computer Science,Dr. Johnson,Machine Learning,true
+DB202,Database Systems,3,Computer Science,Prof. Williams,Data base,true
+JS001,JS Learning,4,Computer Science,Dr.Ravi,Key Concepts of javascripts learning,true
+QQ455,introduction to programming,1,Computer Science,Dr.Suriyaa,Basic programming concepts,true
+AI1121,AI and Machine Learning,4,Computer Science,Dr.Bhagyani,Advanced AI concepts,true
+DM654,Discreate Mathematics,4,Mathematics,Dr.Dulani,Maths concepts,true
+QC7760,Quantom Computing,4,Computer Science,Dr.Ruchira,Quantom Computing Concepts,true
+AM2333,Applied Mathematics,3,Mathematics,Dr.Soosage,Applied Concepts,true
+IT2356,Web Development,4,Computer Science,Dr.Saman,web developing....,true
+CS502,Parallel Computing,4,Computer Science,Dr. Lee,Parallel algorithms and systems,true
+AI403,Deep Learning,3,Computer Science,Prof. Taylor,Neural networks and deep learning,true
+SE301,Software Engineering,3,Computer Science,Dr. Brown,Software development methodologies,true
+CS601,Operating Systems,4,Computer Science,Prof. Davis,OS concepts and design,true
+ML501,Reinforcement Learning,3,Computer Science,Dr. Kim,Advanced ML techniques,true
+DB401,Advanced Databases,4,Computer Science,Prof. Harris,Distributed databases,true
+CS201,Data Structures,3,Computer Science,Dr. Patel,Fundamental data structures,true
+IT301,Cloud Computing,4,Computer Science,Dr. Gupta,Cloud architectures,true
+MT101,Linear Algebra,3,Mathematics,Prof. Wilson,Matrix theory and applications,true
+CS405,Cybersecurity Basics,3,Computer Science,Dr. Clark,Intro to security concepts,true
+AI602,Natural Language Processing,4,Computer Science,Prof. Nguyen,Text processing and NLP,true
+SE401,Agile Development,3,Computer Science,Dr. Evans,Agile methodologies,true
+MT301,Probability and Statistics,4,Mathematics,Dr. Adams,Statistical methods,true
+CS701,Computer Networks,3,Computer Science,Prof. Miller,Networking protocols,true
+IT501,DevOps Practices,4,Computer Science,Dr. Singh,CI/CD and automation,true
+AI201,Intro to AI,3,Computer Science,Prof. Lewis,AI fundamentals,true
+MT401,Calculus II,4,Mathematics,Dr. Walker,Advanced calculus concepts,true
+CS305,Computer Graphics,3,Computer Science,Dr. Young,Graphics rendering,true
+DB301,Data Warehousing,4,Computer Science,Prof. Robinson,Data storage solutions,true
+IT601,Internet of Things,3,Computer Science,Dr. Khan,IoT systems,true
+MT501,Number Theory,4,Mathematics,Prof. Carter,Number theory applications,true
+CS801,Distributed Systems,4,Computer Science,Dr. Hall,Distributed computing,true
+AI701,Computer Vision,3,Computer Science,Prof. Scott,Image processing,true
+SE501,Software Testing,3,Computer Science,Dr. Turner,Quality assurance,true
+IT701,Blockchain Technology,4,Computer Science,Dr. Lopez,Blockchain fundamentals,true
+MT601,Graph Theory,3,Mathematics,Prof. Edwards,Graphs and networks,true
+CS901,Embedded Systems,4,Computer Science,Dr. Morris,Embedded programming,true
+AI801,Ethics in AI,3,Computer Science,Prof. Allen,AI ethics and governance,true
+IT801,UI/UX Design,3,Computer Science,Dr. Parker,User interface design,true
+CS302,Computer Architecture,3,Computer Science,Dr. Martin,Fundamentals of computer hardware,true

@@ -34,10 +34,8 @@ public class SignUpServlet extends HttpServlet {
             // Save user data
             saveUserData(request, fullname, email, password);
 
-            // Successful registration - use correct path to logIn.jsp
-            response.sendRedirect(request.getContextPath() + "logIn.jsp?registered=1");
-// OR if logIn.jsp is in root:
-// response.sendRedirect(request.getContextPath() + "/logIn.jsp?registered=1");
+            // Successful registration
+            response.sendRedirect(request.getContextPath() + "/logIn.jsp?registered=1");
         } catch (Exception e) {
             e.printStackTrace();
             response.sendRedirect("signUp.jsp?error=2"); // Server error
@@ -46,9 +44,23 @@ public class SignUpServlet extends HttpServlet {
 
     private void saveUserData(HttpServletRequest request, String fullname,
                               String email, String password) throws IOException {
+        // Save to primary user_data.txt
         String path = request.getServletContext().getRealPath("/WEB-INF/user_data.txt");
         try (PrintWriter out = new PrintWriter(new FileWriter(path, true))) {
             out.println(fullname + "|" + email + "|" + password);
+        }
+
+        // Save to individual file named with first name and timestamp
+        String[] nameParts = fullname.split(" ", 2);
+        String firstName = nameParts[0].replaceAll("[^a-zA-Z0-9_]", "_");
+        String uniqueId = String.valueOf(System.currentTimeMillis()); // Use timestamp for uniqueness
+        String filename = firstName + "_" + uniqueId + ".txt";
+        String individualFilePath = request.getServletContext().getRealPath("/WEB-INF/data/") + filename;
+        try (PrintWriter out = new PrintWriter(new FileWriter(individualFilePath))) {
+            out.println(fullname + "|" + email + "|" + password);
+        } catch (IOException e) {
+            // Log error but don't fail registration
+            request.getServletContext().log("Failed to write to individual user file: " + filename, e);
         }
     }
 }
