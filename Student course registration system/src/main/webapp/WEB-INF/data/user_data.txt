@@ -29,3 +29,4 @@
 0,Hasiru,$2a$10$dI/QGFbo49JOsd/xyFT8HOpUzRerRtMR/PQGlcxIk89SEyyS9nSFC,admin
 0,Hasiru,$2a$10$fe7V8LhTUXnN9hRtkmwJyuxPSYwPBx1eSafUhHwH6uLfhjG9CRWnm,admin
 0,Hasiru,$2a$10$3tqFBuulxOvAQpZE3A3uHO4.MjTeTnelQvvCiOs/deWlezB/IFd1a,admin
+0,Hasiru,$2a$10$YUyjzQTUsb3GnAQIm2ESi.IOpmN2sCuL8isngh2M4viU/3bwRhSFC,admin
