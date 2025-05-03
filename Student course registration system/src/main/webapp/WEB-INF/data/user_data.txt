@@ -29,6 +29,9 @@
 0,Hasiru,$2a$10$dI/QGFbo49JOsd/xyFT8HOpUzRerRtMR/PQGlcxIk89SEyyS9nSFC,admin
 0,Hasiru,$2a$10$fe7V8LhTUXnN9hRtkmwJyuxPSYwPBx1eSafUhHwH6uLfhjG9CRWnm,admin
 0,Hasiru,$2a$10$3tqFBuulxOvAQpZE3A3uHO4.MjTeTnelQvvCiOs/deWlezB/IFd1a,admin
+<<<<<<< HEAD
 0,Hasiru,$2a$10$1pkw4/qTiDkAGL.SF/YyEu9Iae9u/3kCS3CEYumr5qqAFQRYttnDS,admin
 0,Hasiru,$2a$10$BhVzUCeOcsGlBS4WUMnNxu9uBqYIAuP19PxF7HAQY9JZw6zdXAD4m,admin
 0,Hasiru,$2a$10$ZcxZDQNWj0qYuKvkyCrscuEa1gp4futcNkFMP74jg6rr4F03O9R5O,admin
+=======
+>>>>>>> fe20fe5a8563e26ff54b3649bcc50f18a47a489a

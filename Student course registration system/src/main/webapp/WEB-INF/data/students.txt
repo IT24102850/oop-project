@@ -9,4 +9,8 @@ CB22FF44,Damith Asanka,damith2004@gmail.com,hasiru2006
 60B2A35B,Mahinda Rajapaksa,mahinda2004@gmail.com,mahinda2004
 STU20230001,John Doe,john.doe@nexora.edu
 STU20230002,Jane Smith,jane.smith@nexora.edu
+<<<<<<< HEAD
 CA7CB734,ravindu akalanka,ravindu2004@gmail.com,ravindu2004
+=======
+2D32FFF9,Chanuth Chethana,chanuth2004@gmail.com,chanuth2004
+>>>>>>> fe20fe5a8563e26ff54b3649bcc50f18a47a489a
