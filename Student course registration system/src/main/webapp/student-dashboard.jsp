@@ -1,6 +1,7 @@
 <%@ page import="java.util.*" %>
 <%@ page import="java.io.*" %>
 <%@ page import="java.text.SimpleDateFormat" %>
+<%@ page import="java.util.Date" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html lang="en">
@@ -116,6 +117,55 @@
     // Check if invoice is overdue
     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
     Date currentDate = dateFormat.parse("2025-05-02"); // Current date as of May 02, 2025
+
+    // Handle form submission for making a payment
+    String action = request.getParameter("action");
+    if ("makePayment".equals(action)) {
+        String subscriptionPlan = request.getParameter("subscriptionPlan");
+        String amount = request.getParameter("amount");
+        String startDate = request.getParameter("startDate");
+        String paymentMethod = request.getParameter("paymentMethod");
+
+        // Generate a unique invoice ID
+        String invoiceId = "INV" + System.currentTimeMillis();
+        String dueDate = "";
+        try {
+            Date startDateParsed = dateFormat.parse(startDate);
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(startDateParsed);
+            if ("monthly".equals(subscriptionPlan)) {
+                cal.add(Calendar.MONTH, 1);
+            } else if ("quarterly".equals(subscriptionPlan)) {
+                cal.add(Calendar.MONTH, 3);
+            } else if ("yearly".equals(subscriptionPlan)) {
+                cal.add(Calendar.YEAR, 1);
+            }
+            dueDate = dateFormat.format(cal.getTime());
+        } catch (Exception e) {
+            dueDate = "N/A";
+        }
+
+        // Payment details
+        String status = "pending";
+        String paymentDate = "";
+        String waiverApplied = "false";
+        String lateFee = "0.00";
+
+        // Prepare the payment entry
+        String paymentEntry = String.join(",",
+                invoiceId, studentId, amount, dueDate, status, paymentDate, waiverApplied, lateFee, paymentMethod, subscriptionPlan, startDate);
+
+        // Write to payments.txt
+        String paymentsFilePath = application.getRealPath("/WEB-INF/data/payments.txt");
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(paymentsFilePath, true))) {
+            writer.write(paymentEntry);
+            writer.newLine();
+            paymentHistory.add(paymentEntry.split(","));
+            response.sendRedirect("student-dashboard.jsp?message=payment_made");
+        } catch (IOException e) {
+            request.setAttribute("error", "Failed to save payment: " + e.getMessage());
+        }
+    }
 %>
 
 <!-- Sidebar -->
@@ -206,7 +256,7 @@
                 </div>
                 <form action="auth" method="post">
                     <input type="hidden" name="action" value="logout">
-                    <button type="submit" class="btn btn-outline">
+                    <button type="submit" class="btn btn-outline
                         <i class="fas fa-sign-out-alt"></i> Logout
                     </button>
                 </form>
@@ -570,7 +620,7 @@
 
             <div class="payment-section active" id="make-payment-section">
                 <h3>Make a Payment</h3>
-                <form id="paymentForm" action="fee" method="post" class="payment-form">
+                <form id="paymentForm" action="student-dashboard.jsp" method="post" class="payment-form">
                     <input type="hidden" name="action" value="makePayment">
                     <input type="hidden" name="studentId" value="<%= studentId %>">
                     <div class="form-group">
@@ -889,17 +939,17 @@
 
     // Form Validation and Submission for Make Payment
     document.getElementById('paymentForm').addEventListener('submit', function(e) {
-        e.preventDefault();
-        const form = this;
         const subscriptionPlan = document.getElementById('subscriptionPlan').value;
         const paymentMethod = document.getElementById('paymentMethod').value;
 
         if (!subscriptionPlan) {
+            e.preventDefault();
             alert('Please select a subscription plan.');
             return;
         }
 
         if (!paymentMethod) {
+            e.preventDefault();
             alert('Please select a payment method.');
             return;
         }
@@ -910,6 +960,7 @@
             const expiryDate = document.getElementById('expiryDate').value;
             const cvv = document.getElementById('cvv').value;
             if (!cardNumber || !expiryDate || !cvv) {
+                e.preventDefault();
                 alert('Please fill all card details.');
                 return;
             }
@@ -917,24 +968,27 @@
             const accountNumber = document.getElementById('accountNumber').value;
             const routingNumber = document.getElementById('routingNumber').value;
             if (!accountNumber || !routingNumber) {
+                e.preventDefault();
                 alert('Please fill all bank transfer details.');
                 return;
             }
         } else if (paymentMethod === 'payPal') {
             const paypalEmail = document.getElementById('paypalEmail').value;
             if (!paypalEmail) {
+                e.preventDefault();
                 alert('Please enter your PayPal email.');
                 return;
             }
+
+            
         } else if (paymentMethod === 'crypto') {
             const cryptoWallet = document.getElementById('cryptoWallet').value;
             if (!cryptoWallet) {
+                e.preventDefault();
                 alert('Please enter your crypto wallet address.');
                 return;
             }
         }
-
-        form.submit();
     });
 
     // Initialize payment section
