@@ -22,12 +22,6 @@ public class StudentRegistrationServlet extends HttpServlet {
         }
     }
 
-<<<<<<< HEAD
-=======
-
-
-
->>>>>>> fe20fe5a8563e26ff54b3649bcc50f18a47a489a
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {

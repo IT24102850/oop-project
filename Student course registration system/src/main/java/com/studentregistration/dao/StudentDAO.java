@@ -41,9 +41,6 @@ public class StudentDAO {
             throw new IllegalStateException("File path for students.txt is not set");
         }
 
-
-
-
         try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
             String line;
             while ((line = reader.readLine()) != null) {
