@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Full-Stack Web Development | NexoraSkill</title>
+    <title>NexoraSkill - Mobile App Development Course</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="icon" type="image/png" href="./images/favicon.ico">
     <!-- Google Fonts -->
@@ -20,7 +20,7 @@
             --dark-color: #0a0f24;
             --darker-color: #050916;
             --text-color: #ffffff;
-            --text-muted: rgba(255,255,255,0.7);
+            --text-muted: rgba(255, 255, 255, 0.7);
             --hover-color: #00c6fb;
             --glow-color: rgba(0, 242, 254, 0.6);
             --card-bg: rgba(15, 23, 42, 0.8);
@@ -114,7 +114,6 @@
             z-index: 1000;
             background: var(--glass-bg);
             backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
             border-bottom: 1px solid rgba(0, 242, 254, 0.1);
             box-shadow: 0 5px 30px rgba(0, 0, 0, 0.2);
             transition: var(--transition);
@@ -152,13 +151,7 @@
 
         .logo img {
             height: 45px;
-            transition: var(--transition);
             filter: drop-shadow(0 0 5px var(--glow-color));
-        }
-
-        .logo:hover img {
-            transform: rotate(15deg) scale(1.1);
-            filter: drop-shadow(0 0 10px var(--glow-color));
         }
 
         .navbar ul {
@@ -168,7 +161,6 @@
         }
 
         .navbar ul li a {
-            position: relative;
             font-family: 'Poppins', sans-serif;
             text-decoration: none;
             color: var(--text-color);
@@ -176,7 +168,7 @@
             font-size: 1.1rem;
             transition: var(--transition);
             padding: 8px 0;
-            overflow: hidden;
+            position: relative;
         }
 
         .navbar ul li a:before {
@@ -188,11 +180,6 @@
             left: -100%;
             background: linear-gradient(90deg, transparent, var(--primary-color));
             transition: var(--transition);
-        }
-
-        .navbar ul li a:hover {
-            color: var(--primary-color);
-            text-shadow: 0 0 10px var(--glow-color);
         }
 
         .navbar ul li a:hover:before {
@@ -244,8 +231,6 @@
         .btn-login:hover {
             color: var(--dark-color);
             border-color: transparent;
-            transform: translateY(-3px);
-            box-shadow: 0 10px 20px rgba(0, 242, 254, 0.3);
         }
 
         .btn-signup {
@@ -258,18 +243,27 @@
             background: transparent;
             color: var(--primary-color);
             border-color: var(--primary-color);
-            transform: translateY(-3px);
-            box-shadow: 0 10px 20px rgba(0, 242, 254, 0.3);
         }
 
-        /* Main Content */
-        .main-content {
-            padding: 180px 5% 100px;
+        /* Main Section */
+        main {
+            padding-top: 120px;
+        }
+
+        /* Top Section */
+        .top-section {
+            display: flex;
+            justify-content: space-between;
+            padding: 100px 5%;
+            gap: 40px;
+            max-width: 1600px;
+            margin: 0 auto;
             position: relative;
             overflow: hidden;
+            animation: fadeInUp 1s ease-out;
         }
 
-        .main-content:before {
+        .top-section:before {
             content: '';
             position: absolute;
             top: -50%;
@@ -281,36 +275,21 @@
             z-index: -1;
         }
 
-        /* Course Top Section */
-        .course-top-section {
-            display: flex;
-            justify-content: space-between;
-            gap: 40px;
-            margin-bottom: 80px;
-            animation: fadeInUp 1s ease-out;
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
 
         .course-image {
             flex: 1;
-            min-width: 300px;
             position: relative;
-            border-radius: var(--border-radius);
-            overflow: hidden;
-            box-shadow: var(--box-shadow);
-            border: 1px solid rgba(0, 242, 254, 0.2);
-            transition: var(--transition);
-        }
-
-        .course-image:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
-            border-color: rgba(0, 242, 254, 0.4);
+            z-index: 1;
         }
 
         .course-image img {
             width: 100%;
-            height: 100%;
-            object-fit: cover;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
             transition: var(--transition);
             filter: drop-shadow(0 0 10px var(--glow-color));
         }
@@ -322,28 +301,17 @@
 
         .course-description {
             flex: 2;
-            padding: 40px;
-            background: var(--card-bg);
-            backdrop-filter: blur(10px);
-            border-radius: var(--border-radius);
-            border: 1px solid rgba(0, 242, 254, 0.2);
-            box-shadow: var(--box-shadow);
-            transition: var(--transition);
-        }
-
-        .course-description:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
-            border-color: rgba(0, 242, 254, 0.4);
+            padding: 0 30px;
+            z-index: 1;
         }
 
         .course-description h1 {
-            font-size: 3rem;
+            font-size: 3.5rem;
             margin-bottom: 20px;
             background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            text-shadow: 0 0 30px rgba(0, 242, 254, 0.3);
+            text-shadow: 0 0 20px var(--glow-color);
             position: relative;
         }
 
@@ -359,65 +327,29 @@
         }
 
         .course-description p {
-            font-size: 1.2rem;
+            font-size: 1.3rem;
             color: var(--text-muted);
             margin-bottom: 30px;
         }
 
-        .course-meta {
-            display: flex;
-            gap: 30px;
-            margin-top: 30px;
-        }
-
-        .meta-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            color: var(--primary-color);
-            font-size: 1.1rem;
-        }
-
-        .meta-item i {
-            font-size: 1.5rem;
-        }
-
         .review-section {
             flex: 1;
-            min-width: 300px;
             background: var(--card-bg);
             backdrop-filter: blur(10px);
             border-radius: var(--border-radius);
             padding: 30px;
             border: 1px solid rgba(0, 242, 254, 0.2);
             box-shadow: var(--box-shadow);
-            transition: var(--transition);
-        }
-
-        .review-section:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
-            border-color: rgba(0, 242, 254, 0.4);
+            position: relative;
+            z-index: 1;
         }
 
         .review-section h2 {
-            font-size: 1.8rem;
-            margin-bottom: 30px;
+            font-size: 2rem;
+            margin-bottom: 20px;
             background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            position: relative;
-        }
-
-        .review-section h2:after {
-            content: '';
-            position: absolute;
-            bottom: -10px;
-            left: 0;
-            width: 60px;
-            height: 3px;
-            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
-            border-radius: 2px;
         }
 
         .review-slideshow {
@@ -443,134 +375,87 @@
         }
 
         .review-card p {
-            font-size: 1rem;
+            font-size: 1.1rem;
             color: var(--text-muted);
-            margin-bottom: 15px;
-            font-style: italic;
+            margin-bottom: 10px;
         }
 
         .review-card h4 {
-            font-size: 1.1rem;
+            font-size: 1rem;
             color: var(--primary-color);
         }
 
-        /* Course Bottom Section */
-        .course-bottom-section {
+        /* Bottom Section */
+        .bottom-section {
             display: flex;
             justify-content: space-between;
+            padding: 100px 5%;
             gap: 40px;
+            max-width: 1600px;
+            margin: 0 auto;
+            position: relative;
+            background: linear-gradient(to bottom, transparent, var(--darker-color));
         }
 
         .instructors-description {
             flex: 1;
-            background: var(--card-bg);
-            backdrop-filter: blur(10px);
-            border-radius: var(--border-radius);
-            padding: 40px;
-            border: 1px solid rgba(0, 242, 254, 0.2);
-            box-shadow: var(--box-shadow);
-            transition: var(--transition);
-        }
-
-        .instructors-description:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
-            border-color: rgba(0, 242, 254, 0.4);
+            z-index: 1;
         }
 
         .instructors-description h2 {
-            font-size: 1.8rem;
+            font-size: 2rem;
             margin-bottom: 30px;
             background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            position: relative;
-        }
-
-        .instructors-description h2:after {
-            content: '';
-            position: absolute;
-            bottom: -10px;
-            left: 0;
-            width: 60px;
-            height: 3px;
-            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
-            border-radius: 2px;
-        }
-
-        .instructor-list {
-            display: flex;
-            flex-direction: column;
-            gap: 30px;
         }
 
         .instructor-item {
-            display: flex;
-            gap: 20px;
-            align-items: center;
-        }
-
-        .instructor-image {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border-radius: var(--border-radius);
+            padding: 30px;
+            border: 1px solid rgba(0, 242, 254, 0.2);
+            box-shadow: var(--box-shadow);
+            transition: var(--transition);
+            position: relative;
             overflow: hidden;
-            border: 2px solid var(--primary-color);
-            box-shadow: 0 0 20px var(--glow-color);
         }
 
-        .instructor-image img {
+        .instructor-item:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+        }
+
+        .instructor-item img {
             width: 100%;
-            height: 100%;
-            object-fit: cover;
+            border-radius: var(--border-radius);
+            margin-bottom: 20px;
         }
 
-        .instructor-info h3 {
-            font-size: 1.3rem;
-            color: var(--primary-color);
-            margin-bottom: 5px;
+        .instructor-item h3 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            color: var(--text-color);
         }
 
-        .instructor-info p {
-            font-size: 1rem;
+        .instructor-item p {
+            font-size: 1.1rem;
             color: var(--text-muted);
         }
 
         .why-choose {
             flex: 2;
-            background: var(--card-bg);
-            backdrop-filter: blur(10px);
-            border-radius: var(--border-radius);
-            padding: 40px;
-            border: 1px solid rgba(0, 242, 254, 0.2'acquisto
-            box-shadow: var(--box-shadow);
-            transition: var(--transition);
-        }
-
-        .why-choose:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
-            border-color: rgba(0, 242, 254, 0.4);
+            padding: 0 30px;
+            z-index: 1;
         }
 
         .why-choose h2 {
-            font-size: 1.8rem;
+            font-size: 2rem;
             margin-bottom: 30px;
             background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            position: relative;
-        }
-
-        .why-choose h2:after {
-            content: '';
-            position: absolute;
-            bottom: -10px;
-            left: 0;
-            width: 60px;
-            height: 3px;
-            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
-            border-radius: 2px;
         }
 
         .why-choose ul {
@@ -578,85 +463,42 @@
         }
 
         .why-choose li {
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            color: var(--text-muted);
             position: relative;
             padding-left: 30px;
-            margin-bottom: 20px;
-            font-size: 1.1rem;
-            color: var(--text-muted);
-            transition: var(--transition);
         }
 
         .why-choose li:before {
-            content: '▹';
+            content: '»';
             position: absolute;
             left: 0;
             color: var(--primary-color);
-            font-size: 1.3rem;
-        }
-
-        .why-choose li:hover {
-            color: var(--text-color);
-            transform: translateX(5px);
+            font-size: 1.5rem;
         }
 
         .enroll-section {
             flex: 1;
             display: flex;
             justify-content: center;
-            align-items: flex-start;
-        }
-
-        .enroll-card {
-            background: var(--card-bg);
-            backdrop-filter: blur(10px);
-            border-radius: var(--border-radius);
-            padding: 40px;
-            border: 1px solid rgba(0, 242, 254, 0.2);
-            box-shadow: var(--box-shadow);
-            transition: var(--transition);
-            text-align: center;
-            width: 100%;
-        }
-
-        .enroll-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
-            border-color: rgba(0, 242, 254, 0.4);
-        }
-
-        .enroll-card h3 {
-            font-size: 1.5rem;
-            margin-bottom: 30px;
-            color: var(--primary-color);
-        }
-
-        .price {
-            font-size: 2.5rem;
-            font-weight: 700;
-            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 30px;
+            align-items: center;
+            z-index: 1;
         }
 
         .enroll-button {
-            padding: 18px 36px;
-            border-radius: 50px;
-            font-size: 1.2rem;
-            font-weight: 600;
+            padding: 20px 40px;
+            font-size: 1.3rem;
             background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
             color: var(--dark-color);
             border: none;
+            border-radius: 50px;
             cursor: pointer;
             transition: var(--transition);
-            display: inline-flex;
-            align-items: center;
-            gap: 12px;
+            box-shadow: 0 15px 35px rgba(0, 242, 254, 0.4);
             position: relative;
             overflow: hidden;
             z-index: 1;
-            width: 100%;
-            justify-content: center;
         }
 
         .enroll-button:before {
@@ -678,171 +520,6 @@
 
         .enroll-button:hover:before {
             width: 100%;
-        }
-
-        /* Footer */
-        .footer {
-            background: var(--darker-color);
-            padding: 100px 5% 50px;
-            border-top: 1px solid rgba(0, 242, 254, 0.1);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .footer:before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: url('./images/grid-pattern.png') center/cover;
-            opacity: 0.03;
-            z-index: 0;
-        }
-
-        .footer-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 50px;
-            max-width: 1300px;
-            margin: 0 auto 60px;
-            position: relative;
-            z-index: 1;
-        }
-
-        .footer-col {
-            position: relative;
-        }
-
-        .footer-logo {
-            font-size: 2.2rem;
-            font-weight: 700;
-            margin-bottom: 25px;
-            display: inline-block;
-            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            position: relative;
-        }
-
-        .footer-logo:after {
-            content: '';
-            position: absolute;
-            bottom: -10px;
-            left: 0;
-            width: 60px;
-            height: 3px;
-            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
-            border-radius: 2px;
-        }
-
-        .footer-about {
-            color: var(--text-muted);
-            margin-bottom: 30px;
-            font-size: 1.1rem;
-            line-height: 1.8;
-        }
-
-        .social-links {
-            display: flex;
-            gap: 20px;
-        }
-
-        .social-link {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            background: var(--glass-bg);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--text-color);
-            transition: var(--transition);
-            font-size: 1.3rem;
-            border: 1px solid rgba(0, 242, 254, 0.1);
-        }
-
-        .social-link:hover {
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            color: var(--dark-color);
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0, 242, 254, 0.3);
-            border-color: transparent;
-        }
-
-        .footer-title {
-            font-size: 1.5rem;
-            margin-bottom: 30px;
-            color: var(--text-color);
-            position: relative;
-            padding-bottom: 15px;
-        }
-
-        .footer-title:after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 50px;
-            height: 2px;
-            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
-            border-radius: 2px;
-        }
-
-        .footer-links {
-            list-style: none;
-        }
-
-        .footer-links li {
-            margin-bottom: 20px;
-            position: relative;
-            padding-left: 20px;
-        }
-
-        .footer-links li:before {
-            content: '»';
-            position: absolute;
-            left: 0;
-            color: var(--primary-color);
-            transition: var(--transition);
-        }
-
-        .footer-links a {
-            color: var(--text-muted);
-            text-decoration: none;
-            transition: var(--transition);
-            font-size: 1.1rem;
-            display: inline-block;
-        }
-
-        .footer-links li:hover:before {
-            transform: translateX(5px);
-        }
-
-        .footer-links a:hover {
-            color: var(--primary-color);
-            transform: translateX(5px);
-        }
-
-        .footer-bottom {
-            text-align: center;
-            padding-top: 50px;
-            border-top: 1px solid rgba(0, 242, 254, 0.1);
-            color: var(--text-muted);
-            font-size: 1rem;
-            position: relative;
-            z-index: 1;
-        }
-
-        .footer-bottom a {
-            color: var(--primary-color);
-            text-decoration: none;
-            transition: var(--transition);
-        }
-
-        .footer-bottom a:hover {
-            text-shadow: 0 0 10px var(--glow-color);
         }
 
         /* Scroll To Top Button */
@@ -876,50 +553,35 @@
 
         .scroll-top:hover {
             transform: translateY(-5px) scale(1.1);
-            box-shadow: 0 10px 25px rgba(0, 242, 254, 0.6);
         }
 
         /* Animations */
         @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        @keyframes rotate {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+        @keyframes float {
+            0% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+            100% { transform: translateY(0); }
         }
 
         /* Responsive Design */
         @media (max-width: 1200px) {
-            .course-top-section, .course-bottom-section {
-                flex-direction: column;
-            }
-
-            .course-image, .review-section, .enroll-card {
-                width: 100%;
-                max-width: 600px;
-                margin: 0 auto;
-            }
-
-            .course-description, .instructors-description, .why-choose {
-                width: 100%;
-            }
+            .course-description h1 { font-size: 3rem; }
+            .review-section h2, .instructors-description h2, .why-choose h2 { font-size: 1.8rem; }
         }
 
         @media (max-width: 992px) {
-            .course-description h1 {
-                font-size: 2.5rem;
+            .top-section, .bottom-section {
+                flex-direction: column;
+                text-align: center;
             }
 
-            .review-section h2, .instructors-description h2, .why-choose h2 {
-                font-size: 1.5rem;
+            .course-image, .course-description, .review-section, .instructors-description, .why-choose, .enroll-section {
+                flex: none;
+                padding: 20px;
             }
 
             .enroll-button {
@@ -929,41 +591,16 @@
         }
 
         @media (max-width: 768px) {
-            .navbar {
-                display: none;
-            }
-
-            .course-description h1 {
-                font-size: 2.2rem;
-            }
-
-            .course-meta {
-                flex-direction: column;
-                gap: 15px;
-            }
-
-            .enroll-button {
-                padding: 15px;
-                font-size: 1rem;
-            }
+            .navbar { display: none; }
+            .auth-buttons { display: none; }
+            .course-description h1 { font-size: 2.5rem; }
+            .review-section h2, .instructors-description h2, .why-choose h2 { font-size: 1.5rem; }
         }
 
         @media (max-width: 576px) {
-            .auth-buttons {
-                display: none;
-            }
-
-            .course-description h1 {
-                font-size: 1.8rem;
-            }
-
-            .course-description p {
-                font-size: 1rem;
-            }
-
-            .why-choose li {
-                font-size: 1rem;
-            }
+            .course-description h1 { font-size: 2rem; }
+            .course-description p, .why-choose li { font-size: 1.1rem; }
+            .enroll-button { font-size: 1.1rem; }
         }
     </style>
 </head>
@@ -980,10 +617,9 @@
             <img src="./images/favicon-32x32.png" alt="NexoraSkill Logo">
             <span>NexoraSkill</span>
         </a>
-
         <nav class="navbar">
             <ul>
-                <li><a href="index.jsp">Home</a></li>
+                <li><a href="#home">Home</a></li>
                 <li><a href="courses.jsp">Courses</a></li>
                 <li><a href="Apply%20Course.jsp">Apply Course</a></li>
                 <li><a href="aboutus.jsp">About Us</a></li>
@@ -997,160 +633,72 @@
     </div>
 </header>
 
-<!-- Main Content -->
-<main class="main-content">
-    <!-- Course Top Section -->
-    <section class="course-top-section">
-        <!-- Left Side: Course Image -->
+<!-- Main Section -->
+<main>
+    <!-- Top Section -->
+    <section class="top-section">
+        <!-- Course Image -->
         <div class="course-image">
-            <img src="https://images.unsplash.com/photo-1516321310764-8d9c6341e698?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80" alt="Full-Stack Web Development">
+            <img src="./images/mobile-app-dev.jpg" alt="Mobile App Development Illustration">
         </div>
 
-        <!-- Middle: Course Description -->
+        <!-- Course Description -->
         <div class="course-description">
-            <h1>Full-Stack Web Development</h1>
-            <p>Become a proficient full-stack web developer with our comprehensive course. Master front-end technologies like HTML, CSS, JavaScript, and React, alongside back-end skills with Node.js, Express, and MongoDB. Build real-world projects, from responsive websites to dynamic web applications, guided by industry experts.</p>
-
-            <div class="course-meta">
-                <div class="meta-item">
-                    <i class="fas fa-clock"></i>
-                    <span>12 Weeks</span>
-                </div>
-                <div class="meta-item">
-                    <i class="fas fa-chart-line"></i>
-                    <span>Beginner to Intermediate</span>
-                </div>
-                <div class="meta-item">
-                    <i class="fas fa-certificate"></i>
-                    <span>Certificate</span>
-                </div>
-            </div>
+            <h1>Mobile App Development</h1>
+            <p>Master the art of building cross-platform mobile applications with this comprehensive course. Learn modern frameworks like Flutter and React Native, guided by industry experts. Perfect for beginners and seasoned developers alike.</p>
         </div>
 
-        <!-- Right Side: Review Section -->
+        <!-- Review Section -->
         <div class="review-section">
             <h2>Student Reviews</h2>
             <div class="review-slideshow">
-                <div class="review-card active">
-                    <p>"This course transformed me into a confident full-stack developer. The projects were amazing!"</p>
-                    <h4>- Lisa Thompson</h4>
+                <div class="review-card">
+                    <p>"An excellent course for anyone looking to dive into mobile app development!"</p>
+                    <h4>- Alex Carter</h4>
                 </div>
                 <div class="review-card">
-                    <p>"The instructors explained complex concepts clearly. I built my portfolio with ease!"</p>
-                    <h4>- Mark Evans</h4>
+                    <p>"The hands-on projects made learning so much easier and fun."</p>
+                    <h4>- Priya Sharma</h4>
                 </div>
                 <div class="review-card">
-                    <p>"From zero coding experience to deploying web apps, this course is a game-changer."</p>
-                    <h4>- Anita Patel</h4>
+                    <p>"The instructor's teaching style is clear and engaging. Highly recommended!"</p>
+                    <h4>- Michael Brown</h4>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Course Bottom Section -->
-    <section class="course-bottom-section">
-        <!-- Left Side: Instructors Description -->
+    <!-- Bottom Section -->
+    <section class="bottom-section">
+        <!-- Instructors Description -->
         <div class="instructors-description">
-            <h2>Meet Your Instructors</h2>
+            <h2>Meet Our Instructors</h2>
             <div class="instructor-list">
                 <div class="instructor-item">
-                    <div class="instructor-image">
-                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80" alt="Michael Reed">
-                    </div>
-                    <div class="instructor-info">
-                        <h3>Michael Reed</h3>
-                        <p>Full-Stack Developer with 12+ years of experience</p>
-                    </div>
-                </div>
-                <div class="instructor-item">
-                    <div class="instructor-image">
-                        <img src="https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80" alt="Sophie Clark">
-                    </div>
-                    <div class="instructor-info">
-                        <h3>Sophie Clark</h3>
-                        <p>Front-End Specialist & UI/UX Designer</p>
-                    </div>
+                    <img src="./images/teacher2.jpg" alt="Instructor">
+                    <h3>Jane Smith</h3>
+                    <p>Expert in Mobile App Development with 10+ years of industry experience.</p>
                 </div>
             </div>
         </div>
 
-        <!-- Middle: Why Choose This Course -->
+        <!-- Why Choose This Course -->
         <div class="why-choose">
             <h2>Why Choose This Course?</h2>
             <ul>
-                <li>Comprehensive curriculum covering front-end and back-end development</li>
-                <li>Hands-on projects to build responsive, dynamic web applications</li>
-                <li>Expert instructors with extensive industry experience</li>
-                <li>Flexible learning schedule with lifetime access to materials</li>
-                <li>Supportive community and mentorship opportunities</li>
-                <li>Portfolio development for job-ready skills</li>
-                <li>Cutting-edge tools like React, Node.js, and MongoDB</li>
+                <li>Learn to build cross-platform apps using Flutter and React Native.</li>
+                <li>Hands-on projects to create real-world applications.</li>
+                <li>Expert instructors with industry experience.</li>
+                <li>Flexible learning schedule to fit your lifestyle.</li>
             </ul>
         </div>
 
-        <!-- Right Side: Enroll Section -->
+        <!-- Enroll Button -->
         <div class="enroll-section">
-            <div class="enroll-card">
-                <h3>Start Learning Today</h3>
-                <div class="price">$199.99</div>
-                <button class="enroll-button">
-                    <i class="fas fa-user-graduate"></i> Enroll Now
-                </button>
-                <p style="margin-top: 20px; color: var(--text-muted); font-size: 0.9rem;">30-day money back guarantee</p>
-            </div>
+            <button class="enroll-button">Enroll Now</button>
         </div>
     </section>
 </main>
-
-<!-- Footer -->
-<footer class="footer">
-    <div class="footer-grid">
-        <div class="footer-col">
-            <a href="#" class="footer-logo">NexoraSkill</a>
-            <p class="footer-about">The premier platform for future-ready education. We're revolutionizing how the world learns technology through immersive, interactive experiences.</p>
-            <div class="social-links">
-                <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
-                <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
-                <a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a>
-                <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
-                <a href="#" class="social-link"><i class="fab fa-youtube"></i></a>
-            </div>
-        </div>
-        <div class="footer-col">
-            <h3 class="footer-title">Quick Links</h3>
-            <ul class="footer-links">
-                <li><a href="index.jsp">Home</a></li>
-                <li><a href="courses.jsp">Courses</a></li>
-                <li><a href="registration.jsp">Registration</a></li>
-                <li><a href="aboutus.jsp">About Us</a></li>
-                <li><a href="contact.jsp">Contact</a></li>
-            </ul>
-        </div>
-        <div class="footer-col">
-            <h3 class="footer-title">Tech Tracks</h3>
-            <ul class="footer-links">
-                <li><a href="#">AI & Machine Learning</a></li>
-                <li><a href="#">Blockchain Development</a></li>
-                <li><a href="#">Quantum Computing</a></li>
-                <li><a href="#">Cybersecurity</a></li>
-                <li><a href="#">Cloud Architecture</a></li>
-            </ul>
-        </div>
-        <div class="footer-col">
-            <h3 class="footer-title">Company</h3>
-            <ul class="footer-links">
-                <li><a href="#">Careers</a></li>
-                <li><a href="#">Press</a></li>
-                <li><a href="#">Investors</a></li>
-                <li><a href="#">Privacy Policy</a></li>
-                <li><a href="#">Terms of Service</a></li>
-            </ul>
-        </div>
-    </div>
-    <div class="footer-bottom">
-        <p>© 2023 NexoraSkill. All rights reserved. | Designed with <i class="fas fa-heart" style="color: var(--accent-color);"></i> for the future of education</p>
-    </div>
-</footer>
 
 <!-- Scroll To Top Button -->
 <div class="scroll-top">

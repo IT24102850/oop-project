@@ -1,9 +1,0 @@
-Action: payment
-Course: CyberSecurity ($499)
-Start Date: 2025-04-12
-Study Mode: online
-Emergency Contact: 0765183172
-Payment Plan: N/A
-Payment Method: Credit Card
-Amount: $499
-Submission Time: Sat Apr 19 23:49:09 IST 2025

@@ -1,11 +1,12 @@
 6BFF41A6,Rishni Rimandi,rishni2004@gmail.com,rishni2004
-0817F17C,Hasiru Chamika,hasiru2004@gmail.com,hasiru2004
-1EBFED72,Tesan Chathurya,tesan@gmail.com,tesan2004
-6D82BD55,Kirula Chamika,kirulu2004@gmail.com,kirulu2004
-677DC896,Sudaththa ThilakSiri,sudaththa2004@gmail.com,sudaththa@2004
-AB480BDF,Iraj Perera,iraj2004@gmail.com,iraj2004
-CB22FF44,Damith Asanka,damith2004@gmail.com,hasiru2006
-64F12262,Bharatha Thennakon,bharatha2004@gmail.com,bharatha2004
-60B2A35B,Mahinda Rajapaksa,mahinda2004@gmail.com,mahinda2004
-STU20230001,John Doe,john.doe@nexora.edu
-STU20230002,Jane Smith,jane.smith@nexora.edu
+349191B8,Hasiru Chamika,Hasiru2004@gmail.com,Hasiru2004
+283B77E7,Miyuru Indeepa,miyuru2004@gmail.com,miyuru2004
+717084F5,Sahan Damayantha,sahan2004@gmail.com,sahan2004
+
+
+B47CDE3A,Dimuthu Udayanga,dimuthu2004@gmail.com,Dimuthu2004
+
+
+204B2815,sethmi hansika,sethmi2004@rfgd.wfw,sethmi2004
+B3B948F8,Kasundi Geenadi,kasundi2004@gmail.com,Kasundi2004
+23E00EB0,Yamuna Gayane,yamuna2004@gmail.com,Yamuna2004

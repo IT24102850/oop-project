@@ -1,6 +1,8 @@
-
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+
+
 <html>
+
 <head>
     <title>Login - NexoraSkill</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -36,6 +38,7 @@
             position: relative;
         }
 
+        /* Animated background elements */
         body::before, body::after {
             content: '';
             position: absolute;
@@ -146,6 +149,7 @@
             box-shadow: 0 0 0 2px rgba(0, 242, 254, 0.3);
         }
 
+        /* Futuristic Toggle Switch */
         .toggle-container {
             display: flex;
             justify-content: center;
@@ -315,7 +319,7 @@
         </div>
 
         <div class="forgot-password">
-            <a href="change-password.jsp">Forgot Password?</a>
+            <a href="#">Forgot Password?</a>
         </div>
 
         <%-- Submit Button --%>
@@ -327,6 +331,7 @@
 </div>
 
 <script>
+    // Toggle switch functionality
     const adminOption = document.getElementById('adminOption');
     const studentOption = document.getElementById('studentOption');
     const toggleBg = document.querySelector('.toggle-bg');
@@ -362,8 +367,10 @@
         updateToggle();
     });
 
+    // Initial update
     updateToggle();
 
+    // Add focus effects to inputs
     const inputs = document.querySelectorAll('input[type="text"], input[type="password"]');
     inputs.forEach(input => {
         input.addEventListener('focus', function() {

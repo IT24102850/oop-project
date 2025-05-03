@@ -1,15 +1,17 @@
-
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Python Programming Basics | NexoraSkill</title>
+    <title>Introduction to Programming | NexoraSkill</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link rel="icon" type="image/png" href="../images/favicon.ico">
+    <link rel="icon" type="image/png" href="./images/favicon.ico">
+    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Orbitron:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Animate.css -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+
     <style>
         :root {
             --primary-color: #00f2fe;
@@ -27,7 +29,13 @@
             --box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
             --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
             font-family: 'Poppins', sans-serif;
             background: radial-gradient(ellipse at bottom, var(--darker-color) 0%, var(--dark-color) 100%);
@@ -36,12 +44,19 @@
             line-height: 1.7;
             scroll-behavior: smooth;
         }
+
         h1, h2, h3 {
             font-family: 'Orbitron', sans-serif;
             font-weight: 700;
             letter-spacing: 1.5px;
         }
-        ::selection { background: var(--primary-color); color: var(--dark-color); }
+
+        ::selection {
+            background: var(--primary-color);
+            color: var(--dark-color);
+        }
+
+        /* Header Section */
         .header {
             position: fixed;
             top: 0;
@@ -49,11 +64,17 @@
             z-index: 1000;
             background: var(--glass-bg);
             backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
             border-bottom: 1px solid rgba(0, 242, 254, 0.1);
             box-shadow: 0 5px 30px rgba(0, 0, 0, 0.2);
             transition: var(--transition);
         }
-        .header.scrolled { padding: 10px 0; background: rgba(10, 15, 36, 0.95); }
+
+        .header.scrolled {
+            padding: 10px 0;
+            background: rgba(10, 15, 36, 0.95);
+        }
+
         .container {
             display: flex;
             justify-content: space-between;
@@ -62,6 +83,7 @@
             max-width: 1600px;
             margin: 0 auto;
         }
+
         .logo {
             display: flex;
             align-items: center;
@@ -73,17 +95,29 @@
             transition: var(--transition);
             position: relative;
         }
-        .logo:hover { color: var(--primary-color); transform: scale(1.05); }
+
+        .logo:hover {
+            color: var(--primary-color);
+            transform: scale(1.05);
+        }
+
         .logo img {
             height: 45px;
             transition: var(--transition);
             filter: drop-shadow(0 0 5px var(--glow-color));
         }
+
         .logo:hover img {
             transform: rotate(15deg) scale(1.1);
             filter: drop-shadow(0 0 10px var(--glow-color));
         }
-        .navbar ul { list-style: none; display: flex; gap: 35px; }
+
+        .navbar ul {
+            list-style: none;
+            display: flex;
+            gap: 35px;
+        }
+
         .navbar ul li a {
             position: relative;
             font-family: 'Poppins', sans-serif;
@@ -95,6 +129,7 @@
             padding: 8px 0;
             overflow: hidden;
         }
+
         .navbar ul li a:before {
             content: '';
             position: absolute;
@@ -105,9 +140,21 @@
             background: linear-gradient(90deg, transparent, var(--primary-color));
             transition: var(--transition);
         }
-        .navbar ul li a:hover { color: var(--primary-color); text-shadow: 0 0 10px var(--glow-color); }
-        .navbar ul li a:hover:before { left: 100%; }
-        .auth-buttons { display: flex; gap: 20px; }
+
+        .navbar ul li a:hover {
+            color: var(--primary-color);
+            text-shadow: 0 0 10px var(--glow-color);
+        }
+
+        .navbar ul li a:hover:before {
+            left: 100%;
+        }
+
+        .auth-buttons {
+            display: flex;
+            gap: 20px;
+        }
+
         .btn {
             padding: 14px 32px;
             border-radius: 50px;
@@ -122,6 +169,7 @@
             overflow: hidden;
             z-index: 1;
         }
+
         .btn:before {
             content: '';
             position: absolute;
@@ -133,23 +181,30 @@
             transition: var(--transition);
             z-index: -1;
         }
-        .btn:hover:before { width: 100%; }
+
+        .btn:hover:before {
+            width: 100%;
+        }
+
         .btn-login {
             background: transparent;
             border: 2px solid var(--primary-color);
             color: var(--text-color);
         }
+
         .btn-login:hover {
             color: var(--dark-color);
             border-color: transparent;
             transform: translateY(-3px);
             box-shadow: 0 10px 20px rgba(0, 242, 254, 0.3);
         }
+
         .btn-signup {
             background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
             color: var(--dark-color);
             border: 2px solid transparent;
         }
+
         .btn-signup:hover {
             background: transparent;
             color: var(--primary-color);
@@ -157,11 +212,14 @@
             transform: translateY(-3px);
             box-shadow: 0 10px 20px rgba(0, 242, 254, 0.3);
         }
+
+        /* Main Content */
         .main-content {
             padding: 180px 5% 100px;
             position: relative;
             overflow: hidden;
         }
+
         .main-content:before {
             content: '';
             position: absolute;
@@ -173,6 +231,8 @@
             animation: rotate 60s linear infinite;
             z-index: -1;
         }
+
+        /* Course Top Section */
         .course-top-section {
             display: flex;
             justify-content: space-between;
@@ -180,6 +240,7 @@
             margin-bottom: 80px;
             animation: fadeInUp 1s ease-out;
         }
+
         .course-image {
             flex: 1;
             min-width: 300px;
@@ -190,18 +251,24 @@
             border: 1px solid rgba(0, 242, 254, 0.2);
             transition: var(--transition);
         }
+
         .course-image:hover {
             transform: translateY(-10px);
             box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
             border-color: rgba(0, 242, 254, 0.4);
         }
+
         .course-image img {
             width: 100%;
             height: 100%;
             object-fit: cover;
             transition: var(--transition);
         }
-        .course-image:hover img { transform: scale(1.05); }
+
+        .course-image:hover img {
+            transform: scale(1.05);
+        }
+
         .course-description {
             flex: 2;
             padding: 40px;
@@ -212,11 +279,13 @@
             box-shadow: var(--box-shadow);
             transition: var(--transition);
         }
+
         .course-description:hover {
             transform: translateY(-10px);
             box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
             border-color: rgba(0, 242, 254, 0.4);
         }
+
         .course-description h1 {
             font-size: 3rem;
             margin-bottom: 20px;
@@ -226,6 +295,7 @@
             text-shadow: 0 0 30px rgba(0, 242, 254, 0.3);
             position: relative;
         }
+
         .course-description h1:after {
             content: '';
             position: absolute;
@@ -236,16 +306,19 @@
             background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
             border-radius: 2px;
         }
+
         .course-description p {
             font-size: 1.2rem;
             color: var(--text-muted);
             margin-bottom: 30px;
         }
+
         .course-meta {
             display: flex;
             gap: 30px;
             margin-top: 30px;
         }
+
         .meta-item {
             display: flex;
             align-items: center;
@@ -253,7 +326,11 @@
             color: var(--primary-color);
             font-size: 1.1rem;
         }
-        .meta-item i { font-size: 1.5rem; }
+
+        .meta-item i {
+            font-size: 1.5rem;
+        }
+
         .review-section {
             flex: 1;
             min-width: 300px;
@@ -265,17 +342,20 @@
             box-shadow: var(--box-shadow);
             transition: var(--transition);
         }
+
         .review-section:hover {
             transform: translateY(-10px);
             box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
             border-color: rgba(0, 242, 254, 0.4);
         }
+
         .review-section h2 {
             font-size: 1.8rem;
             margin-bottom: 30px;
             color: var(--text-color);
             position: relative;
         }
+
         .review-section h2:after {
             content: '';
             position: absolute;
@@ -286,11 +366,13 @@
             background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
             border-radius: 2px;
         }
+
         .review-slideshow {
             display: flex;
             flex-direction: column;
             gap: 25px;
         }
+
         .review-card {
             background: rgba(0, 0, 0, 0.2);
             padding: 25px;
@@ -298,123 +380,32 @@
             border: 1px solid rgba(0, 242, 254, 0.1);
             transition: var(--transition);
         }
+
         .review-card:hover {
             transform: translateY(-5px);
             border-color: rgba(0, 242, 254, 0.3);
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
         }
+
         .review-card p {
             font-size: 1rem;
             color: var(--text-muted);
             margin-bottom: 15px;
             font-style: italic;
         }
-        .review-card h4 { font-size: 1.1rem; color: var(--primary-color); }
-        .review-form-section {
-            max-width: 600px;
-            margin: 40px auto;
-            background: var(--card-bg);
-            backdrop-filter: blur(10px);
-            border-radius: var(--border-radius);
-            padding: 30px;
-            border: 1px solid rgba(0, 242, 254, 0.2);
-            box-shadow: var(--box-shadow);
-            transition: var(--transition);
-        }
-        .review-form-section:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
-            border-color: rgba(0, 242, 254, 0.4);
-        }
-        .review-form-section h2 {
-            font-size: 1.8rem;
-            margin-bottom: 20px;
-            color: var(--text-color);
-            position: relative;
-        }
-        .review-form-section h2:after {
-            content: '';
-            position: absolute;
-            bottom: -10px;
-            left: 0;
-            width: 60px;
-            height: 3px;
-            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
-            border-radius: 2px;
-        }
-        .review-form {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-        .form-group {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-        .form-group label {
+
+        .review-card h4 {
             font-size: 1.1rem;
-            color: var(--text-color);
+            color: var(--primary-color);
         }
-        .form-group input,
-        .form-group textarea {
-            padding: 12px;
-            font-size: 1rem;
-            font-family: 'Poppins', sans-serif;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(0, 242, 254, 0.2);
-            border-radius: 8px;
-            color: var(--text-color);
-            transition: var(--transition);
-        }
-        .form-group input:focus,
-        .form-group textarea:focus {
-            outline: none;
-            border-color: var(--primary-color);
-            box-shadow: 0 0 10px var(--glow-color);
-        }
-        .form-group textarea { resize: vertical; min-height: 100px; }
-        .submit-review-btn {
-            padding: 14px 28px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            color: var(--dark-color);
-            border: none;
-            border-radius: 50px;
-            cursor: pointer;
-            transition: var(--transition);
-            align-self: flex-start;
-            position: relative;
-            overflow: hidden;
-            z-index: 1;
-        }
-        .submit-review-btn:before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 0;
-            height: 100%;
-            background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
-            transition: var(--transition);
-            z-index: -1;
-        }
-        .submit-review-btn:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0, 242, 254, 0.4);
-        }
-        .submit-review-btn:hover:before { width: 100%; }
-        .error-message {
-            color: var(--accent-color);
-            font-size: 0.9rem;
-            display: none;
-        }
+
+        /* Course Bottom Section */
         .course-bottom-section {
             display: flex;
             justify-content: space-between;
             gap: 40px;
         }
+
         .instructors-description {
             flex: 1;
             background: var(--card-bg);
@@ -425,16 +416,19 @@
             box-shadow: var(--box-shadow);
             transition: var(--transition);
         }
+
         .instructors-description:hover {
             transform: translateY(-10px);
             box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
             border-color: rgba(0, 242, 254, 0.4);
         }
+
         .instructors-description h2 {
             font-size: 1.8rem;
             margin-bottom: 30px;
             position: relative;
         }
+
         .instructors-description h2:after {
             content: '';
             position: absolute;
@@ -445,8 +439,19 @@
             background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
             border-radius: 2px;
         }
-        .instructor-list { display: flex; flex-direction: column; gap: 30px; }
-        .instructor-item { display: flex; gap: 20px; align-items: center; }
+
+        .instructor-list {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .instructor-item {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
         .instructor-image {
             width: 80px;
             height: 80px;
@@ -455,13 +460,24 @@
             border: 2px solid var(--primary-color);
             box-shadow: 0 0 20px var(--glow-color);
         }
-        .instructor-image img { width: 100%; height: 100%; object-fit: cover; }
+
+        .instructor-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
         .instructor-info h3 {
             font-size: 1.3rem;
             color: var(--primary-color);
             margin-bottom: 5px;
         }
-        .instructor-info p { font-size: 1rem; color: var(--text-muted); }
+
+        .instructor-info p {
+            font-size: 1rem;
+            color: var(--text-muted);
+        }
+
         .why-choose {
             flex: 2;
             background: var(--card-bg);
@@ -472,16 +488,19 @@
             box-shadow: var(--box-shadow);
             transition: var(--transition);
         }
+
         .why-choose:hover {
             transform: translateY(-10px);
             box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
             border-color: rgba(0, 242, 254, 0.4);
         }
+
         .why-choose h2 {
             font-size: 1.8rem;
             margin-bottom: 30px;
             position: relative;
         }
+
         .why-choose h2:after {
             content: '';
             position: absolute;
@@ -492,7 +511,11 @@
             background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
             border-radius: 2px;
         }
-        .why-choose ul { list-style: none; }
+
+        .why-choose ul {
+            list-style: none;
+        }
+
         .why-choose li {
             position: relative;
             padding-left: 30px;
@@ -501,6 +524,7 @@
             color: var(--text-muted);
             transition: var(--transition);
         }
+
         .why-choose li:before {
             content: '▹';
             position: absolute;
@@ -508,8 +532,19 @@
             color: var(--primary-color);
             font-size: 1.3rem;
         }
-        .why-choose li:hover { color: var(--text-color); transform: translateX(5px); }
-        .enroll-section { flex: 1; display: flex; justify-content: center; align-items: flex-start; }
+
+        .why-choose li:hover {
+            color: var(--text-color);
+            transform: translateX(5px);
+        }
+
+        .enroll-section {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
         .enroll-card {
             background: var(--card-bg);
             backdrop-filter: blur(10px);
@@ -521,16 +556,19 @@
             text-align: center;
             width: 100%;
         }
+
         .enroll-card:hover {
             transform: translateY(-10px);
             box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
             border-color: rgba(0, 242, 254, 0.4);
         }
+
         .enroll-card h3 {
             font-size: 1.5rem;
             margin-bottom: 30px;
             color: var(--primary-color);
         }
+
         .price {
             font-size: 2.5rem;
             font-weight: 700;
@@ -539,6 +577,7 @@
             -webkit-text-fill-color: transparent;
             margin-bottom: 30px;
         }
+
         .enroll-button {
             padding: 18px 36px;
             border-radius: 50px;
@@ -558,6 +597,7 @@
             width: 100%;
             justify-content: center;
         }
+
         .enroll-button:before {
             content: '';
             position: absolute;
@@ -569,11 +609,17 @@
             transition: var(--transition);
             z-index: -1;
         }
+
         .enroll-button:hover {
             transform: translateY(-5px) scale(1.05);
             box-shadow: 0 20px 45px rgba(0, 242, 254, 0.6);
         }
-        .enroll-button:hover:before { width: 100%; }
+
+        .enroll-button:hover:before {
+            width: 100%;
+        }
+
+        /* Footer */
         .footer {
             background: var(--darker-color);
             padding: 100px 5% 50px;
@@ -581,6 +627,7 @@
             position: relative;
             overflow: hidden;
         }
+
         .footer:before {
             content: '';
             position: absolute;
@@ -588,10 +635,11 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: url('../images/grid-pattern.png') center/cover;
+            background: url('./images/grid-pattern.png') center/cover;
             opacity: 0.03;
             z-index: 0;
         }
+
         .footer-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -601,7 +649,11 @@
             position: relative;
             z-index: 1;
         }
-        .footer-col { position: relative; }
+
+        .footer-col {
+            position: relative;
+        }
+
         .footer-logo {
             font-size: 2.2rem;
             font-weight: 700;
@@ -612,6 +664,7 @@
             -webkit-text-fill-color: transparent;
             position: relative;
         }
+
         .footer-logo:after {
             content: '';
             position: absolute;
@@ -622,13 +675,19 @@
             background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
             border-radius: 2px;
         }
+
         .footer-about {
             color: var(--text-muted);
             margin-bottom: 30px;
             font-size: 1.1rem;
             line-height: 1.8;
         }
-        .social-links { display: flex; gap: 20px; }
+
+        .social-links {
+            display: flex;
+            gap: 20px;
+        }
+
         .social-link {
             width: 50px;
             height: 50px;
@@ -642,6 +701,7 @@
             font-size: 1.3rem;
             border: 1px solid rgba(0, 242, 254, 0.1);
         }
+
         .social-link:hover {
             background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
             color: var(--dark-color);
@@ -649,6 +709,7 @@
             box-shadow: 0 10px 20px rgba(0, 242, 254, 0.3);
             border-color: transparent;
         }
+
         .footer-title {
             font-size: 1.5rem;
             margin-bottom: 30px;
@@ -656,6 +717,7 @@
             position: relative;
             padding-bottom: 15px;
         }
+
         .footer-title:after {
             content: '';
             position: absolute;
@@ -666,12 +728,17 @@
             background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
             border-radius: 2px;
         }
-        .footer-links { list-style: none; }
+
+        .footer-links {
+            list-style: none;
+        }
+
         .footer-links li {
             margin-bottom: 20px;
             position: relative;
             padding-left: 20px;
         }
+
         .footer-links li:before {
             content: '»';
             position: absolute;
@@ -679,6 +746,7 @@
             color: var(--primary-color);
             transition: var(--transition);
         }
+
         .footer-links a {
             color: var(--text-muted);
             text-decoration: none;
@@ -686,8 +754,16 @@
             font-size: 1.1rem;
             display: inline-block;
         }
-        .footer-links li:hover:before { transform: translateX(5px); }
-        .footer-links a:hover { color: var(--primary-color); transform: translateX(5px); }
+
+        .footer-links li:hover:before {
+            transform: translateX(5px);
+        }
+
+        .footer-links a:hover {
+            color: var(--primary-color);
+            transform: translateX(5px);
+        }
+
         .footer-bottom {
             text-align: center;
             padding-top: 50px;
@@ -697,12 +773,18 @@
             position: relative;
             z-index: 1;
         }
+
         .footer-bottom a {
             color: var(--primary-color);
             text-decoration: none;
             transition: var(--transition);
         }
-        .footer-bottom a:hover { text-shadow: 0 0 10px var(--glow-color); }
+
+        .footer-bottom a:hover {
+            text-shadow: 0 0 10px var(--glow-color);
+        }
+
+        /* Scroll To Top Button */
         .scroll-top {
             position: fixed;
             bottom: 30px;
@@ -724,77 +806,139 @@
             visibility: hidden;
             transform: translateY(20px);
         }
+
         .scroll-top.active {
             opacity: 1;
             visibility: visible;
             transform: translateY(0);
         }
+
         .scroll-top:hover {
             transform: translateY(-5px) scale(1.1);
             box-shadow: 0 10px 25px rgba(0, 242, 254, 0.6);
         }
-        @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes rotate { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Responsive Design */
         @media (max-width: 1200px) {
-            .course-top-section, .course-bottom-section { flex-direction: column; }
-            .course-image, .review-section, .enroll-card { width: 100%; max-width: 600px; margin: 0 auto; }
-            .course-description, .instructors-description, .why-choose { width: 100%; }
-            .review-form-section { max-width: 100%; }
+            .course-top-section, .course-bottom-section {
+                flex-direction: column;
+            }
+
+            .course-image, .review-section, .enroll-card {
+                width: 100%;
+                max-width: 600px;
+                margin: 0 auto;
+            }
+
+            .course-description, .instructors-description, .why-choose {
+                width: 100%;
+            }
         }
+
         @media (max-width: 768px) {
-            .navbar { display: none; }
-            .course-description h1 { font-size: 2.2rem; }
-            .course-meta { flex-direction: column; gap: 15px; }
-            .enroll-button { padding: 15px; font-size: 1rem; }
-            .review-form-section h2 { font-size: 1.5rem; }
+            .navbar {
+                display: none;
+            }
+
+            .course-description h1 {
+                font-size: 2.2rem;
+            }
+
+            .course-meta {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .enroll-button {
+                padding: 15px;
+                font-size: 1rem;
+            }
         }
+
         @media (max-width: 576px) {
-            .auth-buttons { display: none; }
-            .course-description h1 { font-size: 1.8rem; }
-            .course-description p { font-size: 1rem; }
-            .why-choose li { font-size: 1rem; }
-            .review-form-section { padding: 20px; }
-            .submit-review-btn { padding: 12px 24px; font-size: 1rem; }
+            .auth-buttons {
+                display: none;
+            }
+
+            .course-description h1 {
+                font-size: 1.8rem;
+            }
+
+            .course-description p {
+                font-size: 1rem;
+            }
+
+            .why-choose li {
+                font-size: 1rem;
+            }
         }
     </style>
 </head>
 <body>
+<!-- Preloader -->
 <div class="preloader">
     <div class="loader"></div>
 </div>
+
+<!-- Header Section -->
 <header class="header">
     <div class="container">
-        <a href="../index.jsp" class="logo">
-            <img src="../images/favicon-32x32.png" alt="NexoraSkill Logo">
+        <a href="#" class="logo">
+            <img src="./images/favicon-32x32.png" alt="NexoraSkill Logo">
             <span>NexoraSkill</span>
         </a>
+
         <nav class="navbar">
             <ul>
-                <li><a href="../index.jsp">Home</a></li>
-                <li><a href="../courses.jsp">Courses</a></li>
-                <li><a href="../Apply%20Course.jsp">Apply Course</a></li>
-                <li><a href="../aboutus.jsp">About Us</a></li>
-                <li><a href="../contact.jsp">Contact</a></li>
+                <li><a href="index.jsp">Home</a></li>
+                <li><a href="courses.jsp">Courses</a></li>
+                <li><a href="Apply%20Course.jsp">Apply Course</a></li>
+                <li><a href="aboutus.jsp">About Us</a></li>
+                <li><a href="contact.jsp">Contact</a></li>
             </ul>
         </nav>
         <div class="auth-buttons">
-            <a href="../logIn.jsp" class="btn btn-login"><i class="fas fa-sign-in-alt"></i> Login</a>
-            <a href="../signUp.jsp" class="btn btn-signup"><i class="fas fa-user-plus"></i> Sign Up</a>
+            <a href="logIn.jsp" class="btn btn-login"><i class="fas fa-sign-in-alt"></i> Login</a>
+            <a href="signUp.jsp" class="btn btn-signup"><i class="fas fa-user-plus"></i> Sign Up</a>
         </div>
     </div>
 </header>
+
+<!-- Main Content -->
 <main class="main-content">
+    <!-- Course Top Section -->
     <section class="course-top-section">
+        <!-- Left Side: Course Image -->
         <div class="course-image">
-            <img src="https://images.unsplash.com/photo-1555949963-ff2c8bb2d4c9" alt="Python Programming Basics Course">
+            <img src="./images/ip.jpg" alt="Introduction to Programming Course">
         </div>
+
+        <!-- Middle: Course Description -->
         <div class="course-description">
-            <h1>Python Programming Basics</h1>
-            <p>Embark on your coding journey with Python, the most versatile and beginner-friendly programming language. Master variables, loops, functions, and more through hands-on projects like building automation scripts and simple games. Perfect for aspiring developers aiming to excel in tech fields like data science, AI, and web development.</p>
+            <h1>Introduction To Programming</h1>
+            <p>Master the fundamentals of programming with our comprehensive course designed for beginners. Learn essential concepts, problem-solving techniques, and practical applications through hands-on projects and real-world examples. Whether you're starting your coding journey or looking to solidify your foundation, this course will equip you with the skills needed to excel in today's tech-driven world.</p>
+
             <div class="course-meta">
                 <div class="meta-item">
                     <i class="fas fa-clock"></i>
-                    <span>6 Weeks</span>
+                    <span>8 Weeks</span>
                 </div>
                 <div class="meta-item">
                     <i class="fas fa-chart-line"></i>
@@ -806,92 +950,87 @@
                 </div>
             </div>
         </div>
+
+        <!-- Right Side: Review Section -->
         <div class="review-section">
             <h2>Student Reviews</h2>
             <div class="review-slideshow">
                 <div class="review-card">
-                    <p>"This course made Python so easy to learn! The projects were fun and practical."</p>
+                    <p>"This course completely changed my perspective on programming. The instructors make complex concepts easy to understand!"</p>
                     <h4>- Sarah Wilson</h4>
                 </div>
                 <div class="review-card">
-                    <p>"I built my first script in just a week! Perfect for beginners."</p>
+                    <p>"The perfect starting point for anyone interested in coding. The projects were challenging but rewarding."</p>
                     <h4>- David Miller</h4>
                 </div>
                 <div class="review-card">
-                    <p>"The instructors are amazing, and the community support is top-notch!"</p>
+                    <p>"I went from zero to building my first app thanks to this course. Highly recommend to beginners!"</p>
                     <h4>- Emily Johnson</h4>
                 </div>
             </div>
         </div>
     </section>
-    <section class="review-form-section">
-        <h2>Submit Your Review</h2>
-        <form class="review-form" id="reviewForm">
-            <div class="form-group">
-                <label for="reviewerName">Your Name</label>
-                <input type="text" id="reviewerName" name="reviewerName" placeholder="Enter your name" required>
-                <span class="error-message" id="nameError">Please enter your name.</span>
-            </div>
-            <div class="form-group">
-                <label for="reviewText">Your Review</label>
-                <textarea id="reviewText" name="reviewText" placeholder="Write your review here" required></textarea>
-                <span class="error-message" id="reviewError">Please enter your review.</span>
-            </div>
-            <button type="submit" class="submit-review-btn">Submit Review</button>
-        </form>
-    </section>
+
+    <!-- Course Bottom Section -->
     <section class="course-bottom-section">
+        <!-- Left Side: Instructors Description -->
         <div class="instructors-description">
             <h2>Meet Your Instructors</h2>
             <div class="instructor-list">
                 <div class="instructor-item">
                     <div class="instructor-image">
-                        <img src="../images/instructor1.jpg" alt="Dr. Alan Turing">
+                        <img src="./images/instructor1.jpg" alt="Dr. Alan Turing">
                     </div>
                     <div class="instructor-info">
                         <h3>Dr. Alan Turing</h3>
-                        <p>Python Expert with 15+ years in software development</p>
+                        <p>Senior Software Architect with 15+ years experience</p>
                     </div>
                 </div>
                 <div class="instructor-item">
                     <div class="instructor-image">
-                        <img src="../images/instructor2.jpg" alt="Ada Lovelace">
+                        <img src="./images/instructor2.jpg" alt="Ada Lovelace">
                     </div>
                     <div class="instructor-info">
                         <h3>Ada Lovelace</h3>
-                        <p>Data Scientist & Python Education Specialist</p>
+                        <p>Lead Developer & Education Specialist</p>
                     </div>
                 </div>
             </div>
         </div>
+
+        <!-- Middle: Why Choose This Course -->
         <div class="why-choose">
             <h2>Why Choose This Course?</h2>
             <ul>
-                <li>Master Python fundamentals with a beginner-friendly curriculum</li>
-                <li>Build real-world projects like automation tools and games</li>
-                <li>Learn from industry-leading Python experts</li>
-                <li>Flexible schedule with lifetime course access</li>
-                <li>Join a vibrant community of learners</li>
-                <li>Get career guidance to kickstart your tech journey</li>
-                <li>Interactive tools for hands-on coding practice</li>
+                <li>Comprehensive curriculum covering all programming fundamentals</li>
+                <li>Hands-on projects to build real-world applications</li>
+                <li>Expert instructors with industry experience</li>
+                <li>Flexible learning schedule with lifetime access</li>
+                <li>Supportive community and mentorship opportunities</li>
+                <li>Career guidance and portfolio building</li>
+                <li>Cutting-edge learning platform with interactive tools</li>
             </ul>
         </div>
+
+        <!-- Right Side: Enroll Section -->
         <div class="enroll-section">
             <div class="enroll-card">
                 <h3>Start Learning Today</h3>
-                <div class="price">$89.99</div>
-                <a href="../Apply%20Course.jsp" class="enroll-button">
+                <div class="price">$99.99</div>
+                <button class="enroll-button">
                     <i class="fas fa-user-graduate"></i> Enroll Now
-                </a>
+                </button>
                 <p style="margin-top: 20px; color: var(--text-muted); font-size: 0.9rem;">30-day money back guarantee</p>
             </div>
         </div>
     </section>
 </main>
+
+<!-- Footer -->
 <footer class="footer">
     <div class="footer-grid">
         <div class="footer-col">
-            <a href="../index.jsp" class="footer-logo">NexoraSkill</a>
+            <a href="#" class="footer-logo">NexoraSkill</a>
             <p class="footer-about">The premier platform for future-ready education. We're revolutionizing how the world learns technology through immersive, interactive experiences.</p>
             <div class="social-links">
                 <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
@@ -904,11 +1043,11 @@
         <div class="footer-col">
             <h3 class="footer-title">Quick Links</h3>
             <ul class="footer-links">
-                <li><a href="../index.jsp">Home</a></li>
-                <li><a href="../courses.jsp">Courses</a></li>
-                <li><a href="../Apply%20Course.jsp">Apply Course</a></li>
-                <li><a href="../aboutus.jsp">About Us</a></li>
-                <li><a href="../contact.jsp">Contact</a></li>
+                <li><a href="index.jsp">Home</a></li>
+                <li><a href="courses.jsp">Courses</a></li>
+                <li><a href="registration.jsp">Registration</a></li>
+                <li><a href="aboutus.jsp">About Us</a></li>
+                <li><a href="contact.jsp">Contact</a></li>
             </ul>
         </div>
         <div class="footer-col">
@@ -933,18 +1072,27 @@
         </div>
     </div>
     <div class="footer-bottom">
-        <p>&copy; 2025 NexoraSkill. All rights reserved. | Designed with <i class="fas fa-heart" style="color: var(--accent-color);"></i> for the future of education</p>
+        <p>&copy; 2023 NexoraSkill. All rights reserved. | Designed with <i class="fas fa-heart" style="color: var(--accent-color);"></i> for the future of education</p>
     </div>
 </footer>
+
+<!-- Scroll To Top Button -->
 <div class="scroll-top">
     <i class="fas fa-arrow-up"></i>
 </div>
+
+<!-- Scripts -->
 <script>
+    // Preloader
     window.addEventListener('load', function() {
         const preloader = document.querySelector('.preloader');
         preloader.classList.add('fade-out');
-        setTimeout(() => { preloader.style.display = 'none'; }, 500);
+        setTimeout(() => {
+            preloader.style.display = 'none';
+        }, 500);
     });
+
+    // Header Scroll Effect
     window.addEventListener('scroll', function() {
         const header = document.querySelector('.header');
         if (window.scrollY > 100) {
@@ -953,80 +1101,9 @@
             header.classList.remove('scrolled');
         }
     });
+
+    // Scroll To Top Button
     const scrollTop = document.querySelector('.scroll-top');
     window.addEventListener('scroll', function() {
         if (window.scrollY > 300) {
-            scrollTop.classList.add('active');
-        } else {
-            scrollTop.classList.remove('active');
-        }
-    });
-    scrollTop.addEventListener('click', function() {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    });
-
-    // Review Form Submission
-    const reviewForm = document.getElementById('reviewForm');
-    const reviewerNameInput = document.getElementById('reviewerName');
-    const reviewTextInput = document.getElementById('reviewText');
-    const nameError = document.getElementById('nameError');
-    const reviewError = document.getElementById('reviewError');
-    const reviewSlideshow = document.querySelector('.review-slideshow');
-
-    reviewForm.addEventListener('submit', function(event) {
-        event.preventDefault();
-
-        // Reset error messages
-        nameError.style.display = 'none';
-        reviewError.style.display = 'none';
-
-        // Validate inputs
-        let isValid = true;
-        if (!reviewerNameInput.value.trim()) {
-            nameError.style.display = 'block';
-            isValid = false;
-        }
-        if (!reviewTextInput.value.trim()) {
-            reviewError.style.display = 'block';
-            isValid = false;
-        }
-
-        if (isValid) {
-            const name = reviewerNameInput.value.trim();
-            const review = reviewTextInput.value.trim();
-
-            // Create new review card
-            const reviewCard = document.createElement('div');
-            reviewCard.className = 'review-card';
-            reviewCard.innerHTML = `
-                <p>"${review}"</p>
-                <h4>- ${name}</h4>
-            `;
-            reviewSlideshow.appendChild(reviewCard);
-
-            // Send review to server
-            fetch('../saveReview.jsp', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                body: `reviewerName=${encodeURIComponent(name)}&reviewText=${encodeURIComponent(review)}`
-            })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        alert('Review submitted successfully!');
-                        reviewForm.reset();
-                    } else {
-                        alert('Error saving review: ' + data.message);
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('An error occurred while submitting the review.');
-                });
-        }
-    });
-</script>
-</body>
-</html>
+            scrollTop.classList
