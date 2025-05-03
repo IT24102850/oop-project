@@ -7,22 +7,8 @@
         return;
     }
 
-    // Fetch courses from request attribute (set by CourseServlet)
-    List<String> courses = (List<String>) request.getAttribute("courses");
-    if (courses == null || courses.isEmpty()) {
-        courses = new ArrayList<>();
-        courses.add("CS101,Introduction to Programming,3,Computer Science,Dr. Smith,Basic programming concepts,true");
-        request.setAttribute("courses", courses);
-    }
-
-    // Determine which section to display based on activeTab (default to "dashboard")
-    String activeTab = request.getParameter("activeTab");
-    if (activeTab == null) {
-        activeTab = "dashboard";
-    }
-
-    // Calculate active courses from courses.txt for the Dashboard section
-    int activeCoursesCount = 0;
+    // Load courses from courses.txt
+    List<String> courses = new ArrayList<>();
     String coursesFilePath = application.getRealPath("/WEB-INF/data/courses.txt");
     File coursesFile = new File(coursesFilePath);
     if (coursesFile.exists()) {
@@ -30,20 +16,197 @@
             String line;
             while ((line = reader.readLine()) != null) {
                 if (line.trim().isEmpty()) continue;
-                String[] parts = line.split(",");
-                if (parts.length >= 7 && "true".equals(parts[6])) {
-                    activeCoursesCount++;
-                }
+                courses.add(line);
             }
         } catch (IOException e) {
             System.out.println("Error reading courses.txt: " + e.getMessage());
-            activeCoursesCount = 0;
         }
     } else {
-        activeCoursesCount = 0;
+        courses.add("CS101,Introduction to Programming,3,Computer Science,Dr. Smith,Basic programming concepts,true");
+    }
+    request.setAttribute("courses", courses);
+
+    String activeTab = request.getParameter("activeTab");
+    if (activeTab == null) {
+        activeTab = "dashboard";
     }
 
-    // Read student data from students.txt for the Student Management section
+    // Handle course creation
+    String action = request.getParameter("action");
+    if ("create".equals(action)) {
+        String courseCode = request.getParameter("courseCode");
+        String title = request.getParameter("title");
+        String credits = request.getParameter("credits");
+        String department = request.getParameter("department");
+        String professor = request.getParameter("professor");
+        String syllabus = request.getParameter("syllabus");
+
+        boolean hasError = false;
+        String errorMessage = null;
+
+        if (courseCode == null || courseCode.trim().isEmpty() || title == null || title.trim().isEmpty() ||
+                credits == null || credits.trim().isEmpty() || department == null || department.trim().isEmpty()) {
+            errorMessage = "All required fields must be filled.";
+            hasError = true;
+        } else if (!courseCode.matches("^[A-Z]{2}\\d{3}$")) {
+            errorMessage = "Course code must be in format XX999 (e.g., CS101).";
+            hasError = true;
+        } else if (!credits.matches("\\d+")) {
+            errorMessage = "Credits must be a positive number.";
+            hasError = true;
+        } else {
+            for (String course : courses) {
+                String[] parts = course.split(",");
+                if (parts[0].equals(courseCode)) {
+                    errorMessage = "A course with this code already exists.";
+                    hasError = true;
+                    break;
+                }
+            }
+        }
+
+        if (!hasError) {
+            String newCourse = String.format("%s,%s,%s,%s,%s,%s,true",
+                    courseCode, title, credits, department,
+                    professor != null ? professor : "",
+                    syllabus != null ? syllabus : "");
+            courses.add(newCourse);
+
+            // Write updated courses list to courses.txt
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(coursesFile))) {
+                for (String course : courses) {
+                    writer.write(course);
+                    writer.newLine();
+                }
+            } catch (IOException e) {
+                System.out.println("Error writing to courses.txt: " + e.getMessage());
+                errorMessage = "Server error while saving course.";
+                hasError = true;
+            }
+
+            if (!hasError) {
+                response.sendRedirect("admin-dashboard.jsp?activeTab=courses&message=course_added");
+                return;
+            }
+        }
+        request.setAttribute("error", errorMessage);
+    }
+
+    // Handle course update
+    if ("update".equals(action)) {
+        String originalCourseCode = request.getParameter("originalCourseCode");
+        String courseCode = request.getParameter("courseCode");
+        String title = request.getParameter("title");
+        String credits = request.getParameter("credits");
+        String department = request.getParameter("department");
+        String professor = request.getParameter("professor");
+        String syllabus = request.getParameter("syllabus");
+
+        boolean hasError = false;
+        String errorMessage = null;
+
+        if (courseCode == null || courseCode.trim().isEmpty() || title == null || title.trim().isEmpty() ||
+                credits == null || credits.trim().isEmpty() || department == null || department.trim().isEmpty()) {
+            errorMessage = "All required fields must be filled.";
+            hasError = true;
+        } else if (!courseCode.matches("^[A-Z]{2}\\d{3}$")) {
+            errorMessage = "Course code must be in format XX999 (e.g., CS101).";
+            hasError = true;
+        } else if (!credits.matches("\\d+")) {
+            errorMessage = "Credits must be a positive number.";
+            hasError = true;
+        } else if (!courseCode.equals(originalCourseCode)) {
+            for (String course : courses) {
+                String[] parts = course.split(",");
+                if (parts[0].equals(courseCode)) {
+                    errorMessage = "A course with this code already exists.";
+                    hasError = true;
+                    break;
+                }
+            }
+        }
+
+        if (!hasError) {
+            boolean courseFound = false;
+            for (int i = 0; i < courses.size(); i++) {
+                String[] parts = courses.get(i).split(",");
+                if (parts[0].equals(originalCourseCode)) {
+                    String updatedCourse = String.format("%s,%s,%s,%s,%s,%s,%s",
+                            courseCode, title, credits, department,
+                            professor != null ? professor : "",
+                            syllabus != null ? syllabus : "", parts[6]);
+                    courses.set(i, updatedCourse);
+                    courseFound = true;
+                    break;
+                }
+            }
+
+            if (!courseFound) {
+                errorMessage = "Course not found.";
+                hasError = true;
+            } else {
+                // Write updated courses list to courses.txt
+                try (BufferedWriter writer = new BufferedWriter(new FileWriter(coursesFile))) {
+                    for (String course : courses) {
+                        writer.write(course);
+                        writer.newLine();
+                    }
+                } catch (IOException e) {
+                    System.out.println("Error writing to courses.txt: " + e.getMessage());
+                    errorMessage = "Server error while updating course.";
+                    hasError = true;
+                }
+            }
+
+            if (!hasError) {
+                response.sendRedirect("admin-dashboard.jsp?activeTab=courses&message=course_updated");
+                return;
+            }
+        }
+        request.setAttribute("error", errorMessage);
+    }
+
+    // Handle course deletion
+    if ("delete".equals(action)) {
+        String courseCode = request.getParameter("courseCode");
+        boolean courseFound = false;
+
+        for (int i = 0; i < courses.size(); i++) {
+            String[] parts = courses.get(i).split(",");
+            if (parts[0].equals(courseCode)) {
+                courses.remove(i);
+                courseFound = true;
+                break;
+            }
+        }
+
+        if (courseFound) {
+            // Write updated courses list to courses.txt
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(coursesFile))) {
+                for (String course : courses) {
+                    writer.write(course);
+                    writer.newLine();
+                }
+            } catch (IOException e) {
+                System.out.println("Error writing to courses.txt: " + e.getMessage());
+                request.setAttribute("error", "Server error while deleting course.");
+            }
+            response.sendRedirect("admin-dashboard.jsp?activeTab=courses&message=course_deleted");
+            return;
+        } else {
+            request.setAttribute("error", "Course not found.");
+        }
+    }
+
+    // Calculate active courses count
+    int activeCoursesCount = 0;
+    for (String course : courses) {
+        String[] parts = course.split(",");
+        if (parts.length >= 7 && "true".equals(parts[6])) {
+            activeCoursesCount++;
+        }
+    }
+
     List<String[]> students = new ArrayList<>();
     String studentsFilePath = application.getRealPath("/WEB-INF/data/students.txt");
     File studentsFile = new File(studentsFilePath);
@@ -53,7 +216,7 @@
             while ((line = reader.readLine()) != null) {
                 if (line.trim().isEmpty()) continue;
                 String[] parts = line.split(",");
-                if (parts.length >= 3) { // Expecting 3 fields: id,name,email
+                if (parts.length >= 3) {
                     students.add(parts);
                 }
             }
@@ -62,7 +225,38 @@
         }
     }
 
-    // Map error codes to user-friendly messages
+    List<String[]> paymentHistory = new ArrayList<>();
+    String paymentsFilePath = application.getRealPath("/WEB-INF/data/payments.txt");
+    File paymentsFile = new File(paymentsFilePath);
+    if (paymentsFile.exists()) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(paymentsFile))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                if (line.trim().isEmpty()) continue;
+                String[] parts = line.split(",");
+                if (parts.length >= 11) {
+                    paymentHistory.add(parts);
+                }
+            }
+        } catch (IOException e) {
+            System.out.println("Error reading payments.txt: " + e.getMessage());
+        }
+    }
+
+    int totalPayments = paymentHistory.size();
+    double totalAmount = 0.0;
+    int pendingPayments = 0;
+    for (String[] payment : paymentHistory) {
+        try {
+            totalAmount += Double.parseDouble(payment[2].replace("$", ""));
+            if ("pending".equals(payment[4]) || "overdue".equals(payment[4])) {
+                pendingPayments++;
+            }
+        } catch (NumberFormatException e) {
+            System.out.println("Error parsing amount for payment: " + Arrays.toString(payment));
+        }
+    }
+
     String errorMessage = null;
     String error = request.getParameter("error");
     if (error != null) {
@@ -73,14 +267,20 @@
             case "duplicate_id_or_email":
                 errorMessage = "A student with this ID or email already exists.";
                 break;
+            case "duplicate_course":
+                errorMessage = "A course with this code already exists.";
+                break;
+            case "course_not_found":
+                errorMessage = "The course was not found.";
+                break;
             case "server_error":
                 errorMessage = "An error occurred on the server. Please try again later.";
                 break;
             case "invalid_input":
                 errorMessage = "Input contains invalid characters (e.g., commas).";
                 break;
-            case "student_not_found":
-                errorMessage = "The student was not found.";
+            case "payment_not_found":
+                errorMessage = "The payment was not found.";
                 break;
             default:
                 errorMessage = "An unexpected error occurred.";
@@ -88,7 +288,6 @@
         request.setAttribute("error", errorMessage);
     }
 
-    // Map success messages
     String successMessage = null;
     String message = request.getParameter("message");
     if (message != null) {
@@ -101,6 +300,21 @@
                 break;
             case "student_deleted":
                 successMessage = "Student successfully deleted!";
+                break;
+            case "course_added":
+                successMessage = "Course successfully added!";
+                break;
+            case "course_updated":
+                successMessage = "Course successfully updated!";
+                break;
+            case "course_archived":
+                successMessage = "Course successfully archived!";
+                break;
+            case "course_deleted":
+                successMessage = "Course successfully deleted!";
+                break;
+            case "payment_updated":
+                successMessage = "Payment status successfully updated!";
                 break;
         }
         request.setAttribute("message", successMessage);
@@ -332,28 +546,6 @@
             box-shadow: 0 2px 8px rgba(255, 193, 7, 0.3);
         }
 
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0, 242, 254, 0.5);
-        }
-
-        .btn-danger {
-            background: var(--accent-color);
-            color: white;
-            box-shadow: 0 2px 8px rgba(255, 77, 126, 0.3);
-        }
-
-        .btn-danger:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(255, 77, 126, 0.5);
-        }
-
-        .btn-warning {
-            background: #ffc107;
-            color: var(--dark-color);
-            box-shadow: 0 2px 8px rgba(255, 193, 7, 0.3);
-        }
-
         .btn-warning:hover {
             transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(255, 193, 7, 0.5);
@@ -461,7 +653,7 @@
             box-shadow: 0 0 20px rgba(0, 200, 83, 0.8);
         }
 
-        .btn-futuristic-create:disabled {
+        .btn-futuristic:disabled {
             opacity: 0.5;
             cursor: not-allowed;
             box-shadow: none;
@@ -511,6 +703,7 @@
 
         .form-group {
             margin-bottom: 15px;
+            position: relative;
         }
 
         label {
@@ -548,6 +741,13 @@
             outline: none;
             border-color: var(--primary-color);
             box-shadow: 0 0 8px rgba(0, 242, 254, 0.3);
+        }
+
+        .error-text {
+            color: var(--accent-color);
+            font-size: 0.8rem;
+            margin-top: 5px;
+            display: none;
         }
 
         .message {
@@ -683,21 +883,6 @@
             margin-top: 10px;
         }
 
-        .update-student-form .btn-update {
-            background: none;
-            border: none;
-            color: #00b7eb;
-            text-decoration: underline;
-            font-size: 1rem;
-            cursor: pointer;
-            padding: 0;
-            transition: var(--transition);
-        }
-
-        .update-student-form .btn-update:hover {
-            color: #63b3ed;
-        }
-
         .update-course-form {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -721,21 +906,6 @@
             grid-column: span 2;
             text-align: right;
             margin-top: 10px;
-        }
-
-        .update-course-form .btn-update {
-            background: none;
-            border: none;
-            color: #00b7eb;
-            text-decoration: underline;
-            font-size: 1rem;
-            cursor: pointer;
-            padding: 0;
-            transition: var(--transition);
-        }
-
-        .update-course-form .btn-update:hover {
-            color: #63b3ed;
         }
 
         .create-course-form {
@@ -792,6 +962,10 @@
 
         .content-section {
             display: none;
+        }
+
+        .content-section.active {
+            display: block;
         }
 
         .course-container {
@@ -879,6 +1053,32 @@
             color: var(--dark-color);
         }
 
+        .payment-table {
+            width: 100%;
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            border-collapse: collapse;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .payment-table th, .payment-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid rgba(0, 242, 254, 0.1);
+            font-size: 0.9rem;
+        }
+
+        .payment-table tr:nth-child(even) {
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .payment-table th {
+            background: var(--glass-bg);
+            font-family: 'Orbitron', sans-serif;
+            letter-spacing: 1px;
+        }
+
         .button-group {
             display: flex;
             justify-content: center;
@@ -908,6 +1108,33 @@
             outline: none;
             border-color: var(--primary-color);
             box-shadow: 0 0 8px rgba(0, 242, 254, 0.3);
+        }
+
+        .loading-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .spinner {
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top: 4px solid var(--primary-color);
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
 
         @media (max-width: 768px) {
@@ -948,32 +1175,41 @@
     </style>
 </head>
 <body>
+<div class="loading-overlay" id="loadingOverlay">
+    <div class="spinner"></div>
+</div>
+
 <div class="sidebar">
     <div class="logo">NexoraSkill Admin</div>
     <ul class="nav-menu">
         <li class="nav-item">
-            <a href="#" class="nav-link <%= "dashboard".equals(activeTab) ? "active" : "" %>" data-section="dashboard" aria-label="Dashboard">
+            <a href="?activeTab=dashboard" class="nav-link <%= "dashboard".equals(activeTab) ? "active" : "" %>" data-section="dashboard" aria-label="Dashboard">
                 <i class="fas fa-chart-line"></i> Dashboard
             </a>
         </li>
         <li class="nav-item">
-            <a href="#" class="nav-link <%= "students".equals(activeTab) ? "active" : "" %>" data-section="students" aria-label="Student Management">
+            <a href="?activeTab=students" class="nav-link <%= "students".equals(activeTab) ? "active" : "" %>" data-section="students" aria-label="Student Management">
                 <i class="fas fa-users"></i> Student Management
             </a>
         </li>
         <li class="nav-item">
-            <a href="#" class="nav-link <%= "courses".equals(activeTab) ? "active" : "" %>" data-section="courses" aria-label="Course Management">
+            <a href="?activeTab=courses" class="nav-link <%= "courses".equals(activeTab) ? "active" : "" %>" data-section="courses" aria-label="Course Management">
                 <i class="fas fa-book-open"></i> Course Management
             </a>
         </li>
         <li class="nav-item">
-            <a href="#" class="nav-link <%= "emergency".equals(activeTab) ? "active" : "" %>" data-section="emergency" aria-label="Emergency Contacts">
+            <a href="?activeTab=emergency" class="nav-link <%= "emergency".equals(activeTab) ? "active" : "" %>" data-section="emergency" aria-label="Emergency Contacts">
                 <i class="fas fa-exclamation-triangle"></i> Emergency Contacts
             </a>
         </li>
         <li class="nav-item">
-            <a href="#" class="nav-link <%= "admin-tools".equals(activeTab) ? "active" : "" %>" data-section="admin-tools" aria-label="Admin Tools">
+            <a href="?activeTab=admin-tools" class="nav-link <%= "admin-tools".equals(activeTab) ? "active" : "" %>" data-section="admin-tools" aria-label="Admin Tools">
                 <i class="fas fa-tools"></i> Admin Tools
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="?activeTab=payment" class="nav-link <%= "payment".equals(activeTab) ? "active" : "" %>" data-section="payment" aria-label="Payment Management">
+                <i class="fas fa-credit-card"></i> Payment Management
             </a>
         </li>
     </ul>
@@ -994,13 +1230,13 @@
     </div>
 
     <% if (request.getAttribute("error") != null) { %>
-    <div class="message error"><%= request.getAttribute("error") %></div>
+    <div class="message error" role="alert"><%= request.getAttribute("error") %></div>
     <% } %>
     <% if (request.getAttribute("message") != null) { %>
-    <div class="message success"><%= request.getAttribute("message") %></div>
+    <div class="message success" role="alert"><%= request.getAttribute("message") %></div>
     <% } %>
 
-    <section id="dashboard" class="content-section">
+    <section id="dashboard" class="content-section <%= "dashboard".equals(activeTab) ? "active" : "" %>">
         <div class="stats-grid">
             <div class="stat-card">
                 <h3>Total Students</h3>
@@ -1017,26 +1253,29 @@
         </div>
     </section>
 
-    <section id="students" class="content-section">
+    <section id="students" class="content-section <%= "students".equals(activeTab) ? "active" : "" %>">
         <div class="section-header">
             <h2><i class="fas fa-users-cog"></i> Student Management</h2>
         </div>
 
         <div class="course-container">
-            <h3>Add New Student </h3>
-            <form action="studentRegistration" method="post" class="inline-student-form" onsubmit="return handleAddStudentSubmission(event)">
+            <h3>Add New Student</h3>
+            <form action="studentRegistration" method="post" class="inline-student-form" onsubmit="return validateAddStudentForm(this)">
                 <input type="hidden" name="action" value="add">
                 <div class="form-group">
                     <label for="inlineStudentId" class="required">Student ID</label>
                     <input type="text" id="inlineStudentId" name="id" required placeholder="e.g., STU20230001">
+                    <div class="error-text" id="inlineStudentIdError"></div>
                 </div>
                 <div class="form-group">
                     <label for="inlineStudentName" class="required">Full Name</label>
                     <input type="text" id="inlineStudentName" name="name" required placeholder="e.g., John Doe">
+                    <div class="error-text" id="inlineStudentNameError"></div>
                 </div>
                 <div class="form-group">
                     <label for="inlineStudentEmail" class="required">Email</label>
                     <input type="email" id="inlineStudentEmail" name="email" required placeholder="e.g., john.doe@nexora.edu">
+                    <div class="error-text" id="inlineStudentEmailError"></div>
                 </div>
                 <div class="button-group">
                     <button type="submit" id="inlineAddStudentBtn" class="btn-futuristic btn-futuristic-create" data-tooltip="Add this student" aria-label="Add Student">
@@ -1047,7 +1286,7 @@
         </div>
 
         <div class="search-bar">
-            <input type="text" id="studentSearch" placeholder="Search students by name..." onkeyup="searchStudents()">
+            <input type="text" id="studentSearch" placeholder="Search students by name..." onkeyup="searchStudents()" aria-label="Search students">
             <i class="fas fa-search"></i>
         </div>
 
@@ -1073,7 +1312,7 @@
                     <button class="btn-futuristic btn-futuristic-update" data-tooltip="Edit this student" onclick="openUpdateStudentModal('<%= student[0] %>', '<%= student[1] %>', '<%= student[2] %>')" aria-label="Update Student">
                         <i class="fas fa-pen-nib"></i> Update
                     </button>
-                    <a href="studentRegistration?action=delete&id=<%= student[0] %>" class="btn-futuristic btn-futuristic-delete" data-tooltip="Delete this student" onclick="return confirmStudentDelete('<%= student[0] %>')" aria-label="Delete Student">
+                    <a href="studentRegistration?action=delete&id=<%= student[0] %>&activeTab=students" class="btn-futuristic btn-futuristic-delete" data-tooltip="Delete this student" onclick="return confirmStudentDelete('<%= student[0] %>')" aria-label="Delete Student">
                         <i class="fas fa-trash-can"></i> Delete
                     </a>
                 </td>
@@ -1090,7 +1329,7 @@
         </table>
     </section>
 
-    <section id="courses" class="content-section">
+    <section id="courses" class="content-section <%= "courses".equals(activeTab) ? "active" : "" %>">
         <div class="section-header">
             <h2><i class="fas fa-book"></i> Course Management</h2>
         </div>
@@ -1100,19 +1339,23 @@
                 <h3 onclick="toggleCourseSection('create-course-content')">Create New Course</h3>
             </div>
             <div id="create-course-content" class="course-content <%= "courses".equals(activeTab) ? "active" : "" %>">
-                <form action="course" method="post" class="create-course-form" onsubmit="return handleCreateSubmission(event)">
+                <form action="admin-dashboard.jsp" method="post" class="create-course-form" onsubmit="return validateCreateCourseForm(this)">
                     <input type="hidden" name="action" value="create">
+                    <input type="hidden" name="activeTab" value="courses">
                     <div class="form-group">
                         <label for="courseCode" class="required">Course Code</label>
                         <input type="text" id="courseCode" name="courseCode" required placeholder="e.g., CS101">
+                        <div class="error-text" id="courseCodeError"></div>
                     </div>
                     <div class="form-group">
                         <label for="title" class="required">Title</label>
                         <input type="text" id="title" name="title" required placeholder="e.g., Introduction to Programming">
+                        <div class="error-text" id="titleError"></div>
                     </div>
                     <div class="form-group">
                         <label for="credits" class="required">Credits</label>
                         <input type="number" id="credits" name="credits" required placeholder="e.g., 3" min="1">
+                        <div class="error-text" id="creditsError"></div>
                     </div>
                     <div class="form-group">
                         <label for="department" class="required">Department</label>
@@ -1122,6 +1365,7 @@
                             <option value="Mathematics">Mathematics</option>
                             <option value="Physics">Physics</option>
                         </select>
+                        <div class="error-text" id="departmentError"></div>
                     </div>
                     <div class="form-group">
                         <label for="professor">Professor</label>
@@ -1145,8 +1389,9 @@
                 <h3 onclick="toggleCourseSection('view-courses-content')">View Courses</h3>
             </div>
             <div id="view-courses-content" class="course-content <%= "courses".equals(activeTab) ? "active" : "" %>">
-                <form action="course" method="get" class="filter-form">
+                <form action="admin-dashboard.jsp" method="get" class="filter-form">
                     <input type="hidden" name="action" value="view">
+                    <input type="hidden" name="activeTab" value="courses">
                     <select name="department" aria-label="Filter by Department">
                         <option value="">All Departments</option>
                         <option value="Computer Science">Computer Science</option>
@@ -1176,12 +1421,22 @@
                             <th>Actions</th>
                         </tr>
                         <%
-                            System.out.println("Number of courses: " + courses.size());
+                            String filterDepartment = request.getParameter("department");
+                            String filterCredits = request.getParameter("credits");
                             if (courses != null && !courses.isEmpty()) {
                                 for (String course : courses) {
                                     String[] parts = course.split(",");
-                                    System.out.println("Course: " + course);
                                     if (parts.length < 7) continue;
+
+                                    boolean matchesFilter = true;
+                                    if (filterDepartment != null && !filterDepartment.isEmpty() && !parts[3].equals(filterDepartment)) {
+                                        matchesFilter = false;
+                                    }
+                                    if (filterCredits != null && !filterCredits.isEmpty() && !parts[2].equals(filterCredits)) {
+                                        matchesFilter = false;
+                                    }
+
+                                    if (!matchesFilter) continue;
                         %>
                         <tr>
                             <td><%= parts[0] %></td>
@@ -1196,11 +1451,11 @@
                                     <i class="fas fa-pen-nib"></i> Update
                                 </button>
                                 <% if ("true".equals(parts[6])) { %>
-                                <a href="course?action=archive&courseCode=<%= parts[0] %>" class="btn-futuristic btn-futuristic-archive" data-tooltip="Archive this course" aria-label="Archive Course">
+                                <a href="admin-dashboard.jsp?action=archive&courseCode=<%= parts[0] %>&activeTab=courses" class="btn-futuristic btn-futuristic-archive" data-tooltip="Archive this course" aria-label="Archive Course">
                                     <i class="fas fa-box-archive"></i> Archive
                                 </a>
                                 <% } %>
-                                <a href="course?action=delete&courseCode=<%= parts[0] %>" class="btn-futuristic btn-futuristic-delete" data-tooltip="Delete this course" onclick="return confirmDelete('<%= parts[0] %>')" aria-label="Delete Course">
+                                <a href="admin-dashboard.jsp?action=delete&courseCode=<%= parts[0] %>&activeTab=courses" class="btn-futuristic btn-futuristic-delete" data-tooltip="Delete this course" onclick="return confirmDelete('<%= parts[0] %>')" aria-label="Delete Course">
                                     <i class="fas fa-trash-can"></i> Delete
                                 </a>
                             </td>
@@ -1219,34 +1474,37 @@
         </div>
     </section>
 
-    <section id="emergency" class="content-section">
+    <section id="emergency" class="content-section <%= "emergency".equals(activeTab) ? "active" : "" %>">
         <div class="section-header">
             <h2><i class="fas fa-exclamation-circle"></i> Emergency Contacts</h2>
         </div>
 
         <div class="emergency-contact-form">
             <div class="form-group">
-                <label for="studentId">Student ID</label>
-                <input type="text" id="studentId" placeholder="Enter Student ID">
+                <label for="emergencyStudentId">Student ID</label>
+                <input type="text" id="emergencyStudentId" name="studentId" placeholder="Enter Student ID">
+                <div class="error-text" id="emergencyStudentIdError"></div>
             </div>
             <div class="form-group">
                 <label for="emergencyContact">Emergency Contact</label>
-                <input type="text" id="emergencyContact" placeholder="Contact Name">
+                <input type="text" id="emergencyContact" name="emergencyContact" placeholder="Contact Name">
+                <div class="error-text" id="emergencyContactError"></div>
             </div>
             <div class="form-group">
                 <label for="emergencyPhone">Phone Number</label>
-                <input type="tel" id="emergencyPhone" placeholder="Emergency Phone">
+                <input type="tel" id="emergencyPhone" name="emergencyPhone" placeholder="Emergency Phone">
+                <div class="error-text" id="emergencyPhoneError"></div>
             </div>
-            <button class="btn btn-primary" aria-label="Update Emergency Contacts">Update Contacts</button>
+            <button class="btn btn-primary" onclick="updateEmergencyContact()" aria-label="Update Emergency Contacts">Update Contacts</button>
         </div>
     </section>
 
-    <section id="admin-tools" class="content-section">
+    <section id="admin-tools" class="content-section <%= "admin-tools".equals(activeTab) ? "active" : "" %>">
         <h2><i class="fas fa-tools"></i> Admin Tools</h2>
 
         <div class="action-card">
             <h3>Monitor Active Sessions</h3>
-            <a href="admin?action=monitorSessions" class="btn btn-primary" aria-label="View Active Sessions">
+            <a href="admin?action=monitorSessions&activeTab=admin-tools" class="btn btn-primary" aria-label="View Active Sessions">
                 <i class="fas fa-eye"></i> View Active Admin Sessions
             </a>
         </div>
@@ -1255,6 +1513,7 @@
             <h3>Force Password Reset</h3>
             <form action="admin" method="post">
                 <input type="hidden" name="action" value="forceReset">
+                <input type="hidden" name="activeTab" value="admin-tools">
                 <div class="form-group">
                     <label for="resetUsername">Username:</label>
                     <input type="text" id="resetUsername" name="username" required>
@@ -1269,6 +1528,7 @@
             <h3>Deactivate Account</h3>
             <form action="admin" method="post">
                 <input type="hidden" name="action" value="deactivate">
+                <input type="hidden" name="activeTab" value="admin-tools">
                 <div class="form-group">
                     <label for="deactivateUsername">Username:</label>
                     <input type="text" id="deactivateUsername" name="username" required>
@@ -1283,11 +1543,90 @@
             <h3>Purge Expired Unverified Accounts</h3>
             <form action="admin" method="post">
                 <input type="hidden" name="action" value="purgeUnverified">
+                <input type="hidden" name="activeTab" value="admin-tools">
                 <button type="submit" class="btn btn-danger" aria-label="Purge Unverified Accounts">
                     <i class="fas fa-trash-alt"></i> Purge Unverified Accounts
                 </button>
             </form>
         </div>
+    </section>
+
+    <section id="payment" class="content-section <%= "payment".equals(activeTab) ? "active" : "" %>">
+        <div class="section-header">
+            <h2><i class="fas fa-credit-card"></i> Payment Management</h2>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <h3>Total Payments</h3>
+                <p class="stat-value"><%= totalPayments %></p>
+            </div>
+            <div class="stat-card">
+                <h3>Total Amount Collected</h3>
+                <p class="stat-value">$<%= String.format("%.2f", totalAmount) %></p>
+            </div>
+            <div class="stat-card">
+                <h3>Pending Payments</h3>
+                <p class="stat-value"><%= pendingPayments %></p>
+            </div>
+        </div>
+
+        <div class="search-bar">
+            <input type="text" id="paymentSearch" placeholder="Search payments by student ID or invoice ID..." onkeyup="searchPayments()" aria-label="Search payments">
+            <i class="fas fa-search"></i>
+        </div>
+
+        <table class="payment-table" id="paymentTable">
+            <thead>
+            <tr>
+                <th>Invoice ID</th>
+                <th>Student ID</th>
+                <th>Amount</th>
+                <th>Due Date</th>
+                <th>Status</th>
+                <th>Payment Date</th>
+                <th>Waiver Applied</th>
+                <th>Late Fee</th>
+                <th>Payment Method</th>
+                <th>Subscription Plan</th>
+                <th>Start Date</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <%
+                if (paymentHistory != null && !paymentHistory.isEmpty()) {
+                    for (String[] payment : paymentHistory) {
+                        String status = payment[4].equals("pending") || payment[4].equals("overdue") ? payment[4] : "paid";
+            %>
+            <tr class="payment-row">
+                <td><%= payment[0] %></td>
+                <td><%= payment[1] %></td>
+                <td><%= payment[2] %></td>
+                <td><%= payment[3] %></td>
+                <td class="status-cell <%= status %>"><%= status.substring(0, 1).toUpperCase() + status.substring(1) %></td>
+                <td><%= payment[5].isEmpty() ? "N/A" : payment[5] %></td>
+                <td><%= "true".equals(payment[6]) ? "Yes" : "No" %></td>
+                <td><%= payment[7] %></td>
+                <td><%= payment[8] %></td>
+                <td><%= payment[9] %></td>
+                <td><%= payment[10] %></td>
+                <td>
+                    <button class="btn-futuristic btn-futuristic-update" data-tooltip="Update payment status" onclick="openUpdatePaymentModal('<%= payment[0] %>', '<%= payment[4] %>')" aria-label="Update Payment">
+                        <i class="fas fa-pen-nib"></i> Update
+                    </button>
+                </td>
+            </tr>
+            <%
+                }
+            } else {
+            %>
+            <tr>
+                <td colspan="12" style="text-align: center;">No payment history available.</td>
+            </tr>
+            <% } %>
+            </tbody>
+        </table>
     </section>
 </div>
 
@@ -1295,19 +1634,23 @@
     <div class="modal-content">
         <button class="modal-close" onclick="closeModal('addStudent')" aria-label="Close Modal"><i class="fas fa-times"></i></button>
         <h2>Add New Student</h2>
-        <form action="studentRegistration" method="post" class="add-student-form" onsubmit="return handleAddStudentSubmission(event)">
+        <form action="studentRegistration" method="post" class="add-student-form" onsubmit="return validateAddStudentForm(this)">
             <input type="hidden" name="action" value="add">
+            <input type="hidden" name="activeTab" value="students">
             <div class="form-group">
                 <label for="studentId" class="required">Student ID</label>
                 <input type="text" id="studentId" name="id" required placeholder="e.g., STU20230001">
+                <div class="error-text" id="studentIdError"></div>
             </div>
             <div class="form-group">
                 <label for="studentName" class="required">Full Name</label>
                 <input type="text" id="studentName" name="name" required placeholder="e.g., John Doe">
+                <div class="error-text" id="studentNameError"></div>
             </div>
             <div class="form-group">
                 <label for="studentEmail" class="required">Email</label>
                 <input type="email" id="studentEmail" name="email" required placeholder="e.g., john.doe@nexora.edu">
+                <div class="error-text" id="studentEmailError"></div>
             </div>
             <div class="button-group">
                 <button type="submit" id="addStudentBtn" class="btn-futuristic btn-futuristic-create" data-tooltip="Add this student" aria-label="Add Student">
@@ -1322,20 +1665,24 @@
     <div class="modal-content">
         <button class="modal-close" onclick="closeModal('updateStudent')" aria-label="Close Modal"><i class="fas fa-times"></i></button>
         <h2>Update Student</h2>
-        <form id="updateStudentForm" action="studentRegistration" method="post" onsubmit="return validateUpdateStudentForm()" class="update-student-form">
+        <form id="updateStudentForm" action="studentRegistration" method="post" onsubmit="return validateUpdateStudentForm()">
             <input type="hidden" name="action" value="update">
+            <input type="hidden" name="activeTab" value="students">
             <input type="hidden" name="originalId" id="updateOriginalId">
             <div class="form-group">
                 <label for="updateStudentId" class="required">Student ID</label>
                 <input type="text" id="updateStudentId" name="id" required>
+                <div class="error-text" id="updateStudentIdError"></div>
             </div>
             <div class="form-group">
                 <label for="updateStudentName" class="required">Full Name</label>
                 <input type="text" id="updateStudentName" name="name" required>
+                <div class="error-text" id="updateStudentNameError"></div>
             </div>
             <div class="form-group">
                 <label for="updateStudentEmail" class="required">Email</label>
                 <input type="email" id="updateStudentEmail" name="email" required>
+                <div class="error-text" id="updateStudentEmailError"></div>
             </div>
             <div class="button-group">
                 <button type="submit" class="btn-futuristic btn-futuristic-update" data-tooltip="Update this student" aria-label="Update Student">
@@ -1350,20 +1697,24 @@
     <div class="modal-content">
         <button class="modal-close" onclick="closeModal('updateCourse')" aria-label="Close Modal"><i class="fas fa-times"></i></button>
         <h2>Update Course</h2>
-        <form id="updateCourseForm" action="course" method="post" onsubmit="return validateUpdateForm()" class="update-course-form">
+        <form id="updateCourseForm" action="admin-dashboard.jsp" method="post" onsubmit="return validateUpdateCourseForm()">
             <input type="hidden" name="action" value="update">
+            <input type="hidden" name="activeTab" value="courses">
             <input type="hidden" name="originalCourseCode" id="updateOriginalCourseCode">
             <div class="form-group">
                 <label for="updateCourseCode" class="required">Course Code</label>
                 <input type="text" id="updateCourseCode" name="courseCode" required>
+                <div class="error-text" id="updateCourseCodeError"></div>
             </div>
             <div class="form-group">
                 <label for="updateTitle" class="required">Title</label>
                 <input type="text" id="updateTitle" name="title" required>
+                <div class="error-text" id="updateTitleError"></div>
             </div>
             <div class="form-group">
                 <label for="updateCredits" class="required">Credits</label>
                 <input type="number" id="updateCredits" name="credits" required min="1">
+                <div class="error-text" id="updateCreditsError"></div>
             </div>
             <div class="form-group">
                 <label for="updateDepartment" class="required">Department</label>
@@ -1373,6 +1724,7 @@
                     <option value="Mathematics">Mathematics</option>
                     <option value="Physics">Physics</option>
                 </select>
+                <div class="error-text" id="updateDepartmentError"></div>
             </div>
             <div class="form-group">
                 <label for="updateProfessor">Professor</label>
@@ -1391,41 +1743,81 @@
     </div>
 </div>
 
+<div id="updatePayment" class="modal">
+    <div class="modal-content">
+        <button class="modal-close" onclick="closeModal('updatePayment')" aria-label="Close Modal"><i class="fas fa-times"></i></button>
+        <h2>Update Payment Status</h2>
+        <form id="updatePaymentForm" action="payment" method="post" onsubmit="return validateUpdatePaymentForm()">
+            <input type="hidden" name="action" value="updateStatus">
+            <input type="hidden" name="activeTab" value="payment">
+            <input type="hidden" name="invoiceId" id="updateInvoiceId">
+            <div class="form-group">
+                <label for="updateStatus" class="required">Status</label>
+                <select id="updateStatus" name="status" required>
+                    <option value="paid">Paid</option>
+                    <option value="pending">Pending</option>
+                    <option value="overdue">Overdue</option>
+                </select>
+                <div class="error-text" id="updateStatusError"></div>
+            </div>
+            <div class="button-group">
+                <button type="submit" class="btn-futuristic btn-futuristic-update" data-tooltip="Update payment status" aria-label="Update Payment">
+                    <i class="fas fa-pen-nib"></i> Update Payment
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
 <script>
     const navLinks = document.querySelectorAll('.nav-link');
     const sections = document.querySelectorAll('.content-section');
+    const loadingOverlay = document.getElementById('loadingOverlay');
+
+    function showSection(sectionId) {
+        sections.forEach(section => {
+            section.classList.remove('active');
+            section.style.display = 'none';
+        });
+        const targetSection = document.getElementById(sectionId);
+        if (targetSection) {
+            targetSection.classList.add('active');
+            targetSection.style.display = 'block';
+        }
+
+        navLinks.forEach(link => {
+            link.classList.remove('active');
+            if (link.getAttribute('data-section') === sectionId) {
+                link.classList.add('active');
+            }
+        });
+    }
 
     navLinks.forEach(link => {
         link.addEventListener('click', (e) => {
             e.preventDefault();
             const sectionId = link.getAttribute('data-section');
-
-            navLinks.forEach(l => l.classList.remove('active'));
-            link.classList.add('active');
-
-            sections.forEach(section => section.style.display = 'none');
-            document.getElementById(sectionId).style.display = 'block';
+            showSection(sectionId);
+            history.pushState(null, '', `?activeTab=${sectionId}`);
         });
     });
 
     const urlParams = new URLSearchParams(window.location.search);
-    const activeTab = urlParams.get('activeTab');
-    if (activeTab) {
-        navLinks.forEach(link => {
-            link.classList.remove('active');
-            if (link.getAttribute('data-section') === activeTab) {
-                link.classList.add('active');
-            }
-        });
-        sections.forEach(section => {
-            section.style.display = 'none';
-            if (section.id === activeTab) {
-                section.style.display = 'block';
-            }
-        });
-    } else {
-        document.getElementById('dashboard').style.display = 'block';
-        document.querySelector('.nav-link[data-section="dashboard"]').classList.add('active');
+    const activeTab = urlParams.get('activeTab') || 'dashboard';
+    showSection(activeTab);
+
+    window.addEventListener('popstate', () => {
+        const newParams = new URLSearchParams(window.location.search);
+        const newTab = newParams.get('activeTab') || 'dashboard';
+        showSection(newTab);
+    });
+
+    function showLoading() {
+        loadingOverlay.style.display = 'flex';
+    }
+
+    function hideLoading() {
+        loadingOverlay.style.display = 'none';
     }
 
     function openModal(modalId) {
@@ -1463,6 +1855,12 @@
         openModal('updateStudent');
     }
 
+    function openUpdatePaymentModal(invoiceId, currentStatus) {
+        document.getElementById('updateInvoiceId').value = invoiceId;
+        document.getElementById('updateStatus').value = currentStatus;
+        openModal('updatePayment');
+    }
+
     window.onclick = function(e) {
         if (e.target.className === 'modal') {
             closeModal(e.target.id);
@@ -1474,170 +1872,42 @@
         content.classList.toggle('active');
     }
 
-    function validateUpdateForm() {
-        const courseCode = document.getElementById('updateCourseCode').value.trim();
-        const title = document.getElementById('updateTitle').value.trim();
-        const credits = document.getElementById('updateCredits').value.trim();
-        const department = document.getElementById('updateDepartment').value.trim();
-
-        if (!courseCode || !title || !credits || !department) {
-            alert('Please fill in all required fields.');
-            return false;
-        }
-
-        if (credits <= 0) {
-            alert('Credits must be a positive number.');
-            return false;
-        }
-
-        const confirmUpdate = confirm('Are you sure you want to update this course?');
-        if (!confirmUpdate) {
-            return false;
-        }
-
-        closeModal('updateCourse');
-        return true;
-    }
-
-    function validateUpdateStudentForm() {
-        const id = document.getElementById('updateStudentId').value.trim();
-        const name = document.getElementById('updateStudentName').value.trim();
-        const email = document.getElementById('updateStudentEmail').value.trim();
-
-        if (!id || !name || !email) {
-            alert('Please fill in all required fields.');
-            return false;
-        }
-
-        const confirmUpdate = confirm('Are you sure you want to update this student?');
-        if (!confirmUpdate) {
-            return false;
-        }
-
-        closeModal('updateStudent');
-        return true;
-    }
-
     function confirmDelete(courseCode) {
-        return confirm('Are you sure you want to delete the course ' + courseCode + '? This action cannot be undone.');
+        return confirm('Are you sure you want to delete the course "' + courseCode + '"?');
     }
 
-    function confirmStudentDelete(studentId) {
-        return confirm('Are you sure you want to delete the student with ID ' + studentId + '? This action cannot be undone.');
-    }
-
-    function handleCreateSubmission(event) {
-        event.preventDefault();
-
-        const courseCode = document.getElementById('courseCode').value.trim();
-        const title = document.getElementById('title').value.trim();
-        const credits = document.getElementById('credits').value.trim();
-        const department = document.getElementById('department').value.trim();
-
-        if (!courseCode || !title || !credits || !department) {
-            alert('Please fill in all required fields.');
-            return false;
-        }
-
-        if (credits <= 0) {
-            alert('Credits must be a positive number.');
-            return false;
-        }
-
-        const confirmCreate = confirm('Are you sure you want to create the course "' + title + '"?');
-        if (!confirmCreate) {
-            return false;
-        }
-
-        const createBtn = document.getElementById('createCourseBtn');
-        createBtn.disabled = true;
-        createBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creating...';
-
-        setTimeout(() => {
-            event.target.submit();
-        }, 500);
-
-        return true;
-    }
-
-    function handleAddStudentSubmission(event) {
-        event.preventDefault();
-
-        const form = event.target;
+    function validateAddStudentForm(form) {
         const idField = form.querySelector('[name="id"]').id;
         const nameField = form.querySelector('[name="name"]').id;
         const emailField = form.querySelector('[name="email"]').id;
-        const submitBtn = form.querySelector('button[type="submit"]').id;
 
         const id = document.getElementById(idField).value.trim();
         const name = document.getElementById(nameField).value.trim();
         const email = document.getElementById(emailField).value.trim();
-        const addBtn = document.getElementById(submitBtn);
 
-        // Log form details for debugging
-        console.log('Attempting to add student - Form ID:', form.id, 'ID:', id, 'Name:', name, 'Email:', email);
+        let isValid = true;
 
-        // Validate required fields
-        if (!id || !name || !email) {
-            console.log('Validation failed: Missing required fields');
-            alert('Please fill in all required fields.');
-            addBtn.disabled = false;
-            addBtn.innerHTML = '<i class="fas fa-user-plus"></i> Add Student';
-            return false;
+        document.getElementById(idField + 'Error').style.display = 'none';
+        document.getElementById(nameField + 'Error').style.display = 'none';
+        document.getElementById(emailField + 'Error').style.display = 'none';
+
+        if (!id) {
+            document.getElementById(idField + 'Error').textContent = 'Student ID is required';
+            document.getElementById(idField + 'Error').style.display = 'block';
+            isValid = false;
+        } else if (!id.match(/^STU\d{8}$/)) {
+            document.getElementById(idField + 'Error').textContent = 'Student ID must be in format STUYYYYXXXX';
+            document.getElementById(idField + 'Error').style.display = 'block';
+            isValid = false;
         }
 
-        // Validate email format
-        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailPattern.test(email)) {
-            console.log('Validation failed: Invalid email format - Email:', email);
-            alert('Please enter a valid email address (e.g., example@domain.com).');
-            addBtn.disabled = false;
-            addBtn.innerHTML = '<i class="fas fa-user-plus"></i> Add Student';
-            return false;
+        if (!name) {
+            document.getElementById(nameField + 'Error').textContent = 'Full name is required';
+            document.getElementById(nameField + 'Error').style.display = 'block';
+            isValid = false;
+        } else if (!name.match(/^[A-Za-z\s]+$/)) {
+            document.getElementById(nameField + 'Error').textContent = 'Name can only contain letters and spaces';
+            document.getElementById(nameField + 'Error').style.display = 'block';
+            isValid = false;
         }
 
-        // Confirm with user
-        const confirmAdd = confirm('Are you sure you want to add the student "' + name + '"?');
-        if (!confirmAdd) {
-            console.log('User canceled the addition of student:', name);
-            addBtn.disabled = false;
-            addBtn.innerHTML = '<i class="fas fa-user-plus"></i> Add Student';
-            return false;
-        }
-
-        // Disable button and show loading state
-        addBtn.disabled = true;
-        addBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Adding...';
-        console.log('Submitting form for student:', name);
-
-        // Close the modal if this is the modal form
-        if (form.closest('#addStudent')) {
-            closeModal('addStudent');
-        }
-
-        // Submit the form
-        setTimeout(() => {
-            form.submit();
-        }, 500);
-
-        return true;
-    }
-
-    function searchStudents() {
-        const input = document.getElementById('studentSearch').value.toLowerCase();
-        const table = document.getElementById('studentTable');
-        const rows = table.getElementsByClassName('student-row');
-
-        for (let i = 0; i < rows.length; i++) {
-            const nameCell = rows[i].getElementsByClassName('student-name')[0];
-            const name = nameCell.textContent || nameCell.innerText;
-            if (name.toLowerCase().indexOf(input) > -1) {
-                rows[i].style.display = '';
-            } else {
-                rows[i].style.display = 'none';
-            }
-        }
-    }
-</script>
-</body>
-</html>
