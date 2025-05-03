@@ -1,4 +1,8 @@
 <head>
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Contact Us | NexoraSkill</title>
@@ -280,4 +284,246 @@
       }
     }
   </style>
+<<<<<<< Updated upstream
 </head>
+=======
+
+</head>
+<body>
+<!-- Preloader -->
+<div class="preloader">
+  <div class="loader"></div>
+</div>
+
+<!-- Header Section -->
+<header class="header">
+  <div class="container">
+    <a href="index.jsp" class="logo">
+      <img src="./images/favicon-32x32.png" alt="NexoraSkill Logo">
+      <span>NexoraSkill</span>
+    </a>
+
+    <nav class="navbar">
+      <ul>
+        <li>
+          <a href="index.jsp" class="nav-link">
+            <i class="fas fa-home nav-icon"></i>
+            <span class="nav-text">Home</span>
+            <div class="nav-underline"></div>
+          </a>
+        </li>
+        <li>
+          <a href="courses.jsp" class="nav-link">
+            <i class="fas fa-book nav-icon"></i>
+            <span class="nav-text">Courses</span>
+            <div class="nav-underline"></div>
+          </a>
+        </li>
+        <li>
+          <a href="Apply%20Course.jsp" class="nav-link">
+            <i class="fas fa-rocket nav-icon"></i>
+            <span class="nav-text">Apply</span>
+            <div class="nav-underline"></div>
+          </a>
+        </li>
+        <li>
+          <a href="aboutus.jsp" class="nav-link">
+            <i class="fas fa-info-circle nav-icon"></i>
+            <span class="nav-text">About</span>
+            <div class="nav-underline"></div>
+          </a>
+        </li>
+        <li>
+          <a href="contact.jsp" class="nav-link active">
+            <i class="fas fa-envelope nav-icon"></i>
+            <span class="nav-text">Contact</span>
+            <div class="nav-underline"></div>
+          </a>
+        </li>
+      </ul>
+    </nav>
+
+    <div class="auth-buttons">
+      <a href="logIn.jsp" class="btn btn-login">
+        <i class="fas fa-sign-in-alt"></i>
+        <span class="btn-text">Login</span>
+      </a>
+      <a href="signUp.jsp" class="btn btn-signup">
+        <i class="fas fa-user-plus"></i>
+        <span class="btn-text">Sign Up</span>
+      </a>
+    </div>
+
+    <!-- Mobile Menu Toggle -->
+    <div class="mobile-menu-toggle">
+      <i class="fas fa-bars"></i>
+    </div>
+  </div>
+
+</header>
+
+<!-- Hero Section -->
+<section class="hero">
+  <!-- Your existing hero content remains the same -->
+  <!-- ... -->
+</section>
+
+<!-- Contact Information Section -->
+<section class="contact-info">
+  <!-- Your existing contact info content remains the same -->
+  <!-- ... -->
+</section>
+
+<!-- Contact Form Section -->
+<section class="contact-form">
+  <h2>Send Us a Message</h2>
+
+  <%-- Success/Error Messages --%>
+  <% if (request.getAttribute("success") != null) { %>
+  <div class="alert alert-success" style="background: rgba(0,255,0,0.1); color: #00ff00; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #00ff00;">
+    <i class="fas fa-check-circle"></i> Your message has been sent successfully!
+  </div>
+  <% } %>
+
+
+  <!-- Contact Form -->
+  <div class="contact-form">
+    <%-- Success/Error Messages --%>
+    <% if (request.getAttribute("success") != null) { %>
+    <div class="alert alert-success">
+      <i class="fas fa-check-circle"></i> Your message has been sent successfully!
+    </div>
+    <% } %>
+
+    <% if (request.getAttribute("error") != null) { %>
+    <div class="alert alert-error">
+      <i class="fas fa-exclamation-circle"></i> There was an error sending your message. Please try again.
+    </div>
+    <% } %>
+
+    <form action="contact.jsp" method="POST">
+      <div class="form-group">
+        <input type="text" name="name" id="name" placeholder=" " required>
+        <label for="name">Your Name</label>
+      </div>
+
+      <div class="form-group">
+        <input type="email" name="email" id="email" placeholder=" " required>
+        <label for="email">Your Email</label>
+      </div>
+
+      <div class="form-group">
+        <input type="text" name="subject" id="subject" placeholder=" " required>
+        <label for="subject">Subject</label>
+      </div>
+
+      <div class="form-group">
+        <textarea name="message" id="message" placeholder=" " required></textarea>
+        <label for="message">Your Message</label>
+      </div>
+
+      <button type="submit" class="submit-btn">
+        <i class="fas fa-paper-plane"></i> Send Message
+      </button>
+    </form>
+
+  <% if (request.getAttribute("error") != null) { %>
+  <div class="alert alert-error" style="background: rgba(255,0,0,0.1); color: #ff0000; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #ff0000;">
+    <i class="fas fa-exclamation-circle"></i> There was an error sending your message. Please try again.
+
+  </div>
+  <% } %>
+
+  <form action="contact.jsp" method="POST">
+    <div class="form-group">
+      <input type="text" name="name" id="name" placeholder=" " required>
+      <label for="name">Your Name</label>
+    </div>
+    <div class="form-group">
+      <input type="email" name="email" id="email" placeholder=" " required>
+      <label for="email">Your Email</label>
+    </div>
+    <div class="form-group">
+      <input type="text" name="subject" id="subject" placeholder=" " required>
+      <label for="subject">Subject</label>
+    </div>
+    <div class="form-group">
+      <textarea name="message" id="message" placeholder=" " rows="5" required></textarea>
+      <label for="message">Your Message</label>
+    </div>
+    <button type="submit" class="btn-primary"><i class="fas fa-paper-plane"></i> Send Message</button>
+  </form>
+</section>
+
+<!-- Footer -->
+<footer class="footer">
+  <!-- Your existing footer content remains the same -->
+  <!-- ... -->
+</footer>
+
+<!-- Scroll To Top Button -->
+<div class="scroll-top">
+  <i class="fas fa-arrow-up"></i>
+</div>
+
+<!-- Scripts -->
+<script>
+<<<<<<< HEAD
+  // Preloader
+  window.addEventListener('load', function() {
+    const preloader = document.querySelector('.preloader');
+    preloader.classList.add('fade-out');
+    setTimeout(() => {
+      preloader.style.display = 'none';
+    }, 500);
+  });
+
+  // Header scroll effect
+  window.addEventListener('scroll', function() {
+    const header = document.querySelector('.header');
+    if (window.scrollY > 100) {
+      header.classList.add('scrolled');
+    } else {
+      header.classList.remove('scrolled');
+    }
+
+    // Scroll to top button
+    const scrollTop = document.querySelector('.scroll-top');
+    if (window.scrollY > 300) {
+      scrollTop.classList.add('active');
+    } else {
+      scrollTop.classList.remove('active');
+    }
+  });
+
+  // Mobile Menu Toggle
+  const mobileMenuToggle = document.querySelector('.mobile-menu-toggle');
+  const navbar = document.querySelector('.navbar');
+
+  mobileMenuToggle.addEventListener('click', function() {
+    navbar.classList.toggle('active');
+    mobileMenuToggle.classList.toggle('active');
+  });
+
+  // Close mobile menu when clicking on a link
+  document.querySelectorAll('.nav-link').forEach(link => {
+    link.addEventListener('click', function() {
+      if (window.innerWidth <= 992) {
+        navbar.classList.remove('active');
+        mobileMenuToggle.classList.remove('active');
+      }
+    });
+  });
+
+  // Scroll to top button
+  document.querySelector('.scroll-top').addEventListener('click', function() {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+=======
+  // Your existing JavaScript remains the same
+  // ...
+</script>
+</body>
+</html>
+>>>>>>> Stashed changes

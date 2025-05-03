@@ -31,6 +31,9 @@
 0,Hasiru,$2a$10$3tqFBuulxOvAQpZE3A3uHO4.MjTeTnelQvvCiOs/deWlezB/IFd1a,admin
 0,Hasiru,$2a$10$1pkw4/qTiDkAGL.SF/YyEu9Iae9u/3kCS3CEYumr5qqAFQRYttnDS,admin
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 0,Hasiru,$2a$10$IuFgYBI2xEOaskQmvVnGA.MlCXDORQGWxePJxuArvpJXxrPFRpGkG,admin
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
