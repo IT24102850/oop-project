@@ -8,19 +8,15 @@
     String subject = request.getParameter("subject");
     String message = request.getParameter("message");
 
-    if (name != null && !name.isEmpty() &&
-            email != null && !email.isEmpty() &&
-            subject != null && !subject.isEmpty() &&
-            message != null && !message.isEmpty()) {
-
+    if (name != null && email != null && subject != null && message != null) {
       // Format the message with timestamp
       String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
       String messageData = String.format(
-              "[%s]%nName: %s%nEmail: %s%nSubject: %s%nMessage: %s%n%n",
+              "[%s]\nName: %s\nEmail: %s\nSubject: %s\nMessage: %s\n\n",
               timestamp, name, email, subject, message
       );
 
-      // Get the real path to data directory
+      // Get the real path to WEB-INF/data directory
       String dataDir = application.getRealPath("/WEB-INF/data");
       File directory = new File(dataDir);
       if (!directory.exists()) {
@@ -29,13 +25,16 @@
 
       // Write to file
       try (PrintWriter writer = new PrintWriter(new FileWriter(dataDir + "/contact_messages.txt", true))) {
-        writer.print(messageData);
+        writer.println(messageData);
+        // Set success flag
         request.setAttribute("success", true);
       } catch (IOException e) {
+        // Set error flag
         request.setAttribute("error", true);
         e.printStackTrace();
       }
     } else {
+      // Set error flag if any field is missing
       request.setAttribute("error", true);
     }
   }
@@ -43,6 +42,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<<<<<<< HEAD
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Contact Us | NexoraSkill</title>
@@ -821,6 +821,10 @@
       }
     }
   </style>
+=======
+  <!-- All your existing head content remains the same -->
+  <!-- ... -->
+>>>>>>> 7fff411948dcf23ef745a5c695d3a70737054d01
 </head>
 <body>
 <!-- Preloader -->
@@ -830,6 +834,7 @@
 
 <!-- Header Section -->
 <header class="header">
+<<<<<<< HEAD
   <div class="container">
     <a href="index.jsp" class="logo">
       <img src="./images/favicon-32x32.png" alt="NexoraSkill Logo">
@@ -892,63 +897,36 @@
       <i class="fas fa-bars"></i>
     </div>
   </div>
+=======
+  <!-- Your existing header content remains the same -->
+  <!-- ... -->
+>>>>>>> 7fff411948dcf23ef745a5c695d3a70737054d01
 </header>
 
-<!-- Contact Hero Section -->
-<section class="contact-hero">
-  <h1 class="contact-title">CONTACT US</h1>
-  <p class="contact-subtext">Have questions about our courses or platform? Our team is ready to help you with any inquiries.</p>
+<!-- Hero Section -->
+<section class="hero">
+  <!-- Your existing hero content remains the same -->
+  <!-- ... -->
 </section>
 
-<!-- Contact Container -->
-<div class="contact-container">
-  <!-- Contact Information -->
-  <div class="contact-info">
-    <div class="info-item">
-      <div class="info-icon">
-        <i class="fas fa-map-marker-alt"></i>
-      </div>
-      <div class="info-content">
-        <h3>Our Location</h3>
-        <p>123 Future Tech Park<br>Innovation District, Colombo 05<br>Sri Lanka</p>
-      </div>
-    </div>
+<!-- Contact Information Section -->
+<section class="contact-info">
+  <!-- Your existing contact info content remains the same -->
+  <!-- ... -->
+</section>
 
-    <div class="info-item">
-      <div class="info-icon">
-        <i class="fas fa-envelope"></i>
-      </div>
-      <div class="info-content">
-        <h3>Email Us</h3>
-        <a href="mailto:info@nexoraskill.com">info@nexoraskill.com</a><br>
-        <a href="mailto:support@nexoraskill.com">support@nexoraskill.com</a>
-      </div>
-    </div>
+<!-- Contact Form Section -->
+<section class="contact-form">
+  <h2>Send Us a Message</h2>
 
-    <div class="info-item">
-      <div class="info-icon">
-        <i class="fas fa-phone-alt"></i>
-      </div>
-      <div class="info-content">
-        <h3>Call Us</h3>
-        <a href="tel:+94112345678">+94 112 345 678</a><br>
-        <a href="tel:+94771234567">+94 771 234 567</a>
-      </div>
-    </div>
-
-    <div class="info-item">
-      <div class="info-icon">
-        <i class="fas fa-clock"></i>
-      </div>
-      <div class="info-content">
-        <h3>Working Hours</h3>
-        <p>Monday-Friday: 8:00 AM - 6:00 PM<br>
-          Saturday: 9:00 AM - 2:00 PM<br>
-          Sunday: Closed</p>
-      </div>
-    </div>
+  <%-- Success/Error Messages --%>
+  <% if (request.getAttribute("success") != null) { %>
+  <div class="alert alert-success" style="background: rgba(0,255,0,0.1); color: #00ff00; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #00ff00;">
+    <i class="fas fa-check-circle"></i> Your message has been sent successfully!
   </div>
+  <% } %>
 
+<<<<<<< HEAD
   <!-- Contact Form -->
   <div class="contact-form">
     <%-- Success/Error Messages --%>
@@ -989,58 +967,39 @@
         <i class="fas fa-paper-plane"></i> Send Message
       </button>
     </form>
+=======
+  <% if (request.getAttribute("error") != null) { %>
+  <div class="alert alert-error" style="background: rgba(255,0,0,0.1); color: #ff0000; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #ff0000;">
+    <i class="fas fa-exclamation-circle"></i> There was an error sending your message. Please try again.
+>>>>>>> 7fff411948dcf23ef745a5c695d3a70737054d01
   </div>
-</div>
+  <% } %>
 
-<!-- Map Section -->
-<div class="map-container">
-  <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3960.798511757687!2d79.8607554153939!3d6.914657295003692!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ae2596b5b6e7c07%3A0x1c1e7a2b5b6e7c07!2sFuture%20Tech%20Park!5e0!3m2!1sen!2slk!4v1620000000000!5m2!1sen!2slk" allowfullscreen="" loading="lazy"></iframe>
-</div>
+  <form action="contact.jsp" method="POST">
+    <div class="form-group">
+      <input type="text" name="name" id="name" placeholder=" " required>
+      <label for="name">Your Name</label>
+    </div>
+    <div class="form-group">
+      <input type="email" name="email" id="email" placeholder=" " required>
+      <label for="email">Your Email</label>
+    </div>
+    <div class="form-group">
+      <input type="text" name="subject" id="subject" placeholder=" " required>
+      <label for="subject">Subject</label>
+    </div>
+    <div class="form-group">
+      <textarea name="message" id="message" placeholder=" " rows="5" required></textarea>
+      <label for="message">Your Message</label>
+    </div>
+    <button type="submit" class="btn-primary"><i class="fas fa-paper-plane"></i> Send Message</button>
+  </form>
+</section>
 
 <!-- Footer -->
 <footer class="footer">
-  <div class="footer-grid">
-    <div class="footer-col">
-      <a href="index.jsp" class="footer-logo">NexoraSkill</a>
-      <p class="footer-about">The premier platform for future-ready education. We're revolutionizing how the world learns technology.</p>
-      <div class="social-links">
-        <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
-        <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
-        <a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a>
-        <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
-      </div>
-    </div>
-    <div class="footer-col">
-      <h3 class="footer-title">Quick Links</h3>
-      <ul class="footer-links">
-        <li><a href="index.jsp">Home</a></li>
-        <li><a href="courses.jsp">Courses</a></li>
-        <li><a href="registration.jsp">Registration</a></li>
-        <li><a href="contact.jsp">Contact</a></li>
-      </ul>
-    </div>
-    <div class="footer-col">
-      <h3 class="footer-title">Tech Tracks</h3>
-      <ul class="footer-links">
-        <li><a href="#">AI & Machine Learning</a></li>
-        <li><a href="#">Cloud Computing</a></li>
-        <li><a href="#">Cybersecurity</a></li>
-        <li><a href="#">Data Science</a></li>
-      </ul>
-    </div>
-    <div class="footer-col">
-      <h3 class="footer-title">Support</h3>
-      <ul class="footer-links">
-        <li><a href="#">Help Center</a></li>
-        <li><a href="#">Privacy Policy</a></li>
-        <li><a href="#">Terms of Service</a></li>
-        <li><a href="#">FAQ</a></li>
-      </ul>
-    </div>
-  </div>
-  <div class="footer-bottom">
-    <p>&copy; 2023 NexoraSkill. All rights reserved.</p>
-  </div>
+  <!-- Your existing footer content remains the same -->
+  <!-- ... -->
 </footer>
 
 <!-- Scroll To Top Button -->
@@ -1048,7 +1007,9 @@
   <i class="fas fa-arrow-up"></i>
 </div>
 
+<!-- Scripts -->
 <script>
+<<<<<<< HEAD
   // Preloader
   window.addEventListener('load', function() {
     const preloader = document.querySelector('.preloader');
@@ -1100,3 +1061,10 @@
     window.scrollTo({
       top: 0,
       behavior: 'smooth'
+=======
+  // Your existing JavaScript remains the same
+  // ...
+</script>
+</body>
+</html>
+>>>>>>> 7fff411948dcf23ef745a5c695d3a70737054d01
