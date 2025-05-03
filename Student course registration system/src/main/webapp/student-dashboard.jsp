@@ -980,7 +980,7 @@
                 return;
             }
 
-            
+
         } else if (paymentMethod === 'crypto') {
             const cryptoWallet = document.getElementById('cryptoWallet').value;
             if (!cryptoWallet) {
