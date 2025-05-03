@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="java.io.*, java.util.*" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -530,10 +531,11 @@
             top: 0;
             left: 0;
             width: 100%;
+            path/to/image.jpg
             height: 100%;
-            background: url('./images/grid-pattern.png') center/cover;
-            opacity: 0.03;
-            z-index: 0;
+        background: url('./images/grid-pattern.png') center/cover;
+        opacity: 0.03;
+        z-index: 0;
         }
 
         .footer-grid {
@@ -877,96 +879,77 @@
         <button class="category-btn" data-category="mobile">Mobile Dev</button>
     </div>
 
+    <%
+        // Read courses from courses.txt
+        List<String[]> courses = new ArrayList<>();
+        String coursesFilePath = application.getRealPath("/WEB-INF/data/courses.txt");
+        File coursesFile = new File(coursesFilePath);
+        if (coursesFile.exists()) {
+            try (BufferedReader reader = new BufferedReader(new FileReader(coursesFile))) {
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    if (line.trim().isEmpty()) continue;
+                    String[] parts = line.split(",");
+                    if (parts.length >= 7 && "true".equals(parts[6])) { // Only active courses
+                        courses.add(parts);
+                    }
+                }
+            } catch (IOException e) {
+                System.out.println("Error reading courses.txt: " + e.getMessage());
+            }
+        }
+
+        // Map departments to categories
+        Map<String, String> departmentToCategory = new HashMap<>();
+        departmentToCategory.put("Computer Science", "programming");
+        departmentToCategory.put("Mathematics", "data");
+        departmentToCategory.put("Physics", "data");
+
+        // Map departments to images
+        Map<String, String> departmentToImage = new HashMap<>();
+        departmentToImage.put("Computer Science", "./images/course1.jpg");
+        departmentToImage.put("Mathematics", "./images/course3.jpg");
+        departmentToImage.put("Physics", "./images/course3.jpg");
+    %>
+
     <div class="courses-grid">
-        <!-- Course 1 -->
-        <div class="course-card" data-category="programming">
-            <img src="./images/course1.jpg" alt="Introduction to Programming" class="course-image">
+        <%
+            if (courses.isEmpty()) {
+        %>
+        <p style="text-align: center; color: var(--text-muted);">No active courses available.</p>
+        <%
+        } else {
+            for (String[] course : courses) {
+                String courseCode = course[0];
+                String title = course[1];
+                String credits = course[2];
+                String department = course[3];
+                String professor = course[4];
+                String syllabus = course[5];
+                String category = departmentToCategory.getOrDefault(department, "programming");
+                String image = departmentToImage.getOrDefault(department, "./images/course1.jpg");
+                // Estimate duration (e.g., 10 hours per credit)
+                int estimatedHours = Integer.parseInt(credits) * 10;
+                // Determine level based on credits
+                String level = Integer.parseInt(credits) <= 2 ? "Beginner" : (Integer.parseInt(credits) <= 3 ? "Intermediate" : "Advanced");
+        %>
+        <div class="course-card" data-category="<%= category %>">
+            <img src="<%= image %>" alt="<%= title %>" class="course-image">
             <div class="course-content">
-                <span class="course-category">Programming</span>
-                <h3 class="course-title">Introduction to Programming</h3>
-                <p class="course-description">Learn the fundamentals of programming with Python in this comprehensive beginner's course.</p>
+                <span class="course-category"><%= department %></span>
+                <h3 class="course-title"><%= title %></h3>
+                <p class="course-description"><%= syllabus %></p>
                 <div class="course-meta">
-                    <span class="course-meta-item"><i class="fas fa-clock"></i> 40 Hours</span>
-                    <span class="course-meta-item"><i class="fas fa-user-graduate"></i> Beginner</span>
+                    <span class="course-meta-item"><i class="fas fa-clock"></i> <%= estimatedHours %> Hours</span>
+                    <span class="course-meta-item"><i class="fas fa-user-graduate"></i> <%= level %></span>
                 </div>
-                <a href="./courses/course1.html" class="course-btn">Enroll Now <i class="fas fa-arrow-right"></i></a>
+                <a href="./courses/<%= courseCode.toLowerCase() %>.html" class="course-btn">Enroll Now <i class="fas fa-arrow-right"></i></a>
             </div>
         </div>
-
-        <!-- Course 2 -->
-        <div class="course-card" data-category="web">
-            <img src="./images/course2.jpg" alt="Web Development" class="course-image">
-            <div class="course-content">
-                <span class="course-category">Web Development</span>
-                <h3 class="course-title">Modern Web Development</h3>
-                <p class="course-description">Master HTML5, CSS3, JavaScript and modern frameworks to build responsive websites.</p>
-                <div class="course-meta">
-                    <span class="course-meta-item"><i class="fas fa-clock"></i> 60 Hours</span>
-                    <span class="course-meta-item"><i class="fas fa-user-graduate"></i> Intermediate</span>
-                </div>
-                <a href="./courses/course2.html" class="course-btn">Enroll Now <i class="fas fa-arrow-right"></i></a>
-            </div>
-        </div>
-
-        <!-- Course 3 -->
-        <div class="course-card" data-category="data">
-            <img src="./images/course3.jpg" alt="Data Science" class="course-image">
-            <div class="course-content">
-                <span class="course-category">Data Science</span>
-                <h3 class="course-title">Data Science Fundamentals</h3>
-                <p class="course-description">Explore data analysis, visualization and machine learning with Python and R.</p>
-                <div class="course-meta">
-                    <span class="course-meta-item"><i class="fas fa-clock"></i> 80 Hours</span>
-                    <span class="course-meta-item"><i class="fas fa-user-graduate"></i> Intermediate</span>
-                </div>
-                <a href="./courses/course3.html" class="course-btn">Enroll Now <i class="fas fa-arrow-right"></i></a>
-            </div>
-        </div>
-
-        <!-- Course 4 -->
-        <div class="course-card" data-category="mobile">
-            <img src="./images/course4.jpg" alt="Mobile App Development" class="course-image">
-            <div class="course-content">
-                <span class="course-category">Mobile Development</span>
-                <h3 class="course-title">Flutter App Development</h3>
-                <p class="course-description">Build cross-platform mobile apps using Flutter and Dart with this project-based course.</p>
-                <div class="course-meta">
-                    <span class="course-meta-item"><i class="fas fa-clock"></i> 50 Hours</span>
-                    <span class="course-meta-item"><i class="fas fa-user-graduate"></i> Intermediate</span>
-                </div>
-                <a href="./courses/course4.html" class="course-btn">Enroll Now <i class="fas fa-arrow-right"></i></a>
-            </div>
-        </div>
-
-        <!-- Course 5 -->
-        <div class="course-card" data-category="cyber">
-            <img src="./images/course5.jpg" alt="Cybersecurity" class="course-image">
-            <div class="course-content">
-                <span class="course-category">Cybersecurity</span>
-                <h3 class="course-title">Ethical Hacking</h3>
-                <p class="course-description">Learn penetration testing and ethical hacking techniques to secure systems.</p>
-                <div class="course-meta">
-                    <span class="course-meta-item"><i class="fas fa-clock"></i> 70 Hours</span>
-                    <span class="course-meta-item"><i class="fas fa-user-graduate"></i> Advanced</span>
-                </div>
-                <a href="./courses/course5.html" class="course-btn">Enroll Now <i class="fas fa-arrow-right"></i></a>
-            </div>
-        </div>
-
-        <!-- Course 6 -->
-        <div class="course-card" data-category="ai">
-            <img src="./images/course6.jpg" alt="AI & Machine Learning" class="course-image">
-            <div class="course-content">
-                <span class="course-category">AI & ML</span>
-                <h3 class="course-title">Machine Learning</h3>
-                <p class="course-description">Master machine learning algorithms and build AI models with TensorFlow and PyTorch.</p>
-                <div class="course-meta">
-                    <span class="course-meta-item"><i class="fas fa-clock"></i> 90 Hours</span>
-                    <span class="course-meta-item"><i class="fas fa-user-graduate"></i> Advanced</span>
-                </div>
-                <a href="./courses/course6.html" class="course-btn">Enroll Now <i class="fas fa-arrow-right"></i></a>
-            </div>
-        </div>
+        <%
+                }
+            }
+        %>
     </div>
 </section>
 
@@ -989,7 +972,7 @@
             <ul class="footer-links">
                 <li><a href="index.jsp">Home</a></li>
                 <li><a href="courses.jsp">Courses</a></li>
-                <li><a href="registration.jsp">Registration</a></li>
+                <li><a href="Apply%20Course.jsp">Registration</a></li>
                 <li><a href="aboutus.jsp">About Us</a></li>
                 <li><a href="contact.jsp">Contact</a></li>
             </ul>
@@ -1016,7 +999,7 @@
         </div>
     </div>
     <div class="footer-bottom">
-        <p>&copy; 2023 NexoraSkill. All rights reserved. | Designed with <i class="fas fa-heart" style="color: var(--accent-color);"></i> for the future of education</p>
+        <p>&copy; 2025 NexoraSkill. All rights reserved. | Designed with <i class="fas fa-heart" style="color: var(--accent-color);"></i> for the future of education</p>
     </div>
 </footer>
 
@@ -1053,3 +1036,38 @@
             scrollTop.classList.add('active');
         } else {
             scrollTop.classList.remove('active');
+        }
+    });
+
+    scrollTop.addEventListener('click', function() {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    // Category Filter
+    const categoryButtons = document.querySelectorAll('.category-btn');
+    const courseCards = document.querySelectorAll('.course-card');
+
+    categoryButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const category = this.getAttribute('data-category');
+
+            // Update active button
+            categoryButtons.forEach(btn => btn.classList.remove('active'));
+            this.classList.add('active');
+
+            // Filter courses
+            courseCards.forEach(card => {
+                const cardCategory = card.getAttribute('data-category');
+                if (category === 'all' || cardCategory === category) {
+                    card.style.display = 'block';
+                    card.classList.add('animate__animated', 'animate__fadeInUp');
+                } else {
+                    card.style.display = 'none';
+                    card.classList.remove('animate__animated', 'animate__fadeInUp');
+                }
+            });
+        });
+    });
+</script>
+</body>
+</html>
