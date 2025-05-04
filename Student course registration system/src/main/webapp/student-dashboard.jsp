@@ -13,480 +13,927 @@
     <link rel="icon" type="image/png" href="./images/favicon.ico">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Orbitron:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        body {
-            margin: 0;
-            font-family: 'Poppins', sans-serif;
-            background-color: #0a0f24;
-            color: #fff;
-            display: flex;
-            min-height: 100vh;
+        :root {
+            --primary-color: #00f2fe;
+            --secondary-color: #ff69b4;
+            --accent-color: #4facfe;
+            --background-color: #0a0f24;
+            --card-bg: rgba(15, 23, 42, 0.9);
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --text-color: #ffffff;
+            --text-muted: rgba(255, 255, 255, 0.7);
+            --border-radius: 15px;
+            --box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            --glow-effect: 0 0 15px rgba(0, 242, 254, 0.3);
+            --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
-        /* Header Section - Holographic Effect */
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, var(--background-color), #050916);
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            overflow-x: hidden;
+        }
+
+        /* Header Section */
         .header {
             position: fixed;
             top: 0;
             width: 100%;
             z-index: 1000;
-            background: rgba(10, 15, 36, 0.95);
+            background: linear-gradient(135deg, rgba(10, 15, 36, 0.95), rgba(0, 0, 0, 0.7));
             backdrop-filter: blur(15px);
             border-bottom: 1px solid rgba(0, 242, 254, 0.1);
-            box-shadow: 0 5px 30px rgba(0, 0, 0, 0.2);
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: var(--box-shadow);
+            transition: var(--transition);
         }
+
         .container {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 10px 5%;
+            padding: 15px 5%;
             max-width: 1600px;
             margin: 0 auto;
         }
+
         .logo {
-            font-size: 1.5rem;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.8rem;
             font-weight: 700;
-            color: #00f2fe;
+            color: var(--primary-color);
             text-decoration: none;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: var(--transition);
+            text-shadow: 0 0 5px rgba(0, 242, 254, 0.3);
         }
+
         .logo:hover {
-            color: #4facfe;
+            color: var(--accent-color);
             transform: scale(1.05);
+            text-shadow: var(--glow-effect);
         }
+
         .navbar ul {
             list-style: none;
             display: flex;
-            gap: 25px;
+            gap: 30px;
+            align-items: center;
         }
+
         .navbar ul li a {
-            font-family: 'Poppins', sans-serif;
             text-decoration: none;
-            color: #ffffff;
+            color: var(--text-color);
             font-weight: 500;
-            font-size: 1rem;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            font-size: 1.1rem;
+            transition: var(--transition);
+            position: relative;
         }
+
+        .navbar ul li a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 0;
+            background: var(--primary-color);
+            transition: width 0.3s ease;
+        }
+
+        .navbar ul li a:hover::after {
+            width: 100%;
+        }
+
         .navbar ul li a:hover {
-            color: #00f2fe;
-            text-shadow: 0 0 10px rgba(0, 242, 254, 0.6);
+            color: var(--primary-color);
+            text-shadow: var(--glow-effect);
         }
+
         .auth-buttons {
             display: flex;
             gap: 15px;
         }
+
         .btn {
-            padding: 8px 15px;
-            border-radius: 20px;
+            padding: 10px 20px;
+            border-radius: 25px;
             text-decoration: none;
             font-weight: 600;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            font-size: 0.9rem;
+            font-size: 1rem;
             display: inline-flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
+            transition: var(--transition);
+            cursor: pointer;
+            border: none;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
         }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--glow-effect);
+        }
+
         .btn-login {
             background: transparent;
-            border: 2px solid #00f2fe;
-            color: #00f2fe;
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
         }
+
         .btn-login:hover {
-            background: #00f2fe;
-            color: #0a0f24;
+            background: var(--primary-color);
+            color: var(--background-color);
         }
+
         .btn-signup {
-            background: #00f2fe;
-            color: #0a0f24;
+            background: var(--primary-color);
+            color: var(--background-color);
             border: 2px solid transparent;
         }
+
         .btn-signup:hover {
             background: transparent;
-            color: #00f2fe;
-            border-color: #00f2fe;
+            color: var(--primary-color);
+            border-color: var(--primary-color);
         }
-        .sidebar-toggle {
-            display: none;
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: var(--background-color);
+            border: 2px solid transparent;
         }
+
+        .btn-primary:hover {
+            background: transparent;
+            color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+
+        .btn-danger {
+            background: #ff4500;
+            color: var(--text-color);
+            border: 2px solid transparent;
+        }
+
+        .btn-danger:hover {
+            background: transparent;
+            color: #ff4500;
+            border-color: #ff4500;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--primary-color);
+            color: var(--primary-color);
+            padding: 8px 15px;
+            border-radius: 8px;
+        }
+
+        .btn-outline:hover {
+            background: var(--primary-color);
+            color: var(--background-color);
+        }
+
+        .btn-logout {
+            background: transparent;
+            border: 2px solid var(--secondary-color);
+            color: var(--secondary-color);
+        }
+
+        .btn-logout:hover {
+            background: var(--secondary-color);
+            color: var(--text-color);
+        }
+
+        /* Sidebar */
         .sidebar {
             width: 250px;
-            background: #0a0f24;
+            background: linear-gradient(135deg, var(--card-bg), rgba(10, 15, 36, 0.95));
             height: 100vh;
-            padding: 20px 0;
+            padding: 25px 0;
             position: fixed;
             border-right: 1px solid rgba(0, 242, 254, 0.1);
             top: 0;
             left: 0;
+            transition: transform 0.4s ease-in-out;
+            box-shadow: 5px 0 20px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
         }
+
+        .sidebar.hidden {
+            transform: translateX(-100%);
+        }
+
         .sidebar .logo {
             text-align: center;
-            font-size: 1.5rem;
-            margin-bottom: 20px;
+            font-size: 1.8rem;
+            margin-bottom: 30px;
         }
+
         .sidebar .user-profile {
-            text-align: center;
+            display: flex;
+            align-items: center;
+            gap: 15px;
             padding: 20px;
-            background: rgba(255, 255, 255, 0.05);
-            margin: 0 15px;
-            border-radius: 10px;
+            background: var(--glass-bg);
+            margin: 0 15px 30px;
+            border-radius: var(--border-radius);
+            transition: var(--transition);
         }
-        .sidebar .user-profile .user-avatar {
-            background: #00f2fe;
-            border-radius: 50%;
+
+        .sidebar .user-profile:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--glow-effect);
+        }
+
+        .sidebar .user-avatar {
             width: 60px;
             height: 60px;
-            margin: 0 auto;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: bold;
+            font-size: 1.5rem;
+            color: var(--background-color);
+        }
+
+        .sidebar .user-info h3 {
             font-size: 1.2rem;
-            color: #0a0f24;
+            margin-bottom: 5px;
         }
-        .sidebar .user-profile h3 {
-            margin: 10px 0 5px;
-            font-size: 1.1rem;
+
+        .sidebar .user-info p {
+            font-size: 0.95rem;
+            color: var(--text-muted);
         }
-        .sidebar .user-profile p {
-            margin: 0;
-            color: #ccc;
-            font-size: 0.9rem;
-        }
+
         .sidebar .nav-menu {
             list-style: none;
             padding: 0;
             margin-top: 20px;
         }
-        .sidebar .nav-menu .nav-item {
+
+        .sidebar .nav-item {
             padding: 10px 20px;
         }
-        .sidebar .nav-menu .nav-item a {
-            color: #fff;
-            text-decoration: none;
+
+        .sidebar .nav-link {
             display: flex;
             align-items: center;
-            padding: 10px;
-            border-radius: 10px;
+            gap: 15px;
+            padding: 12px 20px;
+            border-radius: var(--border-radius);
+            color: var(--text-color);
+            text-decoration: none;
+            transition: var(--transition);
+            cursor: pointer;
         }
-        .sidebar .nav-menu .nav-item a i {
-            margin-right: 10px;
+
+        .sidebar .nav-link:hover {
+            background: var(--glass-bg);
+            transform: translateX(5px);
+            box-shadow: var(--glow-effect);
         }
-        .sidebar .nav-menu .nav-item a:hover,
-        .sidebar .nav-menu .nav-item.active a {
-            background: #00f2fe;
-            color: #0a0f24;
+
+        .sidebar .nav-link.active {
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            color: var(--background-color);
+            border-left: 4px solid var(--secondary-color);
+            box-shadow: var(--glow-effect);
         }
+
+        .sidebar .nav-link i {
+            font-size: 1.2rem;
+        }
+
+        /* Main Content */
         .main-content {
             margin-left: 250px;
-            padding: 80px 20px 20px;
-            width: calc(100% - 250px);
+            flex: 1;
+            padding: 90px 30px 30px;
+            transition: margin-left 0.4s ease-in-out;
         }
+
+        .main-content.full-width {
+            margin-left: 0;
+        }
+
+        .content-section {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .content-section.active {
+            display: block;
+            opacity: 1;
+        }
+
+        /* Dashboard Header */
         .dashboard-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: var(--glass-bg);
+            border-radius: var(--border-radius);
+            box-shadow: var(--glow-effect);
         }
-        .dashboard-header .greeting h1 {
-            margin: 0;
-            font-size: 2rem;
-            color: #ff69b4;
+
+        .greeting h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
-        .dashboard-header .greeting p {
-            margin: 5px 0 0;
-            color: #ccc;
+
+        .greeting p {
+            font-size: 1.1rem;
+            color: var(--text-muted);
         }
-        .dashboard-header .user-actions {
+
+        .user-actions {
             display: flex;
+            gap: 15px;
             align-items: center;
         }
-        .dashboard-header .notification-bell {
+
+        .notification-bell {
             position: relative;
-            margin-right: 15px;
+            font-size: 1.5rem;
             cursor: pointer;
+            color: var(--text-muted);
+            transition: var(--transition);
         }
-        .dashboard-header .notification-bell .notification-count {
-            background: #ff4500;
-            color: #fff;
-            border-radius: 50%;
-            padding: 2px 6px;
-            font-size: 0.8rem;
+
+        .notification-bell:hover {
+            color: var(--secondary-color);
+            transform: rotate(15deg);
+        }
+
+        .notification-count {
             position: absolute;
-            top: -5px;
-            right: -5px;
-        }
-        .dashboard-header .btn-outline {
-            background: #fff;
-            color: #0a0f24;
-            border: none;
-            padding: 5px 15px;
-            border-radius: 20px;
-            cursor: pointer;
+            top: -8px;
+            right: -8px;
+            background: var(--secondary-color);
+            color: var(--text-color);
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
             display: flex;
             align-items: center;
-            gap: 5px;
+            justify-content: center;
+            font-size: 0.8rem;
         }
+
+        /* Stats Grid */
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            margin-bottom: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
         }
+
         .stat-card {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 15px;
-            padding: 20px;
-            text-align: center;
+            background: var(--card-bg);
+            padding: 25px;
+            border-radius: var(--border-radius);
             border: 1px solid rgba(0, 242, 254, 0.2);
+            transition: var(--transition);
+            backdrop-filter: blur(5px);
         }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--box-shadow), var(--glow-effect);
+        }
+
         .stat-card h3 {
-            margin: 0;
-            color: #ccc;
-            font-size: 1rem;
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            margin-bottom: 15px;
+            text-transform: uppercase;
         }
-        .stat-card .stat-value {
-            margin: 10px 0;
-            font-size: 2rem;
-            color: #00f2fe;
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: var(--primary-color);
         }
-        .stat-card .stat-change {
-            font-size: 0.9rem;
+
+        .stat-change {
             display: flex;
-            justify-content: center;
             align-items: center;
-            gap: 5px;
+            font-size: 0.95rem;
+            gap: 8px;
         }
-        .stat-card .positive {
+
+        .stat-change.positive {
             color: #00ff00;
         }
-        .stat-card .negative {
-            color: #ff4500;
+
+        .stat-change.negative {
+            color: var(--secondary-color);
         }
-        .content-section {
-            display: none;
-        }
-        .content-section.active {
-            display: block;
-        }
-        /* Additional styles for other sections */
+
+        /* Courses Container */
         .courses-container {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 25px;
         }
+
         .course-card {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            padding: 15px;
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            transition: var(--transition);
+            position: relative;
+            backdrop-filter: blur(5px);
         }
+
+        .course-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--box-shadow), var(--glow-effect);
+        }
+
+        .course-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(to bottom, var(--primary-color), var(--secondary-color));
+        }
+
         .course-header .course-code {
-            font-size: 1.2rem;
-            color: #00f2fe;
+            font-size: 1.3rem;
+            color: var(--primary-color);
+            font-family: 'Orbitron', sans-serif;
         }
+
         .course-header .course-title {
-            margin: 5px 0;
+            margin: 10px 0;
+            font-size: 1.5rem;
         }
+
         .course-header .course-instructor {
-            color: #ccc;
+            color: var(--text-muted);
+            font-size: 1rem;
         }
+
         .course-progress .progress-text {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 5px;
+            margin-bottom: 10px;
+            font-size: 1rem;
+            color: var(--text-muted);
         }
+
         .course-progress .progress-bar {
-            background: #333;
+            background: rgba(255, 255, 255, 0.1);
             border-radius: 5px;
-            height: 10px;
+            height: 12px;
+            overflow: hidden;
         }
+
         .course-progress .progress-fill {
-            background: #00f2fe;
+            background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
             height: 100%;
             border-radius: 5px;
+            transition: width 0.5s ease;
         }
+
         .course-actions {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-top: 10px;
+            margin-top: 15px;
         }
-        .course-actions .btn-outline {
-            background: transparent;
-            border: 1px solid #00f2fe;
-            color: #00f2fe;
-            padding: 5px 10px;
-            border-radius: 5px;
-        }
+
         .course-actions .status.active {
             color: #00ff00;
+            font-weight: 600;
         }
-        .profile-container, .enrollment-section, .deadlines-container, .payment-container, .settings-container {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 10px;
-            padding: 20px;
-        }
-        .profile-header {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
-        .user-avatar-holographic {
-            position: relative;
-        }
-        .user-avatar-holographic .avatar-image {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-        }
-        .avatar-actions {
-            display: flex;
-            gap: 10px;
-            margin-top: 10px;
-        }
-        .profile-tabs {
-            display: flex;
-            gap: 10px;
-            margin: 20px 0;
-        }
-        .profile-tabs .tab {
-            padding: 10px 20px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        .profile-tabs .tab.active {
-            background: #00f2fe;
-            color: #0a0f24;
-        }
-        .tab-content .tab-pane {
-            display: none;
-        }
-        .tab-content .tab-pane.active {
-            display: block;
-        }
-        .detail-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-        }
-        .detail-card {
-            background: rgba(255, 255, 255, 0.05);
+
+        /* Messages */
+        .message {
             padding: 15px;
-            border-radius: 10px;
+            border-radius: var(--border-radius);
+            margin-bottom: 25px;
+            text-align: center;
+            box-shadow: var(--glow-effect);
         }
-        .detail-item {
-            margin: 10px 0;
+
+        .message.success {
+            background: rgba(0, 255, 0, 0.1);
+            color: #00ff00;
+            border: 1px solid rgba(0, 255, 0, 0.3);
         }
-        .detail-item label {
-            color: #ccc;
+
+        .message.error {
+            background: rgba(255, 69, 0, 0.1);
+            color: var(--secondary-color);
+            border: 1px solid rgba(255, 69, 0, 0.3);
         }
-        .profile-actions, .payment-actions {
-            margin-top: 20px;
-        }
-        .btn-primary {
-            background: #00f2fe;
-            color: #0a0f24;
+
+        /* Sidebar Toggle */
+        .sidebar-toggle {
+            display: none;
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1001;
+            background: var(--primary-color);
+            color: var(--background-color);
             border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
+            padding: 10px 15px;
+            border-radius: 50%;
             cursor: pointer;
+            transition: var(--transition);
+            box-shadow: var(--glow-effect);
         }
-        .btn-danger {
-            background: #ff4500;
-            color: #fff;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
+
+        .sidebar-toggle:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 15px rgba(0, 242, 254, 0.5);
         }
-        .enrollment-form, .payment-form, .settings-form {
+
+        /* Enrollment Form */
+        .enrollment-section {
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: var(--glow-effect);
+        }
+
+        .enrollment-section h2 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: var(--primary-color);
+        }
+
+        .enrollment-form {
             display: grid;
             gap: 15px;
             max-width: 500px;
         }
+
         .form-group {
             display: flex;
             flex-direction: column;
         }
+
         .form-group label {
             margin-bottom: 5px;
-            color: #ccc;
+            color: var(--text-muted);
         }
-        .form-group input, .form-group select {
+
+        .form-group input,
+        .form-group select {
             padding: 8px;
             border-radius: 5px;
-            border: 1px solid #00f2fe;
+            border: 1px solid var(--primary-color);
             background: transparent;
-            color: #fff;
+            color: var(--text-color);
+            transition: var(--transition);
         }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: var(--glow-effect);
+        }
+
+        /* Payment Section */
+        .payment-container {
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            box-shadow: var(--glow-effect);
+        }
+
+        .payment-header h2 {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+        }
+
+        .payment-section h3 {
+            font-size: 1.3rem;
+            color: var(--accent-color);
+            margin-bottom: 15px;
+        }
+
+        .payment-form {
+            display: grid;
+            gap: 15px;
+            max-width: 500px;
+        }
+
         .form-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
             gap: 15px;
         }
+
         .payment-table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 20px;
         }
-        .payment-table th, .payment-table td {
+
+        .payment-table th,
+        .payment-table td {
             padding: 10px;
             border: 1px solid rgba(0, 242, 254, 0.2);
             text-align: left;
         }
+
         .payment-table th {
-            background: rgba(255, 255, 255, 0.1);
+            background: var(--glass-bg);
+            color: var(--primary-color);
         }
+
         .status-cell.paid { color: #00ff00; }
-        .status-cell.pending { color: #00f2fe; }
+        .status-cell.pending { color: var(--primary-color); }
         .status-cell.overdue { color: #ff4500; }
+
         .payment-action-form {
             display: inline-block;
             margin-right: 5px;
         }
+
         .btn-sm {
             padding: 5px 10px;
             font-size: 0.8rem;
         }
-        .message {
-            padding: 10px;
-            border-radius: 5px;
+
+        /* Settings Section */
+        .settings-container {
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            box-shadow: var(--glow-effect);
+        }
+
+        .settings-form {
+            display: grid;
+            gap: 15px;
+            max-width: 500px;
+        }
+
+        /* Deadlines Section */
+        .deadlines-container {
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            box-shadow: var(--glow-effect);
+        }
+
+        .deadline-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            border-bottom: 1px solid rgba(0, 242, 254, 0.1);
+        }
+
+        .deadline-icon i {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            margin-right: 15px;
+        }
+
+        .deadline-info {
+            flex: 1;
+        }
+
+        .deadline-title {
+            font-size: 1.2rem;
+            color: var(--text-color);
+        }
+
+        .deadline-course {
+            font-size: 1rem;
+            color: var(--text-muted);
+        }
+
+        .deadline-time .status {
+            font-weight: 600;
+        }
+
+        .deadline-time .status.overdue {
+            color: #ff4500;
+        }
+
+        .deadline-time .status.pending {
+            color: var(--primary-color);
+        }
+
+        /* Profile Section */
+        .profile-container {
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            box-shadow: var(--glow-effect);
+        }
+
+        .profile-header {
+            display: flex;
+            align-items: center;
+            gap: 20px;
             margin-bottom: 20px;
         }
-        .message.success { background: #00ff00; color: #0a0f24; }
-        .message.error { background: #ff4500; color: #fff; }
+
+        .user-avatar-holographic {
+            position: relative;
+        }
+
+        .user-avatar-holographic .avatar-image {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 2px solid var(--primary-color);
+        }
+
+        .avatar-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .profile-info h2 {
+            font-size: 1.8rem;
+            color: var(--primary-color);
+        }
+
+        .student-id-badge,
+        .verification-status,
+        .academic-level {
+            margin-top: 5px;
+            font-size: 1rem;
+            color: var(--text-muted);
+        }
+
+        .student-id-badge i,
+        .verification-status i {
+            margin-right: 5px;
+        }
+
+        .level-progress {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+            height: 10px;
+            margin-top: 5px;
+        }
+
+        .level-progress .progress-fill {
+            background: var(--primary-color);
+            height: 100%;
+            border-radius: 5px;
+        }
+
+        .profile-tabs {
+            display: flex;
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .profile-tabs .tab {
+            padding: 10px 20px;
+            background: var(--glass-bg);
+            border-radius: 5px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .profile-tabs .tab:hover {
+            background: var(--primary-color);
+            color: var(--background-color);
+        }
+
+        .profile-tabs .tab.active {
+            background: var(--primary-color);
+            color: var(--background-color);
+        }
+
+        .tab-content .tab-pane {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .tab-content .tab-pane.active {
+            display: block;
+            opacity: 1;
+        }
+
+        .detail-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .detail-card {
+            background: var(--glass-bg);
+            padding: 15px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--glow-effect);
+        }
+
+        .detail-card h3 {
+            font-size: 1.2rem;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+
+        .detail-item {
+            margin: 10px 0;
+        }
+
+        .detail-item label {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        .detail-item p {
+            color: var(--text-color);
+            margin: 5px 0;
+        }
+
+        .btn-edit {
+            background: transparent;
+            border: none;
+            color: var(--primary-color);
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        .profile-actions {
+            margin-top: 20px;
+        }
+
+        /* Responsive */
         @media (max-width: 768px) {
             .sidebar {
                 width: 200px;
                 transform: translateX(-100%);
-                transition: transform 0.3s ease;
             }
+
             .sidebar.active {
                 transform: translateX(0);
             }
+
             .main-content {
                 margin-left: 0;
                 width: 100%;
+                padding: 100px 15px 20px;
             }
+
             .main-content.full-width {
                 margin-left: 200px;
                 width: calc(100% - 200px);
             }
+
             .sidebar-toggle {
                 display: block;
-                position: fixed;
-                top: 20px;
-                left: 20px;
-                background: #00f2fe;
-                border: none;
-                padding: 10px;
-                border-radius: 5px;
-                cursor: pointer;
-                z-index: 1001;
+            }
+
+            .navbar ul {
+                display: none;
+            }
+
+            .dashboard-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+
+            .stats-grid, .courses-container, .detail-grid {
+                grid-template-columns: 1fr;
             }
         }
     </style>
 </head>
 <body>
-<!-- Header Section -->
 <header class="header">
     <div class="container">
         <a href="index.jsp" class="logo">NexoraSkill</a>
@@ -494,7 +941,7 @@
             <ul>
                 <li><a href="index.jsp#home">Home</a></li>
                 <li><a href="courses.jsp">Courses</a></li>
-                <li><a href="Apply%20Course.jsp">Apply Course</a></li>
+                <li><a href="ApplyNewCourse.jsp">Apply Course</a></li>
                 <li><a href="aboutus.jsp">About Us</a></li>
                 <li><a href="contact.jsp">Contact</a></li>
             </ul>
@@ -506,13 +953,11 @@
     </div>
 </header>
 
-<!-- Sidebar Toggle Button -->
 <button class="sidebar-toggle">
     <i class="fas fa-bars"></i>
 </button>
 
 <%
-    // Retrieve email and studentId from session
     String email = (String) session.getAttribute("email");
     String studentId = (String) session.getAttribute("studentId");
     String displayName = "Guest";
@@ -548,7 +993,6 @@
         }
     }
 
-    // Fetch enrolled courses and course details
     Map<String, String[]> courseDetailsMap = new HashMap<>();
     String coursesFilePath = application.getRealPath("/WEB-INF/data/courses.txt");
     try (BufferedReader reader = new BufferedReader(new FileReader(coursesFilePath))) {
@@ -579,7 +1023,6 @@
         }
     }
 
-    // Fetch payment history from payments.txt
     List<String[]> paymentHistory = new ArrayList<>();
     if (studentId != null) {
         String paymentsFilePath = application.getRealPath("/WEB-INF/data/payments.txt");
@@ -599,17 +1042,14 @@
         }
     }
 
-    // Hardcoded progress for demonstration
     Map<String, String> courseProgress = new HashMap<>();
     courseProgress.put("CS401", "65%");
     courseProgress.put("AI301", "82%");
     courseProgress.put("DB202", "45%");
 
-    // Check if invoice is overdue
     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-    Date currentDate = dateFormat.parse("2025-05-02"); // Current date as of May 02, 2025
+    Date currentDate = dateFormat.parse("2025-05-02");
 
-    // Handle form submission for making a payment
     String action = request.getParameter("action");
     if ("makePayment".equals(action)) {
         String subscriptionPlan = request.getParameter("subscriptionPlan");
@@ -617,7 +1057,6 @@
         String startDate = request.getParameter("startDate");
         String paymentMethod = request.getParameter("paymentMethod");
 
-        // Generate a unique invoice ID
         String invoiceId = "INV" + System.currentTimeMillis();
         String dueDate = "";
         try {
@@ -636,17 +1075,14 @@
             dueDate = "N/A";
         }
 
-        // Payment details
         String status = "pending";
         String paymentDate = "";
         String waiverApplied = "false";
         String lateFee = "0.00";
 
-        // Prepare the payment entry
         String paymentEntry = String.join(",",
                 invoiceId, studentId, amount, dueDate, status, paymentDate, waiverApplied, lateFee, paymentMethod, subscriptionPlan, startDate);
 
-        // Write to payments.txt
         String paymentsFilePath = application.getRealPath("/WEB-INF/data/payments.txt");
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(paymentsFilePath, true))) {
             writer.write(paymentEntry);
@@ -659,7 +1095,6 @@
     }
 %>
 
-<!-- Sidebar -->
 <div class="sidebar">
     <div class="logo">NexoraSkill</div>
     <div class="user-profile">
@@ -708,9 +1143,7 @@
     </ul>
 </div>
 
-<!-- Main Content -->
 <div class="main-content">
-    <!-- Messages -->
     <% if (request.getAttribute("error") != null) { %>
     <div class="message error"><%= request.getAttribute("error") %></div>
     <% } %>
@@ -731,7 +1164,6 @@
     </div>
     <% } %>
 
-    <!-- Dashboard Section -->
     <section id="dashboard" class="content-section active">
         <div class="dashboard-header">
             <div class="greeting">
@@ -745,7 +1177,7 @@
                 </div>
                 <form action="auth" method="post">
                     <input type="hidden" name="action" value="logout">
-                    <button type="submit" class="btn btn-outline">
+                    <button type="submit" class="btn btn-logout">
                         <i class="fas fa-sign-out-alt"></i> Logout
                     </button>
                 </form>
@@ -802,7 +1234,7 @@
                     </div>
                 </div>
                 <div class="course-actions">
-                    <button class="btn btn-outline">
+                    <button class="btn btn-outline" onclick="alert('Continue course: <%= courseTitle %>')">
                         <i class="fas fa-book"></i> Continue
                     </button>
                     <span class="status active">Active</span>
@@ -813,7 +1245,6 @@
         </div>
     </section>
 
-    <!-- Profile Section -->
     <section id="profile" class="content-section">
         <div class="dashboard-header">
             <div class="greeting">
@@ -821,7 +1252,7 @@
                 <p>Personalize your academic identity</p>
             </div>
             <div class="user-actions">
-                <button class="btn btn-primary">
+                <button class="btn btn-primary" onclick="alert('Profile refreshed!')">
                     <i class="fas fa-sync-alt"></i> Refresh
                 </button>
             </div>
@@ -831,13 +1262,12 @@
             <div class="profile-card">
                 <div class="profile-header">
                     <div class="user-avatar-holographic">
-                        <div class="hologram-effect"></div>
                         <img src="https://via.placeholder.com/150" alt="Profile Picture" class="avatar-image">
                         <div class="avatar-actions">
-                            <button class="btn btn-outline avatar-upload">
+                            <button class="btn btn-outline avatar-upload" onclick="alert('Upload new avatar')">
                                 <i class="fas fa-camera"></i> Update
                             </button>
-                            <button class="btn btn-outline avatar-edit">
+                            <button class="btn btn-outline avatar-edit" onclick="alert('Customize avatar')">
                                 <i class="fas fa-magic"></i> Customize
                             </button>
                         </div>
@@ -873,7 +1303,7 @@
                                 <div class="detail-item">
                                     <label>Name:</label>
                                     <p><%= displayName %></p>
-                                    <button class="btn-edit"><i class="fas fa-pencil-alt"></i></button>
+                                    <button class="btn-edit" onclick="alert('Edit name')"><i class="fas fa-pencil-alt"></i></button>
                                 </div>
                                 <div class="detail-item">
                                     <label>DOB:</label>
@@ -927,14 +1357,14 @@
                                 <div class="detail-item">
                                     <label>Password:</label>
                                     <p>••••••••</p>
-                                    <button class="btn btn-outline">
+                                    <button class="btn btn-outline" onclick="alert('Change password')">
                                         <i class="fas fa-sync-alt"></i> Change
                                     </button>
                                 </div>
                                 <div class="detail-item">
                                     <label>2FA:</label>
                                     <p>Not Enabled</p>
-                                    <button class="btn btn-primary">
+                                    <button class="btn btn-primary" onclick="alert('Enable 2FA')">
                                         <i class="fas fa-toggle-on"></i> Enable
                                     </button>
                                 </div>
@@ -944,7 +1374,7 @@
                 </div>
 
                 <div class="profile-actions">
-                    <button class="btn btn-primary">
+                    <button class="btn btn-primary" onclick="alert('Changes saved!')">
                         <i class="fas fa-save"></i> Save Changes
                     </button>
                 </div>
@@ -952,7 +1382,6 @@
         </div>
     </section>
 
-    <!-- Courses Section -->
     <section id="courses" class="content-section">
         <div class="dashboard-header">
             <div class="greeting">
@@ -990,10 +1419,10 @@
                     </div>
                 </div>
                 <div class="course-actions">
-                    <button class="btn btn-outline">
+                    <button class="btn btn-outline" onclick="alert('Continue course: <%= courseTitle %>')">
                         <i class="fas fa-book"></i> Continue
                     </button>
-                    <button class="btn btn-outline">
+                    <button class="btn btn-outline" onclick="alert('Course details: <%= courseTitle %>')">
                         <i class="fas fa-info-circle"></i> Details
                     </button>
                 </div>
@@ -1004,7 +1433,6 @@
         </div>
     </section>
 
-    <!-- Enrollment Section -->
     <section id="enrollment" class="content-section">
         <div class="dashboard-header">
             <div class="greeting">
@@ -1053,14 +1481,13 @@
         </div>
     </section>
 
-    <!-- Deadlines Section -->
     <section id="deadlines" class="content-section">
         <div class="dashboard-header">
             <div class="greeting">
                 <h1>Upcoming Deadlines</h1>
                 <p>Stay on top of your tasks</p>
             </div>
-            <button class="btn btn-outline">
+            <button class="btn btn-outline" onclick="alert('Add reminder')">
                 <i class="fas fa-plus"></i> Add Reminder
             </button>
         </div>
@@ -1093,7 +1520,6 @@
         </div>
     </section>
 
-    <!-- Payment Section -->
     <section id="payment" class="content-section">
         <div class="dashboard-header">
             <div class="greeting">
@@ -1141,7 +1567,6 @@
                         </select>
                     </div>
 
-                    <!-- Payment Details Section -->
                     <div id="paymentDetails" style="display: none;">
                         <div class="form-grid">
                             <div class="form-group" id="cardNumberGroup">
@@ -1183,7 +1608,6 @@
                 </form>
             </div>
 
-            <!-- Payment History Section -->
             <h3 style="margin-top: 40px;">Payment History</h3>
             <table class="payment-table">
                 <thead>
@@ -1278,7 +1702,6 @@
         </div>
     </section>
 
-    <!-- Settings Section -->
     <section id="settings" class="content-section">
         <div class="dashboard-header">
             <div class="greeting">
@@ -1298,7 +1721,7 @@
                     <input type="email" value="<%= email != null ? email : "john.doe@nexora.edu" %>">
                 </div>
                 <div class="form-group">
-                    <button class="btn btn-primary">
+                    <button class="btn btn-primary" onclick="alert('Settings saved!')">
                         <i class="fas fa-save"></i> Save
                     </button>
                 </div>
@@ -1315,7 +1738,7 @@
 </div>
 
 <script>
-    // Navigation
+    // Sidebar Navigation
     const navLinks = document.querySelectorAll('.nav-link');
     const sections = document.querySelectorAll('.content-section');
 
@@ -1324,11 +1747,21 @@
             e.preventDefault();
             const sectionId = link.getAttribute('data-section');
 
-            navLinks.forEach(l => l.classList.remove('active'));
+            // Update active nav link
+            navLinks.forEach(l => {
+                l.classList.remove('active');
+                l.parentElement.classList.remove('active');
+            });
             link.classList.add('active');
+            link.parentElement.classList.add('active');
 
-            sections.forEach(section => section.classList.remove('active'));
-            document.getElementById(sectionId).classList.add('active');
+            // Show/hide sections
+            sections.forEach(section => {
+                section.classList.remove('active');
+                if (section.id === sectionId) {
+                    section.classList.add('active');
+                }
+            });
         });
     });
 
@@ -1343,144 +1776,133 @@
     });
 
     // Profile Tabs
-    document.querySelectorAll('.profile-tabs .tab').forEach(tab => {
+    const profileTabs = document.querySelectorAll('.profile-tabs .tab');
+    profileTabs.forEach(tab => {
         tab.addEventListener('click', () => {
             const tabId = tab.getAttribute('data-tab');
 
-            document.querySelectorAll('.profile-tabs .tab').forEach(t => t.classList.remove('active'));
+            profileTabs.forEach(t => t.classList.remove('active'));
             tab.classList.add('active');
 
-            document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
-            document.getElementById(`${tabId}-tab`).classList.add('active');
+            const tabPanes = document.querySelectorAll('.tab-pane');
+            tabPanes.forEach(pane => {
+                pane.classList.remove('active');
+                if (pane.id === `${tabId}-tab`) {
+                    pane.classList.add('active');
+                }
+            });
         });
     });
 
-    // Notification
-    document.querySelector('.notification-bell').addEventListener('click', () => {
-        alert('2 new notifications');
-    });
+    // Notification Bell
+    const notificationBell = document.querySelector('.notification-bell');
+    if (notificationBell) {
+        notificationBell.addEventListener('click', () => {
+            alert('2 new notifications');
+        });
+    }
 
-    // Payment Section - Auto-populate subscription amount
+    // Payment Form Handling
     function updateSubscriptionAmount() {
         const subscriptionPlan = document.getElementById('subscriptionPlan');
         const subscriptionAmountInput = document.getElementById('subscriptionAmount');
-        const selectedOption = subscriptionPlan.options[subscriptionPlan.selectedIndex];
-
-        if (!selectedOption.value) {
-            subscriptionAmountInput.value = '';
-            return;
+        if (subscriptionPlan && subscriptionAmountInput) {
+            const selectedOption = subscriptionPlan.options[subscriptionPlan.selectedIndex];
+            subscriptionAmountInput.value = selectedOption.getAttribute('data-amount') || '';
         }
-
-        subscriptionAmountInput.value = selectedOption.getAttribute('data-amount');
     }
 
-    // Toggle Payment Details Fields
     function togglePaymentDetails() {
-        const paymentMethod = document.getElementById('paymentMethod').value;
+        const paymentMethod = document.getElementById('paymentMethod');
         const paymentDetails = document.getElementById('paymentDetails');
-        const cardNumberGroup = document.getElementById('cardNumberGroup');
-        const expiryDateGroup = document.getElementById('expiryDateGroup');
-        const cvvGroup = document.getElementById('cvvGroup');
-        const accountNumberGroup = document.getElementById('accountNumberGroup');
-        const routingNumberGroup = document.getElementById('routingNumberGroup');
-        const paypalEmailGroup = document.getElementById('paypalEmailGroup');
-        const cryptoWalletGroup = document.getElementById('cryptoWalletGroup');
+        if (!paymentMethod || !paymentDetails) return;
 
-        // Reset all fields to hidden
+        const groups = {
+            card: ['cardNumberGroup', 'expiryDateGroup', 'cvvGroup'],
+            bank: ['accountNumberGroup', 'routingNumberGroup'],
+            paypal: ['paypalEmailGroup'],
+            crypto: ['cryptoWalletGroup']
+        };
+
         paymentDetails.style.display = 'none';
-        cardNumberGroup.style.display = 'none';
-        expiryDateGroup.style.display = 'none';
-        cvvGroup.style.display = 'none';
-        accountNumberGroup.style.display = 'none';
-        routingNumberGroup.style.display = 'none';
-        paypalEmailGroup.style.display = 'none';
-        cryptoWalletGroup.style.display = 'none';
-
-        // Clear previous validation requirements
-        document.querySelectorAll('#paymentDetails input').forEach(input => {
-            input.removeAttribute('required');
+        Object.values(groups).flat().forEach(groupId => {
+            const group = document.getElementById(groupId);
+            if (group) group.style.display = 'none';
         });
 
-        // Show relevant fields based on payment method and set required attributes
-        if (paymentMethod) {
+        const method = paymentMethod.value;
+        if (method) {
             paymentDetails.style.display = 'block';
-            if (paymentMethod === 'creditCard' || paymentMethod === 'debitCard') {
-                cardNumberGroup.style.display = 'block';
-                expiryDateGroup.style.display = 'block';
-                cvvGroup.style.display = 'block';
-                document.getElementById('cardNumber').setAttribute('required', 'required');
-                document.getElementById('expiryDate').setAttribute('required', 'required');
-                document.getElementById('cvv').setAttribute('required', 'required');
-            } else if (paymentMethod === 'bankTransfer') {
-                accountNumberGroup.style.display = 'block';
-                routingNumberGroup.style.display = 'block';
-                document.getElementById('accountNumber').setAttribute('required', 'required');
-                document.getElementById('routingNumber').setAttribute('required', 'required');
-            } else if (paymentMethod === 'payPal') {
-                paypalEmailGroup.style.display = 'block';
-                document.getElementById('paypalEmail').setAttribute('required', 'required');
-            } else if (paymentMethod === 'crypto') {
-                cryptoWalletGroup.style.display = 'block';
-                document.getElementById('cryptoWallet').setAttribute('required', 'required');
+            if (['creditCard', 'debitCard'].includes(method)) {
+                groups.card.forEach(groupId => {
+                    const group = document.getElementById(groupId);
+                    if (group) group.style.display = 'block';
+                });
+            } else if (method === 'bankTransfer') {
+                groups.bank.forEach(groupId => {
+                    const group = document.getElementById(groupId);
+                    if (group) group.style.display = 'block';
+                });
+            } else if (method === 'payPal') {
+                groups.paypal.forEach(groupId => {
+                    const group = document.getElementById(groupId);
+                    if (group) group.style.display = 'block';
+                });
+            } else if (method === 'crypto') {
+                groups.crypto.forEach(groupId => {
+                    const group = document.getElementById(groupId);
+                    if (group) group.style.display = 'block';
+                });
             }
         }
     }
 
-    // Form Validation and Submission for Make Payment
-    document.getElementById('paymentForm').addEventListener('submit', function(e) {
-        const subscriptionPlan = document.getElementById('subscriptionPlan').value;
-        const paymentMethod = document.getElementById('paymentMethod').value;
+    // Initialize payment form
+    const paymentForm = document.getElementById('paymentForm');
+    if (paymentForm) {
+        paymentForm.addEventListener('submit', (e) => {
+            const subscriptionPlan = document.getElementById('subscriptionPlan').value;
+            const paymentMethod = document.getElementById('paymentMethod').value;
 
-        if (!subscriptionPlan) {
-            e.preventDefault();
-            alert('Please select a subscription plan.');
-            return;
-        }
-
-        if (!paymentMethod) {
-            e.preventDefault();
-            alert('Please select a payment method.');
-            return;
-        }
-
-        // Additional validation for payment details
-        if (paymentMethod === 'creditCard' || paymentMethod === 'debitCard') {
-            const cardNumber = document.getElementById('cardNumber').value;
-            const expiryDate = document.getElementById('expiryDate').value;
-            const cvv = document.getElementById('cvv').value;
-            if (!cardNumber || !expiryDate || !cvv) {
+            if (!subscriptionPlan) {
                 e.preventDefault();
-                alert('Please fill all card details.');
+                alert('Please select a subscription plan.');
                 return;
             }
-        } else if (paymentMethod === 'bankTransfer') {
-            const accountNumber = document.getElementById('accountNumber').value;
-            const routingNumber = document.getElementById('routingNumber').value;
-            if (!accountNumber || !routingNumber) {
-                e.preventDefault();
-                alert('Please fill all bank transfer details.');
-                return;
-            }
-        } else if (paymentMethod === 'payPal') {
-            const paypalEmail = document.getElementById('paypalEmail').value;
-            if (!paypalEmail) {
-                e.preventDefault();
-                alert('Please enter your PayPal email.');
-                return;
-            }
-        } else if (paymentMethod === 'crypto') {
-            const cryptoWallet = document.getElementById('cryptoWallet').value;
-            if (!cryptoWallet) {
-                e.preventDefault();
-                alert('Please enter your crypto wallet address.');
-                return;
-            }
-        }
-    });
 
-    // Initialize payment section
-    updateSubscriptionAmount();
-    togglePaymentDetails();
+            if (!paymentMethod) {
+                e.preventDefault();
+                alert('Please select a payment method.');
+                return;
+            }
+
+            const validateField = (id, message) => {
+                const field = document.getElementById(id);
+                if (field && !field.value.trim()) {
+                    e.preventDefault();
+                    alert(message);
+                    return false;
+                }
+                return true;
+            };
+
+            if (['creditCard', 'debitCard'].includes(paymentMethod)) {
+                if (!validateField('cardNumber', 'Please enter card number.') ||
+                    !validateField('expiryDate', 'Please enter expiry date.') ||
+                    !validateField('cvv', 'Please enter CVV.')) return;
+            } else if (paymentMethod === 'bankTransfer') {
+                if (!validateField('accountNumber', 'Please enter account number.') ||
+                    !validateField('routingNumber', 'Please enter routing number.')) return;
+            } else if (paymentMethod === 'payPal') {
+                if (!validateField('paypalEmail', 'Please enter PayPal email.')) return;
+            } else if (paymentMethod === 'crypto') {
+                if (!validateField('cryptoWallet', 'Please enter crypto wallet address.')) return;
+            }
+        });
+
+        updateSubscriptionAmount();
+        togglePaymentDetails();
+    }
 </script>
 </body>
 </html>
