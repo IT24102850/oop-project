@@ -1,59 +1,93 @@
- package com.studentregistration.dao;
+package com.studentregistration.dao;
 
+import com.studentregistration.model.Review;
 import javax.servlet.ServletContext;
 import java.io.*;
-import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ReviewDAO {
-    private static final String REVIEWS_DIR = "/WEB-INF/data/reviews/";
+    private String filePath;
 
-    // Save a review to username.txt
-    public void saveReview(String username, String review, ServletContext context) throws IOException {
-        String dirPath = context.getRealPath(REVIEWS_DIR);
-        File dir = new File(dirPath);
-        if (!dir.exists()) {
-            dir.mkdirs();
+    public ReviewDAO(ServletContext context) {
+        this.filePath = context.getRealPath("/WEB-INF/data/reviews.txt");
+        File file = new File(filePath);
+        if (!file.getParentFile().exists()) {
+            file.getParentFile().mkdirs();
         }
-        String filePath = dirPath + File.separator + username + ".txt";
-        String timestamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
-        String entry = timestamp + "|" + review;
-
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, true))) {
-            writer.write(entry);
-            writer.newLine();
+        if (!file.exists()) {
+            try {
+                file.createNewFile();
+            } catch (IOException e) {
+                System.err.println("Failed to create reviews.txt: " + e.getMessage());
+            }
         }
     }
 
-    // Get all reviews from all users
-    public List<Map<String, String>> getAllReviews(ServletContext context) {
-        List<Map<String, String>> reviews = new ArrayList<>();
-        String dirPath = context.getRealPath(REVIEWS_DIR);
-        File dir = new File(dirPath);
-        if (!dir.exists()) {
+    public List<Review> getAllReviews() throws IOException {
+        List<Review> reviews = new ArrayList<>();
+        File file = new File(filePath);
+        if (!file.exists()) {
+            file.createNewFile();
             return reviews;
         }
-
-        File[] files = dir.listFiles((d, name) -> name.endsWith(".txt"));
-        if (files != null) {
-            for (File file : files) {
-                String username = file.getName().replace(".txt", "");
-                try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
-                    String line;
-                    while ((line = reader.readLine()) != null) {
-                        String[] parts = line.split("\\|", 2);
-                        if (parts.length == 2) {
-                            Map<String, String> review = new HashMap<>();
-                            review.put("username", username);
-                            review.put("review", parts[1]);
-                            reviews.add(review);
-                        }
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+            String line;
+            int id = 0;
+            while ((line = reader.readLine()) != null) {
+                Review review = Review.fromString(line);
+                if (review != null) {
+                    review.setId(id++);
+                    reviews.add(review);
                 }
             }
         }
         return reviews;
+    }
+
+    public void saveReview(Review review) throws IOException {
+        File file = new File(filePath);
+        if (!file.exists()) {
+            file.getParentFile().mkdirs();
+            file.createNewFile();
+        }
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file, true))) {
+            writer.write(review.getAuthor() + "|" + review.getText());
+            writer.newLine();
+        }
+    }
+
+    public void updateReview(int id, Review updatedReview) throws IOException {
+        List<Review> reviews = getAllReviews();
+        if (id >= 0 && id < reviews.size()) {
+            updatedReview.setId(id);
+            reviews.set(id, updatedReview);
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
+                for (Review r : reviews) {
+                    writer.write(r.getAuthor() + "|" + r.getText());
+                    writer.newLine();
+                }
+            }
+        } else {
+            throw new IOException("Review with ID " + id + " not found.");
+        }
+    }
+
+    public void deleteReview(int id) throws IOException {
+        List<Review> reviews = getAllReviews();
+        if (id >= 0 && id < reviews.size()) {
+            reviews.remove(id);
+            for (int i = 0; i < reviews.size(); i++) {
+                reviews.get(i).setId(i);
+            }
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
+                for (Review r : reviews) {
+                    writer.write(r.getAuthor() + "|" + r.getText());
+                    writer.newLine();
+                }
+            }
+        } else {
+            throw new IOException("Review with ID " + id + " not found.");
+        }
     }
 }

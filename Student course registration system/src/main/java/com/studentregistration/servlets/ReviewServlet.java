@@ -1,37 +1,73 @@
-package com.studentregistration.servlets;
+package com.studentregistration.servlet;
 
-import com.studentregistration.dao.StudentDAO;
+import com.studentregistration.dao.ReviewDAO;
+import com.studentregistration.model.Review;
 import java.io.*;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.*;
+import java.util.List;
 
-@WebServlet("/saveReview")
+@WebServlet("/ReviewServlet")
 public class ReviewServlet extends HttpServlet {
-    private static final long serialVersionUID = 1L;
-    private StudentDAO studentDAO;
+    private ReviewDAO reviewDAO;
 
     @Override
     public void init() throws ServletException {
-        studentDAO = new StudentDAO();
+        reviewDAO = new ReviewDAO(getServletContext());
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        response.setContentType("application/json");
-        PrintWriter out = response.getWriter();
+        String action = request.getParameter("action");
 
-        String reviewerName = request.getParameter("reviewerName");
-        String reviewText = request.getParameter("reviewText");
-
-        if (reviewerName == null || reviewText == null || reviewerName.trim().isEmpty() || reviewText.trim().isEmpty()) {
-            out.print("{\"success\": false, \"message\": \"Name and review are required.\"}");
-            out.flush();
-            return;
+        try {
+            if (action == null || action.equals("create")) {
+                String author = request.getParameter("author");
+                String text = request.getParameter("text");
+                if (author != null && text != null && !author.trim().isEmpty() && !text.trim().isEmpty()) {
+                    Review review = new Review(author.trim(), text.trim());
+                    reviewDAO.saveReview(review);
+                } else {
+                    request.setAttribute("error", "Author and text cannot be empty.");
+                }
+            } else if (action.equals("update")) {
+                int id = Integer.parseInt(request.getParameter("id"));
+                String author = request.getParameter("author");
+                String text = request.getParameter("text");
+                if (author != null && text != null && !author.trim().isEmpty() && !text.trim().isEmpty()) {
+                    Review updatedReview = new Review(id, author.trim(), text.trim());
+                    reviewDAO.updateReview(id, updatedReview);
+                } else {
+                    request.setAttribute("error", "Author and text cannot be empty for update.");
+                }
+            } else if (action.equals("delete")) {
+                int id = Integer.parseInt(request.getParameter("id"));
+                reviewDAO.deleteReview(id);
+            } else {
+                request.setAttribute("error", "Invalid action specified.");
+            }
+        } catch (Exception e) {
+            request.setAttribute("error", "Operation failed: " + e.getMessage());
+            System.err.println("Error in doPost: " + e.getMessage());
         }
 
+        // Forward to doGet to refresh the page
+        doGet(request, response);
+    }
 
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        try {
+            List<Review> reviews = reviewDAO.getAllReviews();
+            request.setAttribute("reviews", reviews);
+            if (reviews.isEmpty()) {
+                System.out.println("No reviews found in " + reviewDAO.getClass().getName());
+            }
+        } catch (IOException e) {
+            request.setAttribute("error", "Unable to load reviews: " + e.getMessage());
+            System.err.println("Error loading reviews: " + e.getMessage());
+        }
+        request.getRequestDispatcher("index.jsp").forward(request, response);
     }
 }
