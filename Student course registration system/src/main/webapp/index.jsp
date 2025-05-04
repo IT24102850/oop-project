@@ -57,10 +57,7 @@
             color: var(--dark-color);
         }
 
-
-
-
-
+        /* Preloader */
         .preloader {
             position: fixed;
             top: 0;
@@ -1554,7 +1551,7 @@
         <!-- Review Management Form -->
         <div class="review-form-container">
             <h3 id="form-title">Manage Your Reviews</h3>
-            <form class="review-form" id="review-form">
+            <form class="review-form" method="POST" action="${pageContext.request.contextPath}/ReviewServlet">
                 <input type="hidden" name="action" id="action" value="create">
                 <input type="hidden" name="id" id="review-id">
                 <select name="review-select" id="review-select" onchange="fillEditForm()">
@@ -1573,7 +1570,7 @@
                 <div class="review-actions">
                     <button type="button" class="edit-btn" onclick="setAction('update')">Edit</button>
                     <button type="button" class="delete-btn" onclick="setAction('delete')">Delete</button>
-                    <button type="button" id="submit-btn"><i class="fas fa-paper-plane"></i> <span id="submit-text">Submit Review</span></button>
+                    <button type="submit" id="submit-btn"><i class="fas fa-paper-plane"></i> <span id="submit-text">Submit Review</span></button>
                 </div>
             </form>
         </div>
@@ -1743,63 +1740,17 @@
         }
     }
 
-    // Set Action and Submit Form via AJAX
+    // Set Action for Edit/Delete
     function setAction(action) {
         const select = document.getElementById('review-select');
         const selectedIndex = parseInt(select.value);
-        if (selectedIndex >= 0 || action === 'create') {
+        if (selectedIndex >= 0) {
             document.getElementById('action').value = action;
-            submitForm();
+            document.getElementById('review-id').value = selectedIndex;
+            document.querySelector('.review-form').submit();
         } else {
             alert('Please select a review to ' + (action === 'update' ? 'edit' : 'delete') + '.');
         }
-    }
-
-    function submitForm() {
-        const form = document.getElementById('review-form');
-        const formData = new FormData(form);
-
-        fetch('${pageContext.request.contextPath}/ReviewServlet', {
-            method: 'POST',
-            body: formData
-        })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    updateReviews(data.reviews);
-                    resetForm();
-                    alert('Operation successful!');
-                } else {
-                    alert('Error: ' + (data.error || 'Unknown error'));
-                }
-            })
-            .catch(error => {
-                console.error('Fetch error:', error);
-                alert('An error occurred. Please try again.');
-            });
-    }
-
-    // Update Reviews Dynamically
-    function updateReviews(reviews) {
-        const slideshow = document.getElementById('reviews-slideshow');
-        slideshow.innerHTML = '';
-        if (!reviews || reviews.length === 0) {
-            slideshow.innerHTML = '<div class="review-slide active"><p class="review-text">No reviews yet. Be the first to share!</p><p class="review-author">– NexoraSkill</p></div>';
-        } else {
-            reviews.forEach((review, index) => {
-                const slide = document.createElement('div');
-                slide.className = 'review-slide' + (index === 0 ? ' active' : '');
-                slide.innerHTML = `<p class="review-text">"${review.text}"</p><p class="review-author">– ${review.author}</p>`;
-                slideshow.appendChild(slide);
-            });
-        }
-        const select = document.getElementById('review-select');
-        select.innerHTML = '<option value="-1">Select a review to edit or delete</option>';
-        reviews.forEach((review, index) => {
-            select.innerHTML += `<option value="${index}">${review.author}: "${review.text.substring(0, Math.min(review.text.length, 20))}${review.text.length > 20 ? '...' : ''}"</option>`;
-        });
-        currentSlide = 0;
-        showSlide(currentSlide);
     }
 
     // Reset Form
@@ -1812,11 +1763,6 @@
         document.getElementById('submit-text').innerText = 'Submit Review';
         document.getElementById('review-select').value = '-1';
     }
-
-    // Attach Submit Button Event
-    document.getElementById('submit-btn').addEventListener('click', () => {
-        submitForm();
-    });
 
     // Scroll To Top Button
     const scrollTop = document.querySelector('.scroll-top');
