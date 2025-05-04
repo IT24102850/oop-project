@@ -1,8 +1,8 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="java.util.*" %>
 <%@ page import="java.io.*" %>
 <%@ page import="java.text.SimpleDateFormat" %>
 <%@ page import="java.util.Date" %>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -12,9 +12,500 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="icon" type="image/png" href="./images/favicon.ico">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Orbitron:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            background-color: #0a0f24;
+            color: #fff;
+            display: flex;
+            min-height: 100vh;
+        }
+        /* Header Section - Holographic Effect */
+        .header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            background: rgba(10, 15, 36, 0.95);
+            backdrop-filter: blur(15px);
+            border-bottom: 1px solid rgba(0, 242, 254, 0.1);
+            box-shadow: 0 5px 30px rgba(0, 0, 0, 0.2);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 5%;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #00f2fe;
+            text-decoration: none;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .logo:hover {
+            color: #4facfe;
+            transform: scale(1.05);
+        }
+        .navbar ul {
+            list-style: none;
+            display: flex;
+            gap: 25px;
+        }
+        .navbar ul li a {
+            font-family: 'Poppins', sans-serif;
+            text-decoration: none;
+            color: #ffffff;
+            font-weight: 500;
+            font-size: 1rem;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .navbar ul li a:hover {
+            color: #00f2fe;
+            text-shadow: 0 0 10px rgba(0, 242, 254, 0.6);
+        }
+        .auth-buttons {
+            display: flex;
+            gap: 15px;
+        }
+        .btn {
+            padding: 8px 15px;
+            border-radius: 20px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            font-size: 0.9rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .btn-login {
+            background: transparent;
+            border: 2px solid #00f2fe;
+            color: #00f2fe;
+        }
+        .btn-login:hover {
+            background: #00f2fe;
+            color: #0a0f24;
+        }
+        .btn-signup {
+            background: #00f2fe;
+            color: #0a0f24;
+            border: 2px solid transparent;
+        }
+        .btn-signup:hover {
+            background: transparent;
+            color: #00f2fe;
+            border-color: #00f2fe;
+        }
+        .sidebar-toggle {
+            display: none;
+        }
+        .sidebar {
+            width: 250px;
+            background: #0a0f24;
+            height: 100vh;
+            padding: 20px 0;
+            position: fixed;
+            border-right: 1px solid rgba(0, 242, 254, 0.1);
+            top: 0;
+            left: 0;
+        }
+        .sidebar .logo {
+            text-align: center;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+        }
+        .sidebar .user-profile {
+            text-align: center;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            margin: 0 15px;
+            border-radius: 10px;
+        }
+        .sidebar .user-profile .user-avatar {
+            background: #00f2fe;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+            color: #0a0f24;
+        }
+        .sidebar .user-profile h3 {
+            margin: 10px 0 5px;
+            font-size: 1.1rem;
+        }
+        .sidebar .user-profile p {
+            margin: 0;
+            color: #ccc;
+            font-size: 0.9rem;
+        }
+        .sidebar .nav-menu {
+            list-style: none;
+            padding: 0;
+            margin-top: 20px;
+        }
+        .sidebar .nav-menu .nav-item {
+            padding: 10px 20px;
+        }
+        .sidebar .nav-menu .nav-item a {
+            color: #fff;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            border-radius: 10px;
+        }
+        .sidebar .nav-menu .nav-item a i {
+            margin-right: 10px;
+        }
+        .sidebar .nav-menu .nav-item a:hover,
+        .sidebar .nav-menu .nav-item.active a {
+            background: #00f2fe;
+            color: #0a0f24;
+        }
+        .main-content {
+            margin-left: 250px;
+            padding: 80px 20px 20px;
+            width: calc(100% - 250px);
+        }
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .dashboard-header .greeting h1 {
+            margin: 0;
+            font-size: 2rem;
+            color: #ff69b4;
+        }
+        .dashboard-header .greeting p {
+            margin: 5px 0 0;
+            color: #ccc;
+        }
+        .dashboard-header .user-actions {
+            display: flex;
+            align-items: center;
+        }
+        .dashboard-header .notification-bell {
+            position: relative;
+            margin-right: 15px;
+            cursor: pointer;
+        }
+        .dashboard-header .notification-bell .notification-count {
+            background: #ff4500;
+            color: #fff;
+            border-radius: 50%;
+            padding: 2px 6px;
+            font-size: 0.8rem;
+            position: absolute;
+            top: -5px;
+            right: -5px;
+        }
+        .dashboard-header .btn-outline {
+            background: #fff;
+            color: #0a0f24;
+            border: none;
+            padding: 5px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        .stat-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            border: 1px solid rgba(0, 242, 254, 0.2);
+        }
+        .stat-card h3 {
+            margin: 0;
+            color: #ccc;
+            font-size: 1rem;
+        }
+        .stat-card .stat-value {
+            margin: 10px 0;
+            font-size: 2rem;
+            color: #00f2fe;
+        }
+        .stat-card .stat-change {
+            font-size: 0.9rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 5px;
+        }
+        .stat-card .positive {
+            color: #00ff00;
+        }
+        .stat-card .negative {
+            color: #ff4500;
+        }
+        .content-section {
+            display: none;
+        }
+        .content-section.active {
+            display: block;
+        }
+        /* Additional styles for other sections */
+        .courses-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        .course-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 15px;
+        }
+        .course-header .course-code {
+            font-size: 1.2rem;
+            color: #00f2fe;
+        }
+        .course-header .course-title {
+            margin: 5px 0;
+        }
+        .course-header .course-instructor {
+            color: #ccc;
+        }
+        .course-progress .progress-text {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+        }
+        .course-progress .progress-bar {
+            background: #333;
+            border-radius: 5px;
+            height: 10px;
+        }
+        .course-progress .progress-fill {
+            background: #00f2fe;
+            height: 100%;
+            border-radius: 5px;
+        }
+        .course-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 10px;
+        }
+        .course-actions .btn-outline {
+            background: transparent;
+            border: 1px solid #00f2fe;
+            color: #00f2fe;
+            padding: 5px 10px;
+            border-radius: 5px;
+        }
+        .course-actions .status.active {
+            color: #00ff00;
+        }
+        .profile-container, .enrollment-section, .deadlines-container, .payment-container, .settings-container {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            padding: 20px;
+        }
+        .profile-header {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        .user-avatar-holographic {
+            position: relative;
+        }
+        .user-avatar-holographic .avatar-image {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+        }
+        .avatar-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .profile-tabs {
+            display: flex;
+            gap: 10px;
+            margin: 20px 0;
+        }
+        .profile-tabs .tab {
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .profile-tabs .tab.active {
+            background: #00f2fe;
+            color: #0a0f24;
+        }
+        .tab-content .tab-pane {
+            display: none;
+        }
+        .tab-content .tab-pane.active {
+            display: block;
+        }
+        .detail-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+        .detail-card {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 15px;
+            border-radius: 10px;
+        }
+        .detail-item {
+            margin: 10px 0;
+        }
+        .detail-item label {
+            color: #ccc;
+        }
+        .profile-actions, .payment-actions {
+            margin-top: 20px;
+        }
+        .btn-primary {
+            background: #00f2fe;
+            color: #0a0f24;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .btn-danger {
+            background: #ff4500;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .enrollment-form, .payment-form, .settings-form {
+            display: grid;
+            gap: 15px;
+            max-width: 500px;
+        }
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+        .form-group label {
+            margin-bottom: 5px;
+            color: #ccc;
+        }
+        .form-group input, .form-group select {
+            padding: 8px;
+            border-radius: 5px;
+            border: 1px solid #00f2fe;
+            background: transparent;
+            color: #fff;
+        }
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+        }
+        .payment-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        .payment-table th, .payment-table td {
+            padding: 10px;
+            border: 1px solid rgba(0, 242, 254, 0.2);
+            text-align: left;
+        }
+        .payment-table th {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        .status-cell.paid { color: #00ff00; }
+        .status-cell.pending { color: #00f2fe; }
+        .status-cell.overdue { color: #ff4500; }
+        .payment-action-form {
+            display: inline-block;
+            margin-right: 5px;
+        }
+        .btn-sm {
+            padding: 5px 10px;
+            font-size: 0.8rem;
+        }
+        .message {
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .message.success { background: #00ff00; color: #0a0f24; }
+        .message.error { background: #ff4500; color: #fff; }
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 200px;
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+            .sidebar.active {
+                transform: translateX(0);
+            }
+            .main-content {
+                margin-left: 0;
+                width: 100%;
+            }
+            .main-content.full-width {
+                margin-left: 200px;
+                width: calc(100% - 200px);
+            }
+            .sidebar-toggle {
+                display: block;
+                position: fixed;
+                top: 20px;
+                left: 20px;
+                background: #00f2fe;
+                border: none;
+                padding: 10px;
+                border-radius: 5px;
+                cursor: pointer;
+                z-index: 1001;
+            }
+        }
+    </style>
 </head>
 <body>
+<!-- Header Section -->
+<header class="header">
+    <div class="container">
+        <a href="index.jsp" class="logo">NexoraSkill</a>
+        <nav class="navbar">
+            <ul>
+                <li><a href="index.jsp#home">Home</a></li>
+                <li><a href="courses.jsp">Courses</a></li>
+                <li><a href="Apply%20Course.jsp">Apply Course</a></li>
+                <li><a href="aboutus.jsp">About Us</a></li>
+                <li><a href="contact.jsp">Contact</a></li>
+            </ul>
+        </nav>
+        <div class="auth-buttons">
+            <a href="logIn.jsp" class="btn btn-login"><i class="fas fa-sign-in-alt"></i> Login</a>
+            <a href="signUp.jsp" class="btn btn-signup"><i class="fas fa-user-plus"></i> Sign Up</a>
+        </div>
+    </div>
+</header>
+
 <!-- Sidebar Toggle Button -->
 <button class="sidebar-toggle">
     <i class="fas fa-bars"></i>
@@ -171,7 +662,6 @@
 <!-- Sidebar -->
 <div class="sidebar">
     <div class="logo">NexoraSkill</div>
-
     <div class="user-profile">
         <div class="user-avatar"><%= initials %></div>
         <div class="user-info">
@@ -179,9 +669,8 @@
             <p>Computer Science</p>
         </div>
     </div>
-
     <ul class="nav-menu">
-        <li class="nav-item">
+        <li class="nav-item active">
             <a href="#" class="nav-link" data-section="dashboard">
                 <i class="fas fa-home"></i> <span>Dashboard</span>
             </a>
@@ -207,7 +696,7 @@
             </a>
         </li>
         <li class="nav-item">
-            <a href="#" class="nav-link active" data-section="payment">
+            <a href="#" class="nav-link" data-section="payment">
                 <i class="fas fa-credit-card"></i> <span>Payment</span>
             </a>
         </li>
@@ -243,7 +732,7 @@
     <% } %>
 
     <!-- Dashboard Section -->
-    <section id="dashboard" class="content-section">
+    <section id="dashboard" class="content-section active">
         <div class="dashboard-header">
             <div class="greeting">
                 <h1>Welcome back, <%= firstName %>!</h1>
@@ -256,7 +745,7 @@
                 </div>
                 <form action="auth" method="post">
                     <input type="hidden" name="action" value="logout">
-                    <button type="submit" class="btn btn-outline
+                    <button type="submit" class="btn btn-outline">
                         <i class="fas fa-sign-out-alt"></i> Logout
                     </button>
                 </form>
@@ -605,7 +1094,7 @@
     </section>
 
     <!-- Payment Section -->
-    <section id="payment" class="content-section active">
+    <section id="payment" class="content-section">
         <div class="dashboard-header">
             <div class="greeting">
                 <h1>Payment Management</h1>
@@ -979,8 +1468,6 @@
                 alert('Please enter your PayPal email.');
                 return;
             }
-
-
         } else if (paymentMethod === 'crypto') {
             const cryptoWallet = document.getElementById('cryptoWallet').value;
             if (!cryptoWallet) {
