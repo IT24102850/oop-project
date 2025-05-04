@@ -4,5 +4,102 @@ JS001,JS Learning,4,Computer Science,Dr.Ravi,Key Concepts of javascripts learnin
 QQ455,introduction to programming,1,Computer Science,Dr.Suriyaa,Basic programming concepts,true
 AI1121,AI and Machine Learning,4,Computer Science,Dr.Bhagyani,Advanced AI concepts,true
 DM654,Discreate Mathematics,4,Mathematics,Dr.Dulani,Maths concepts,true
-QC7760,Quantom Computing,4,Computer Science,Dr.Ruchira,Quantom Computing Concepts,true
-CS102,MATHS,3,Mathematics,Dr.Mia,maths,true
+ST5377,Linear Algebra,3,Mathematics,Prof. Ishara,Discrete Maths,true
+CA7397,Statistics for Engineers,2,Mathematics,Prof. Ishara,Statistics,true
+ML7396,Quantum Computing,4,Computer Science,Prof. Lakmal,AI Principles,true
+CN5821,Software Engineering,3,Computer Science,Dr. Suriyaa,JavaScript Basics,true
+OP4678,Electronic Circuits,1,Physics,Prof. Chathura,Mechanics,true
+CA4521,Statistics for Engineers,2,Mathematics,Dr. Dulani,Discrete Maths,true
+CS2503,AI Fundamentals,3,Computer Science,Dr. Suriyaa,Web Development,true
+LG6937,Abstract Algebra,2,Mathematics,Dr. Kanishka,Calculus,true
+QQ3485,Software Engineering,4,Computer Science,Dr. Ruchira,Machine Learning,true
+ME786,Applied Physics,1,Physics,Dr. Hansani,Thermodynamics,true
+QM2813,Modern Physics,4,Physics,Prof. Chathura,Optics,true
+CA6595,Abstract Algebra,1,Mathematics,Dr. Rajapaksha,Calculus,true
+OP8116,Thermal Physics,2,Physics,Dr. Hansani,Electronics,true
+QQ9920,Advanced Programming,3,Computer Science,Prof. Lakmal,Web Development,true
+PH5467,Optical Physics,1,Physics,Dr. Vishwa,Quantum Mechanics,true
+ME4302,Modern Physics,4,Physics,Dr. Shehani,Optics,true
+OP8167,Applied Physics,3,Physics,Dr. Vishwa,Thermodynamics,true
+MA1293,Mathematical Logic,3,Mathematics,Prof. Ishara,Discrete Maths,true
+CS9457,Software Engineering,1,Computer Science,Dr. Johnson,AI Principles,true
+EL9341,Applied Physics,3,Physics,Dr. Vishwa,Mechanics,true
+CA1950,Calculus I,4,Mathematics,Dr. Kanishka,Calculus,true
+OP8585,Modern Physics,2,Physics,Dr. Manjula,Optics,true
+EL8115,Modern Physics,4,Physics,Dr. Vishwa,Mechanics,true
+ME5190,Electronic Circuits,2,Physics,Dr. Vishwa,Thermodynamics,true
+QM1236,Thermal Physics,4,Physics,Dr. Shehani,Optics,true
+ML9047,Quantum Computing,3,Computer Science,Dr. Nuwan,JavaScript Basics,true
+ST8072,Statistics for Engineers,4,Mathematics,Dr. Sanduni,Calculus,true
+CS8427,Software Engineering,3,Computer Science,Prof. Lakmal,AI Principles,true
+QM5898,Electronic Circuits,1,Physics,Dr. Manjula,Optics,true
+CA5856,Statistics for Engineers,2,Mathematics,Prof. Ishara,Statistics,true
+PH8335,Thermal Physics,1,Physics,Dr. Hansani,Electronics,true
+OP5342,Thermal Physics,2,Physics,Dr. Hansani,Thermodynamics,true
+MA5692,Linear Algebra,2,Mathematics,Dr. Sanduni,Algebra,true
+EL8184,Thermal Physics,1,Physics,Dr. Manjula,Electronics,true
+CS8695,Quantum Computing,1,Computer Science,Dr. Nuwan,Networking,true
+OP580,Electronic Circuits,2,Physics,Prof. Chathura,Thermodynamics,true
+AI1581,Advanced Programming,3,Computer Science,Dr. Suriyaa,JavaScript Basics,true
+OP7953,Thermal Physics,4,Physics,Dr. Manjula,Optics,true
+QM1790,Applied Physics,2,Physics,Prof. Chathura,Thermodynamics,true
+AI6964,Software Engineering,1,Computer Science,Prof. Williams,Networking,true
+ML2377,Software Engineering,2,Computer Science,Prof. Lakmal,Machine Learning,true
+CA7230,Calculus I,3,Mathematics,Dr. Sanduni,Calculus,true
+CA2346,Mathematical Logic,3,Mathematics,Prof. Ishara,Discrete Maths,true
+CS4905,Advanced Programming,2,Computer Science,Dr. Ruchira,JavaScript Basics,true
+LG7409,Abstract Algebra,3,Mathematics,Dr. Sanduni,Linear Algebra,true
+OP1511,Optical Physics,2,Physics,Prof. Chathura,Mechanics,true
+DM2168,Abstract Algebra,4,Mathematics,Prof. Ishara,Calculus,true
+QM4510,Applied Physics,4,Physics,Dr. Hansani,Quantum Mechanics,true
+CA775,Abstract Algebra,1,Mathematics,Dr. Dulani,Discrete Maths,true
+LG2748,Mathematical Logic,1,Mathematics,Dr. Rajapaksha,Discrete Maths,true
+LG8140,Calculus I,2,Mathematics,Dr. Sanduni,Linear Algebra,true
+PH6478,Applied Physics,1,Physics,Prof. Chathura,Quantum Mechanics,true
+EL6208,Thermal Physics,4,Physics,Dr. Hansani,Mechanics,true
+QM7039,Modern Physics,3,Physics,Dr. Shehani,Quantum Mechanics,true
+MA4179,Linear Algebra,3,Mathematics,Dr. Kanishka,Linear Algebra,true
+ME3086,Thermal Physics,1,Physics,Dr. Hansani,Thermodynamics,true
+LG499,Linear Algebra,3,Mathematics,Prof. Ishara,Linear Algebra,true
+PH7828,Applied Physics,3,Physics,Prof. Chathura,Quantum Mechanics,true
+DM7793,Abstract Algebra,3,Mathematics,Dr. Dulani,Linear Algebra,true
+EL6972,Applied Physics,2,Physics,Dr. Shehani,Mechanics,true
+OP3546,Electronic Circuits,3,Physics,Dr. Vishwa,Mechanics,true
+EL1045,Applied Physics,3,Physics,Dr. Shehani,Thermodynamics,true
+MA6188,Mathematical Logic,3,Mathematics,Dr. Rajapaksha,Linear Algebra,true
+JS1434,AI Fundamentals,3,Computer Science,Dr. Ruchira,Data Structures,true
+MA8329,Linear Algebra,4,Mathematics,Dr. Rajapaksha,Algebra,true
+ML1681,Advanced Programming,1,Computer Science,Dr. Johnson,Web Development,true
+OP9875,Modern Physics,4,Physics,Dr. Vishwa,Electronics,true
+DM1406,Mathematical Logic,2,Mathematics,Dr. Sanduni,Linear Algebra,true
+CA5706,Linear Algebra,2,Mathematics,Dr. Kanishka,Calculus,true
+EL4986,Thermal Physics,2,Physics,Dr. Manjula,Quantum Mechanics,true
+CA4335,Calculus I,4,Mathematics,Dr. Kanishka,Statistics,true
+OP9871,Electronic Circuits,2,Physics,Dr. Shehani,Electronics,true
+CS3693,AI Fundamentals,1,Computer Science,Dr. Bhagyani,Web Development,true
+ST1218,Statistics for Engineers,3,Mathematics,Dr. Rajapaksha,Calculus,true
+JS5875,Software Engineering,2,Computer Science,Dr. Ruchira,Machine Learning,true
+ST7783,Linear Algebra,2,Mathematics,Prof. Ishara,Algebra,true
+LG5341,Mathematical Logic,3,Mathematics,Dr. Rajapaksha,Statistics,true
+CN355,AI Fundamentals,3,Computer Science,Dr. Ruchira,JavaScript Basics,true
+EL6685,Electronic Circuits,3,Physics,Dr. Vishwa,Thermodynamics,true
+WD2616,AI Fundamentals,4,Computer Science,Dr. Nuwan,Data Structures,true
+MA8739,Statistics for Engineers,4,Mathematics,Dr. Sanduni,Calculus,true
+DM4516,Mathematical Logic,3,Mathematics,Dr. Dulani,Statistics,true
+LG9386,Statistics for Engineers,2,Mathematics,Dr. Dulani,Linear Algebra,true
+ME2693,Modern Physics,2,Physics,Dr. Shehani,Optics,true
+ST6849,Mathematical Logic,1,Mathematics,Dr. Dulani,Statistics,true
+EL3471,Modern Physics,3,Physics,Dr. Vishwa,Optics,true
+CA2294,Statistics for Engineers,4,Mathematics,Dr. Dulani,Calculus,true
+DM3171,Mathematical Logic,3,Mathematics,Dr. Dulani,Calculus,true
+DM3641,Abstract Algebra,2,Mathematics,Dr. Rajapaksha,Statistics,true
+DM9249,Linear Algebra,3,Mathematics,Dr. Kanishka,Linear Algebra,true
+PH2151,Electronic Circuits,2,Physics,Dr. Shehani,Thermodynamics,true
+PH6481,Thermal Physics,4,Physics,Dr. Shehani,Quantum Mechanics,true
+WD6394,Database Systems,2,Computer Science,Dr. Bhagyani,JavaScript Basics,true
+PH7064,Electronic Circuits,2,Physics,Dr. Shehani,Optics,true
+QQ3199,Database Systems,4,Computer Science,Dr. Johnson,JavaScript Basics,true
+SE4230,Software Engineering,2,Computer Science,Dr. Suriyaa,Web Development,true
+ML5687,Advanced Programming,2,Computer Science,Prof. Lakmal,Machine Learning,true
+LG7490,Abstract Algebra,4,Mathematics,Dr. Rajapaksha,Discrete Maths,true
+CS110,Introduction to AstroPhysics,4,Physics,Dr.Kandula,Key concepts of AstroPhysics,true
