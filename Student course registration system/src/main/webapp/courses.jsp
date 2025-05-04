@@ -516,94 +516,6 @@
             transform: translateY(-3px);
         }
 
-        /* Review Section */
-        .review-section {
-            padding: 100px 5%;
-            position: relative;
-            z-index: 2;
-        }
-
-        .review-section:before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: url('./images/grid-pattern.png') center/cover;
-            opacity: 0.05;
-            z-index: -1;
-        }
-
-        .review-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 40px;
-            max-width: 1300px;
-            margin: 0 auto;
-        }
-
-        .review-card {
-            background: var(--card-bg);
-            backdrop-filter: blur(10px);
-            border-radius: var(--border-radius);
-            padding: 30px;
-            border: 1px solid rgba(0, 242, 254, 0.2);
-            box-shadow: var(--box-shadow);
-            transition: var(--transition);
-            position: relative;
-            animation: fadeInUp 1s ease-out;
-        }
-
-        .review-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
-            border-color: rgba(0, 242, 254, 0.4);
-        }
-
-        .review-text {
-            color: var(--text-muted);
-            font-size: 1.1rem;
-            line-height: 1.8;
-            margin-bottom: 20px;
-        }
-
-        .review-author {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .review-author img {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 2px solid var(--primary-color);
-        }
-
-        .author-info {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .author-name {
-            color: var(--text-color);
-            font-weight: 600;
-            font-size: 1.1rem;
-        }
-
-        .author-course {
-            color: var(--text-muted);
-            font-size: 0.9rem;
-        }
-
-        .review-rating {
-            color: var(--primary-color);
-            font-size: 1rem;
-            margin-bottom: 15px;
-        }
-
         /* Footer - Same as index.jsp */
         .footer {
             background: var(--darker-color);
@@ -892,10 +804,6 @@
             .courses-grid {
                 grid-template-columns: 1fr;
             }
-
-            .review-grid {
-                grid-template-columns: 1fr;
-            }
         }
 
         @media (max-width: 576px) {
@@ -937,9 +845,9 @@
 
         <nav class="navbar">
             <ul>
-                <li><a href="index.jsp#home">Home</a></li>
+                <li><a href="index.jsp">Home</a></li>
                 <li><a href="courses.jsp" class="active">Courses</a></li>
-                <li><a href="Apply%20Course.jsp">Apply Course</a></li>
+                <li><a href="Apply%20Course.jsp">Registration</a></li>
                 <li><a href="aboutus.jsp">About Us</a></li>
                 <li><a href="contact.jsp">Contact</a></li>
             </ul>
@@ -1045,69 +953,6 @@
     </div>
 </section>
 
-<!-- Review Section -->
-<section class="review-section">
-    <h2 class="section-title">What Our Students Say</h2>
-    <div class="review-grid">
-        <!-- Review 1 -->
-        <div class="review-card">
-            <div class="review-rating">
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-            </div>
-            <p class="review-text">"The Introduction to Programming course was a game-changer for me. The hands-on projects and clear explanations made learning Python so engaging!"</p>
-            <div class="review-author">
-                <img src="./images/avatar1.jpg" alt="Sarah Johnson">
-                <div class="author-info">
-                    <span class="author-name">Sarah Johnson</span>
-                    <span class="author-course">Introduction to Programming</span>
-                </div>
-            </div>
-        </div>
-
-        <!-- Review 2 -->
-        <div class="review-card">
-            <div class="review-rating">
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star-half-alt"></i>
-            </div>
-            <p class="review-text">"Modern Web Development gave me the skills to build professional websites. The instructors were fantastic, and the course content was up-to-date."</p>
-            <div class="review-author">
-                <img src="./images/avatar2.jpg" alt="Michael Chen">
-                <div class="author-info">
-                    <span class="author-name">Michael Chen</span>
-                    <span class="author-course">Modern Web Development</span>
-                </div>
-            </div>
-        </div>
-
-        <!-- Review 3 -->
-        <div class="review-card">
-            <div class="review-rating">
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-            </div>
-            <p class="review-text">"The Machine Learning course was challenging but incredibly rewarding. I now feel confident building AI models for real-world applications."</p>
-            <div class="review-author">
-                <img src="./images/avatar3.jpg" alt="Priya Sharma">
-                <div class="author-info">
-                    <span class="author-name">Priya Sharma</span>
-                    <span class="author-course">Machine Learning</span>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
 <!-- Footer -->
 <footer class="footer">
     <div class="footer-grid">
@@ -1195,14 +1040,7 @@
     });
 
     scrollTop.addEventListener('click', function() {
-<<<<<<< Updated upstream
         window.scrollTo({ top: 0, behavior: 'smooth' });
-=======
-        window.scrollTo({
-            top: 0,
-            behavior: 'smooth'
-        });
->>>>>>> Stashed changes
     });
 
     // Category Filter
@@ -1210,7 +1048,6 @@
     const courseCards = document.querySelectorAll('.course-card');
 
     categoryButtons.forEach(button => {
-<<<<<<< Updated upstream
         button.addEventListener('click', function() {
             const category = this.getAttribute('data-category');
 
@@ -1222,19 +1059,6 @@
             courseCards.forEach(card => {
                 const cardCategory = card.getAttribute('data-category');
                 if (category === 'all' || cardCategory === category) {
-=======
-        button.addEventListener('click', () => {
-            // Remove active class from all buttons
-            categoryButtons.forEach(btn => btn.classList.remove('active'));
-            // Add active class to clicked button
-            button.classList.add('active');
-
-            const category = button.getAttribute('data-category');
-
-            // Show/hide courses based on category
-            courseCards.forEach(card => {
-                if (category === 'all' || card.getAttribute('data-category') === category) {
->>>>>>> Stashed changes
                     card.style.display = 'block';
                     card.classList.add('animate__animated', 'animate__fadeInUp');
                 } else {
@@ -1244,19 +1068,6 @@
             });
         });
     });
-<<<<<<< Updated upstream
-=======
-
-    // Smooth scrolling for anchor links
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function(e) {
-            e.preventDefault();
-            document.querySelector(this.getAttribute('href')).scrollIntoView({
-                behavior: 'smooth'
-            });
-        });
-    });
->>>>>>> Stashed changes
 </script>
 </body>
 </html>
