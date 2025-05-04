@@ -754,6 +754,141 @@
             color: var(--text-color);
         }
 
+        /* Reviews Section - Slideshow and Form */
+        .reviews {
+            padding: 120px 5%;
+            background: linear-gradient(to bottom, transparent, var(--dark-color));
+            position: relative;
+            z-index: 2;
+        }
+
+        .reviews:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('./images/grid-pattern.png') center/cover;
+            opacity: 0.05;
+            z-index: -1;
+        }
+
+        .reviews-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .reviews-slideshow {
+            position: relative;
+            width: 100%;
+            height: 400px;
+            overflow: hidden;
+            margin-bottom: 60px;
+            border-radius: var(--border-radius);
+            border: 1px solid rgba(0, 242, 254, 0.2);
+            box-shadow: var(--box-shadow);
+        }
+
+        .review-slide {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 40px;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+        }
+
+        .review-slide.active {
+            opacity: 1;
+        }
+
+        .review-text {
+            font-size: 1.5rem;
+            color: var(--text-color);
+            margin-bottom: 20px;
+            text-align: center;
+            font-style: italic;
+        }
+
+        .review-author {
+            font-size: 1.2rem;
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        .review-form-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border-radius: var(--border-radius);
+            padding: 40px;
+            border: 1px solid rgba(0, 242, 254, 0.2);
+            box-shadow: var(--box-shadow);
+        }
+
+        .review-form-container h3 {
+            font-size: 2rem;
+            margin-bottom: 30px;
+            text-align: center;
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .review-form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .review-form input,
+        .review-form textarea {
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid rgba(0, 242, 254, 0.3);
+            background: var(--glass-bg);
+            color: var(--text-color);
+            font-size: 1rem;
+            outline: none;
+            transition: var(--transition);
+        }
+
+        .review-form input:focus,
+        .review-form textarea:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 10px var(--glow-color);
+        }
+
+        .review-form textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .review-form button {
+            padding: 15px;
+            border-radius: 50px;
+            border: none;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: var(--dark-color);
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .review-form button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 242, 254, 0.3);
+        }
+
         /* CTA Section - Parallax Effect */
         .cta-section {
             padding: 180px 5%;
@@ -1181,6 +1316,18 @@
                 grid-template-columns: 1fr;
                 gap: 40px;
             }
+
+            .reviews-slideshow {
+                height: 300px;
+            }
+
+            .review-text {
+                font-size: 1.2rem;
+            }
+
+            .review-author {
+                font-size: 1rem;
+            }
         }
 
         @media (max-width: 576px) {
@@ -1210,6 +1357,19 @@
 
             .footer-logo {
                 font-size: 1.8rem;
+            }
+
+            .review-form-container {
+                padding: 20px;
+            }
+
+            .review-form input,
+            .review-form textarea {
+                font-size: 0.9rem;
+            }
+
+            .review-form button {
+                font-size: 1rem;
             }
         }
     </style>
@@ -1320,6 +1480,38 @@
             <div class="stat-icon"><i class="fas fa-headset"></i></div>
             <div class="stat-number">24/7</div>
             <div class="stat-label">Support Available</div>
+        </div>
+    </div>
+</section>
+
+<!-- Reviews Section -->
+<section class="reviews">
+    <h2 class="section-title">What Our Students Say</h2>
+    <div class="reviews-container">
+        <div class="reviews-slideshow">
+            <!-- Sample reviews for the slideshow -->
+            <div class="review-slide active">
+                <p class="review-text">"NexoraSkill transformed my career! The hands-on projects were invaluable."</p>
+                <p class="review-author">– Jane Doe</p>
+            </div>
+            <div class="review-slide">
+                <p class="review-text">"The instructors are top-notch, and the platform is incredibly engaging."</p>
+                <p class="review-author">– John Smith</p>
+            </div>
+            <div class="review-slide">
+                <p class="review-text">"I learned cutting-edge skills that got me hired at a tech giant!"</p>
+                <p class="review-author">– Emily Johnson</p>
+            </div>
+        </div>
+
+        <!-- Review Submission Form -->
+        <div class="review-form-container">
+            <h3>Share Your Experience</h3>
+            <form class="review-form" action="${pageContext.request.contextPath}/ReviewServlet" method="POST">
+                <input type="text" name="author" placeholder="Your Name" required>
+                <textarea name="text" placeholder="Your Review" required></textarea>
+                <button type="submit"><i class="fas fa-paper-plane"></i> Submit Review</button>
+            </form>
         </div>
     </div>
 </section>
@@ -1444,6 +1636,28 @@
     }, { threshold: 0.5 });
 
     observer.observe(statsSection);
+
+    // Reviews Slideshow
+    const slides = document.querySelectorAll('.review-slide');
+    let currentSlide = 0;
+
+    function showSlide(index) {
+        slides.forEach((slide, i) => {
+            slide.classList.remove('active');
+            if (i === index) {
+                slide.classList.add('active');
+            }
+        });
+    }
+
+    function nextSlide() {
+        currentSlide = (currentSlide + 1) % slides.length;
+        showSlide(currentSlide);
+    }
+
+    // Auto-slide every 5 seconds
+    setInterval(nextSlide, 5000);
+    showSlide(currentSlide);
 
     // Scroll To Top Button
     const scrollTop = document.querySelector('.scroll-top');
