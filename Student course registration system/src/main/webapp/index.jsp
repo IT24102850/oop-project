@@ -1,4 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="com.studentregistration.model.Review" %>
+<%@ page import="java.util.List" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,9 +9,7 @@
     <title>NexoraSkill | Future-Ready Education Platform</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="icon" type="image/png" href="./images/favicon.ico">
-    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Orbitron:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Animate.css -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
 
     <style>
@@ -57,7 +57,10 @@
             color: var(--dark-color);
         }
 
-        /* Preloader */
+
+
+
+
         .preloader {
             position: fixed;
             top: 0;
@@ -849,6 +852,7 @@
             gap: 20px;
         }
 
+        .review-form select,
         .review-form input,
         .review-form textarea {
             padding: 15px;
@@ -861,6 +865,7 @@
             transition: var(--transition);
         }
 
+        .review-form select:focus,
         .review-form input:focus,
         .review-form textarea:focus {
             border-color: var(--primary-color);
@@ -887,6 +892,42 @@
         .review-form button:hover {
             transform: translateY(-3px);
             box-shadow: 0 10px 20px rgba(0, 242, 254, 0.3);
+        }
+
+        .review-actions {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .edit-btn, .delete-btn {
+            padding: 10px 20px;
+            border-radius: 25px;
+            border: none;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .edit-btn {
+            background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+            color: var(--dark-color);
+        }
+
+        .edit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .delete-btn {
+            background: linear-gradient(135deg, #ff6b6b, #ee5253);
+            color: var(--text-color);
+        }
+
+        .delete-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(255, 107, 107, 0.3);
         }
 
         /* CTA Section - Parallax Effect */
@@ -1363,6 +1404,7 @@
                 padding: 20px;
             }
 
+            .review-form select,
             .review-form input,
             .review-form textarea {
                 font-size: 0.9rem;
@@ -1488,29 +1530,51 @@
 <section class="reviews">
     <h2 class="section-title">What Our Students Say</h2>
     <div class="reviews-container">
-        <div class="reviews-slideshow">
-            <!-- Sample reviews for the slideshow -->
-            <div class="review-slide active">
-                <p class="review-text">"NexoraSkill transformed my career! The hands-on projects were invaluable."</p>
-                <p class="review-author">– Jane Doe</p>
-            </div>
-            <div class="review-slide">
-                <p class="review-text">"The instructors are top-notch, and the platform is incredibly engaging."</p>
-                <p class="review-author">– John Smith</p>
-            </div>
-            <div class="review-slide">
-                <p class="review-text">"I learned cutting-edge skills that got me hired at a tech giant!"</p>
-                <p class="review-author">– Emily Johnson</p>
-            </div>
+        <div class="reviews-slideshow" id="reviews-slideshow">
+            <%
+                List<Review> reviews = (List<Review>) request.getAttribute("reviews");
+                String error = (String) request.getAttribute("error");
+
+                if (error != null) {
+                    out.println("<div class='review-slide active'><p class='review-text'>" + error + "</p><p class='review-author'>– NexoraSkill</p></div>");
+                } else if (reviews == null || reviews.isEmpty()) {
+                    out.println("<div class='review-slide active'><p class='review-text'>No reviews yet. Be the first to share!</p><p class='review-author'>– NexoraSkill</p></div>");
+                } else {
+                    for (int i = 0; i < reviews.size(); i++) {
+                        Review review = reviews.get(i);
+                        out.println("<div class='review-slide" + (i == 0 ? " active" : "") + "'>");
+                        out.println("<p class='review-text'>\"" + review.getText() + "\"</p>");
+                        out.println("<p class='review-author'>– " + review.getAuthor() + "</p>");
+                        out.println("</div>");
+                    }
+                }
+            %>
         </div>
 
-        <!-- Review Submission Form -->
+        <!-- Review Management Form -->
         <div class="review-form-container">
-            <h3>Share Your Experience</h3>
-            <form class="review-form" action="${pageContext.request.contextPath}/ReviewServlet" method="POST">
-                <input type="text" name="author" placeholder="Your Name" required>
-                <textarea name="text" placeholder="Your Review" required></textarea>
-                <button type="submit"><i class="fas fa-paper-plane"></i> Submit Review</button>
+            <h3 id="form-title">Manage Your Reviews</h3>
+            <form class="review-form" id="review-form">
+                <input type="hidden" name="action" id="action" value="create">
+                <input type="hidden" name="id" id="review-id">
+                <select name="review-select" id="review-select" onchange="fillEditForm()">
+                    <option value="-1">Select a review to edit or delete</option>
+                    <%
+                        if (reviews != null) {
+                            for (int i = 0; i < reviews.size(); i++) {
+                                Review review = reviews.get(i);
+                                out.println("<option value=\"" + i + "\">" + review.getAuthor() + ": \"" + review.getText().substring(0, Math.min(review.getText().length(), 20)) + (review.getText().length() > 20 ? "..." : "") + "\"</option>");
+                            }
+                        }
+                    %>
+                </select>
+                <input type="text" name="author" id="author" placeholder="Your Name" required>
+                <textarea name="text" id="text" placeholder="Your Review" required></textarea>
+                <div class="review-actions">
+                    <button type="button" class="edit-btn" onclick="setAction('update')">Edit</button>
+                    <button type="button" class="delete-btn" onclick="setAction('delete')">Delete</button>
+                    <button type="button" id="submit-btn"><i class="fas fa-paper-plane"></i> <span id="submit-text">Submit Review</span></button>
+                </div>
             </form>
         </div>
     </div>
@@ -1577,7 +1641,7 @@
         </div>
     </div>
     <div class="footer-bottom">
-        <p>&copy; 2023 NexoraSkill. All rights reserved. | Designed with <i class="fas fa-heart" style="color: var(--accent-color);"></i> for the future of education</p>
+        <p>© 2023 NexoraSkill. All rights reserved. | Designed with <i class="fas fa-heart" style="color: var(--accent-color);"></i> for the future of education</p>
     </div>
 </footer>
 
@@ -1656,8 +1720,103 @@
     }
 
     // Auto-slide every 5 seconds
-    setInterval(nextSlide, 5000);
+    if (slides.length > 1) {
+        setInterval(nextSlide, 5000);
+    }
     showSlide(currentSlide);
+
+    // Fill Edit Form
+    function fillEditForm() {
+        const select = document.getElementById('review-select');
+        const selectedIndex = parseInt(select.value);
+        if (selectedIndex >= 0) {
+            const reviews = <%=(reviews != null) ? reviews : "[]" %>;
+            const review = reviews[selectedIndex];
+            document.getElementById('form-title').innerText = 'Edit Your Review';
+            document.getElementById('action').value = 'create';
+            document.getElementById('review-id').value = selectedIndex;
+            document.getElementById('author').value = review.author;
+            document.getElementById('text').value = review.text;
+            document.getElementById('submit-text').innerText = 'Update Review';
+        } else {
+            resetForm();
+        }
+    }
+
+    // Set Action and Submit Form via AJAX
+    function setAction(action) {
+        const select = document.getElementById('review-select');
+        const selectedIndex = parseInt(select.value);
+        if (selectedIndex >= 0 || action === 'create') {
+            document.getElementById('action').value = action;
+            submitForm();
+        } else {
+            alert('Please select a review to ' + (action === 'update' ? 'edit' : 'delete') + '.');
+        }
+    }
+
+    function submitForm() {
+        const form = document.getElementById('review-form');
+        const formData = new FormData(form);
+
+        fetch('${pageContext.request.contextPath}/ReviewServlet', {
+            method: 'POST',
+            body: formData
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    updateReviews(data.reviews);
+                    resetForm();
+                    alert('Operation successful!');
+                } else {
+                    alert('Error: ' + (data.error || 'Unknown error'));
+                }
+            })
+            .catch(error => {
+                console.error('Fetch error:', error);
+                alert('An error occurred. Please try again.');
+            });
+    }
+
+    // Update Reviews Dynamically
+    function updateReviews(reviews) {
+        const slideshow = document.getElementById('reviews-slideshow');
+        slideshow.innerHTML = '';
+        if (!reviews || reviews.length === 0) {
+            slideshow.innerHTML = '<div class="review-slide active"><p class="review-text">No reviews yet. Be the first to share!</p><p class="review-author">– NexoraSkill</p></div>';
+        } else {
+            reviews.forEach((review, index) => {
+                const slide = document.createElement('div');
+                slide.className = 'review-slide' + (index === 0 ? ' active' : '');
+                slide.innerHTML = `<p class="review-text">"${review.text}"</p><p class="review-author">– ${review.author}</p>`;
+                slideshow.appendChild(slide);
+            });
+        }
+        const select = document.getElementById('review-select');
+        select.innerHTML = '<option value="-1">Select a review to edit or delete</option>';
+        reviews.forEach((review, index) => {
+            select.innerHTML += `<option value="${index}">${review.author}: "${review.text.substring(0, Math.min(review.text.length, 20))}${review.text.length > 20 ? '...' : ''}"</option>`;
+        });
+        currentSlide = 0;
+        showSlide(currentSlide);
+    }
+
+    // Reset Form
+    function resetForm() {
+        document.getElementById('form-title').innerText = 'Manage Your Reviews';
+        document.getElementById('action').value = 'create';
+        document.getElementById('review-id').value = '';
+        document.getElementById('author').value = '';
+        document.getElementById('text').value = '';
+        document.getElementById('submit-text').innerText = 'Submit Review';
+        document.getElementById('review-select').value = '-1';
+    }
+
+    // Attach Submit Button Event
+    document.getElementById('submit-btn').addEventListener('click', () => {
+        submitForm();
+    });
 
     // Scroll To Top Button
     const scrollTop = document.querySelector('.scroll-top');
@@ -1685,19 +1844,15 @@
             const particle = document.createElement('div');
             particle.classList.add('particle');
 
-            // Random position
             particle.style.left = Math.random() * 100 + '%';
             particle.style.top = Math.random() * 100 + '%';
 
-            // Random size
             const size = Math.random() * 4 + 1;
             particle.style.width = size + 'px';
             particle.style.height = size + 'px';
 
-            // Random opacity
             particle.style.opacity = Math.random() * 0.7 + 0.1;
 
-            // Random animation duration
             particle.style.animationDuration = Math.random() * 25 + 15 + 's';
             particle.style.animationDelay = Math.random() * 5 + 's';
 
