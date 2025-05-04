@@ -30,7 +30,7 @@
 0,Hasiru,$2a$10$fe7V8LhTUXnN9hRtkmwJyuxPSYwPBx1eSafUhHwH6uLfhjG9CRWnm,admin
 0,Hasiru,$2a$10$3tqFBuulxOvAQpZE3A3uHO4.MjTeTnelQvvCiOs/deWlezB/IFd1a,admin
 0,Hasiru,$2a$10$1pkw4/qTiDkAGL.SF/YyEu9Iae9u/3kCS3CEYumr5qqAFQRYttnDS,admin
-<<<<<<< Updated upstream
 0,Hasiru,$2a$10$IuFgYBI2xEOaskQmvVnGA.MlCXDORQGWxePJxuArvpJXxrPFRpGkG,admin
-=======
->>>>>>> Stashed changes
+0,Hasiru,$2a$10$.S5XsAt03MzNYVYM98hHx.8bw5vewM2ZhG/GQ8FDAn7gQNb1uCA1W,admin
+0,Hasiru,$2a$10$/aU8C42qBjaClNTiNvo2zuzYLIBYbnQL.d40EtuQMIYO1nPUvRGRy,admin
+0,Hasiru,$2a$10$oWOpZn44NQoZgTmK3QFVr.ufVUEWT8RkUUlaUSDZzF3UJsNzj55EO,admin
