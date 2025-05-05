@@ -1,6 +1,5 @@
 package com.studentregistration.servlets;
 
-
 import java.io.*;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -16,6 +15,7 @@ public class AdminLoginServlet extends HttpServlet {
         boolean isValidAdmin = false;
         String adminsFilePath = getServletContext().getRealPath("/WEB-INF/data/admins.txt");
         File adminsFile = new File(adminsFilePath);
+        String expectedPassword = null;
 
         if (adminsFile.exists()) {
             try (BufferedReader reader = new BufferedReader(new FileReader(adminsFile))) {
@@ -25,15 +25,18 @@ public class AdminLoginServlet extends HttpServlet {
                     String[] parts = line.split(",");
                     if (parts.length >= 1 && parts[0].equals(username)) {
                         isValidAdmin = true;
-                        String expectedPassword = "hasiru2004".equals(password) && "Hasiru".equals(username) ? "hasiru2004" :
-                                new StringBuilder(username).reverse().toString();
+                        // Check if password is provided in the file (at least 4 parts: username, name, email, password)
+                        if (parts.length >= 4) {
+                            expectedPassword = parts[3]; // Use the password from the file
+                        } else {
+                            // If no password in file, use reverse of username
+                            expectedPassword = new StringBuilder(username).reverse().toString();
+                        }
                         if (password.equals(expectedPassword)) {
                             HttpSession session = request.getSession();
                             session.setAttribute("userType", "admin");
                             session.setAttribute("username", username);
-                            if ("Hasiru".equals(username)) {
-                                session.setAttribute("isSuperAdmin", true);
-                            }
+                            // Remove the super admin check for Hasiru since we're standardizing password logic
                             response.sendRedirect("admin-dashboard.jsp");
                             return;
                         }

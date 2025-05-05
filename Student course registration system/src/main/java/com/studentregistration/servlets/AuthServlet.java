@@ -61,7 +61,10 @@ public class AuthServlet extends HttpServlet {
                 return;
             }
 
-            if ("instructor".equals(userType)) {
+            if ("admin".equals(userType)) {
+                // Forward to AdminLoginServlet for admin authentication
+                request.getRequestDispatcher("/AdminLoginServlet").forward(request, response);
+            } else if ("instructor".equals(userType)) {
                 handleInstructorLogin(request, response, username, password);
             } else {
                 handleError(request, response, "Invalid user type", "logIn.jsp");

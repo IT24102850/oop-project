@@ -1379,16 +1379,7 @@
                 <i class="fas fa-book-open"></i> Course Management
             </a>
         </li>
-        <li class="nav-item">
-            <a href="?activeTab=emergency" class="nav-link <%= "emergency".equals(activeTab) ? "active" : "" %>" data-section="emergency" aria-label="Emergency Contacts">
-                <i class="fas fa-exclamation-triangle"></i> Emergency Contacts
-            </a>
-        </li>
-        <li class="nav-item">
-            <a href="?activeTab=admin-tools" class="nav-link <%= "admin-tools".equals(activeTab) ? "active" : "" %>" data-section="admin-tools" aria-label="Admin Tools">
-                <i class="fas fa-tools"></i> Admin Tools
-            </a>
-        </li>
+
         <li class="nav-item">
             <a href="?activeTab=payment" class="nav-link <%= "payment".equals(activeTab) ? "active" : "" %>" data-section="payment" aria-label="Payment Management">
                 <i class="fas fa-credit-card"></i> Payment Management
@@ -1439,6 +1430,7 @@
             </div>
         </div>
     </section>
+
 
     <section id="students" class="content-section <%= "students".equals(activeTab) ? "active" : "" %>">
         <div class="section-header">
@@ -1491,7 +1483,7 @@
                 if (students != null && !students.isEmpty()) {
                     for (String[] student : students) {
             %>
-            <tr class="student-row">
+            <tr class="student-row" data-student-name="<%= student[1] %>">
                 <td><%= student[0] %></td>
                 <td class="student-name"><%= student[1] %></td>
                 <td><%= student[2] %></td>
@@ -1515,6 +1507,27 @@
             </tbody>
         </table>
     </section>
+
+    <script>
+        function searchStudents() {
+            let input = document.getElementById("studentSearch").value.toLowerCase();
+            let table = document.getElementById("studentTable");
+            let tr = table.getElementsByClassName("student-row");
+
+            for (let i = 0; i < tr.length; i++) {
+                let studentName = tr[i].getAttribute("data-student-name").toLowerCase();
+                if (studentName.includes(input)) {
+                    tr[i].style.display = "";
+                } else {
+                    tr[i].style.display = "none";
+                }
+            }
+        }
+    </script>
+
+
+
+
 
     <section id="courses" class="content-section <%= "courses".equals(activeTab) ? "active" : "" %>">
         <div class="section-header">
@@ -1661,82 +1674,10 @@
         </div>
     </section>
 
-    <section id="emergency" class="content-section <%= "emergency".equals(activeTab) ? "active" : "" %>">
-        <div class="section-header">
-            <h2><i class="fas fa-exclamation-circle"></i> Emergency Contacts</h2>
-        </div>
 
-        <div class="emergency-contact-form">
-            <div class="form-group">
-                <label for="emergencyStudentId">Student ID</label>
-                <input type="text" id="emergencyStudentId" name="studentId" placeholder="Enter Student ID">
-                <div class="error-text" id="emergencyStudentIdError"></div>
-            </div>
-            <div class="form-group">
-                <label for="emergencyContact">Emergency Contact</label>
-                <input type="text" id="emergencyContact" name="emergencyContact" placeholder="Contact Name">
-                <div class="error-text" id="emergencyContactError"></div>
-            </div>
-            <div class="form-group">
-                <label for="emergencyPhone">Phone Number</label>
-                <input type="tel" id="emergencyPhone" name="emergencyPhone" placeholder="Emergency Phone">
-                <div class="error-text" id="emergencyPhoneError"></div>
-            </div>
-            <button class="btn btn-primary" onclick="updateEmergencyContact()" aria-label="Update Emergency Contacts">Update Contacts</button>
-        </div>
-    </section>
 
-    <section id="admin-tools" class="content-section <%= "admin-tools".equals(activeTab) ? "active" : "" %>">
-        <h2><i class="fas fa-tools"></i> Admin Tools</h2>
 
-        <div class="action-card">
-            <h3>Monitor Active Sessions</h3>
-            <a href="admin?action=monitorSessions&activeTab=admin-tools" class="btn btn-primary" aria-label="View Active Sessions">
-                <i class="fas fa-eye"></i> View Active Admin Sessions
-            </a>
-        </div>
 
-        <div class="action-card">
-            <h3>Force Password Reset</h3>
-            <form action="admin" method="post">
-                <input type="hidden" name="action" value="forceReset">
-                <input type="hidden" name="activeTab" value="admin-tools">
-                <div class="form-group">
-                    <label for="resetUsername">Username:</label>
-                    <input type="text" id="resetUsername" name="username" required>
-                </div>
-                <button type="submit" class="btn btn-primary" aria-label="Force Password Reset">
-                    <i class="fas fa-lock"></i> Force Reset
-                </button>
-            </form>
-        </div>
-
-        <div class="action-card">
-            <h3>Deactivate Account</h3>
-            <form action="admin" method="post">
-                <input type="hidden" name="action" value="deactivate">
-                <input type="hidden" name="activeTab" value="admin-tools">
-                <div class="form-group">
-                    <label for="deactivateUsername">Username:</label>
-                    <input type="text" id="deactivateUsername" name="username" required>
-                </div>
-                <button type="submit" class="btn btn-danger" aria-label="Deactivate Account">
-                    <i class="fas fa-ban"></i> Deactivate
-                </button>
-            </form>
-        </div>
-
-        <div class="action-card">
-            <h3>Purge Expired Unverified Accounts</h3>
-            <form action="admin" method="post">
-                <input type="hidden" name="action" value="purgeUnverified">
-                <input type="hidden" name="activeTab" value="admin-tools">
-                <button type="submit" class="btn btn-danger" aria-label="Purge Unverified Accounts">
-                    <i class="fas fa-trash-alt"></i> Purge Unverified Accounts
-                </button>
-            </form>
-        </div>
-    </section>
 
     <section id="payment" class="content-section <%= "payment".equals(activeTab) ? "active" : "" %>">
         <div class="section-header">
@@ -1759,7 +1700,7 @@
         </div>
 
         <div class="search-bar">
-            <input type="text" id="paymentSearch" placeholder="Search payments by student ID or invoice ID..." onkeyup="searchPayments()" aria-label="Search payments">
+            <input type="text" id="paymentSearch" placeholder="Search payments by student ID..." onkeyup="searchPayments()" aria-label="Search payments">
             <i class="fas fa-search"></i>
         </div>
 
@@ -1786,7 +1727,7 @@
                     for (String[] payment : paymentHistory) {
                         String status = payment[4].equals("pending") || payment[4].equals("overdue") ? payment[4] : "paid";
             %>
-            <tr class="payment-row">
+            <tr class="payment-row" data-student-id="<%= payment[1] %>">
                 <td><%= payment[0] %></td>
                 <td><%= payment[1] %></td>
                 <td><%= payment[2] %></td>
@@ -1815,6 +1756,23 @@
             </tbody>
         </table>
     </section>
+
+    <script>
+        function searchPayments() {
+            let input = document.getElementById("paymentSearch").value.toLowerCase();
+            let table = document.getElementById("paymentTable");
+            let tr = table.getElementsByClassName("payment-row");
+
+            for (let i = 0; i < tr.length; i++) {
+                let studentId = tr[i].getAttribute("data-student-id").toLowerCase();
+                if (studentId.includes(input)) {
+                    tr[i].style.display = "";
+                } else {
+                    tr[i].style.display = "none";
+                }
+            }
+        }
+    </script>
 
     <section id="admin-management" class="content-section <%= "admin-management".equals(activeTab) ? "active" : "" %>">
         <div class="section-header">
