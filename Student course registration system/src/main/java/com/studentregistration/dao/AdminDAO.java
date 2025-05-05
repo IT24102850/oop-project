@@ -6,7 +6,7 @@ import java.io.IOException;
 
 public class AdminDAO {
     public boolean validateAdmin(String username, String password) {
-        String filePath = getClass().getClassLoader().getResource("admin.txt").getPath();
+        String filePath = getClass().getClassLoader().getResource("admins.txt").getPath();
 
         try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
             String line;

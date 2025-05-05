@@ -11,14 +11,14 @@ public class Admin extends User {
     private static final DateTimeFormatter DATE_TIME_FORMATTER =
             DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
-    public Admin(String email, String password, String fullName, boolean isVerified) {
-        super(email, password, fullName, "admin", isVerified);
+    public Admin(String email, String password, String name, boolean isVerified) {
+        super(email, password, name, "admin", isVerified);
         this.forcePasswordReset = false;
         this.lastPasswordChange = LocalDateTime.now();
     }
 
-    public Admin(String email, String password, String fullName, boolean isVerified, String role) {
-        super(email, password, fullName, role, isVerified);
+    public Admin(String email, String password, String name, boolean isVerified, String role) {
+        super(email, password, name, role, isVerified);
         this.forcePasswordReset = false;
         this.lastPasswordChange = LocalDateTime.now();
     }
@@ -40,42 +40,39 @@ public class Admin extends User {
         this.lastPasswordChange = lastPasswordChange;
     }
 
-    public boolean isSuperAdmin() {
-        return "superadmin".equalsIgnoreCase(getRole());
-    }
-
-    // File handling methods
+    // File handling methods (updated to match admins.txt format)
     @Override
     public String toFileString() {
-        return String.join("|",
+        return String.join(",",
+                getUsername(),
+                getName(), // Updated from getFullName()
                 getEmail(),
                 getPassword(),
-                getFullName(),
-                String.valueOf(isActive()),
                 getRole(),
                 String.valueOf(forcePasswordReset),
                 lastPasswordChange.format(DATE_TIME_FORMATTER),
-                getLastLogin() != null ? getLastLogin().format(DATE_TIME_FORMATTER) : "null"
-        );
+                getLastLogin() != null ? getLastLogin().format(DATE_TIME_FORMATTER) : "null");
     }
 
     public static Admin fromFileString(String fileString) {
-        String[] parts = fileString.split("\\|");
-        if (parts.length < 8) {
+        String[] parts = fileString.split(",");
+        if (parts.length < 5) {
             throw new IllegalArgumentException("Invalid admin data string");
         }
 
         Admin admin = new Admin(
-                parts[0], // email
-                parts[1], // password
-                parts[2], // fullName
-                Boolean.parseBoolean(parts[3]), // isActive
+                parts[2], // email
+                parts[3], // password
+                parts[1], // name
+                true,     // isActive (default to true as admins.txt doesn't store this)
                 parts[4]  // role
         );
 
-        admin.setForcePasswordReset(Boolean.parseBoolean(parts[5]));
+        if (parts.length > 5) {
+            admin.setForcePasswordReset(Boolean.parseBoolean(parts[5]));
+        }
 
-        if (!"null".equals(parts[6])) {
+        if (parts.length > 6 && !"null".equals(parts[6])) {
             admin.setLastPasswordChange(LocalDateTime.parse(parts[6], DATE_TIME_FORMATTER));
         }
 
@@ -101,7 +98,7 @@ public class Admin extends User {
     public String toString() {
         return "Admin{" +
                 "email='" + getEmail() + '\'' +
-                ", name='" + getFullName() + '\'' +
+                ", name='" + getName() + '\'' + // Updated from getFullName()
                 ", role='" + getRole() + '\'' +
                 ", isVerified=" + isActive() +
                 ", forcePasswordReset=" + forcePasswordReset +

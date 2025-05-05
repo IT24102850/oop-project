@@ -257,6 +257,179 @@
         }
     }
 
+    // Load admins from admins.txt
+    List<String[]> admins = new ArrayList<>();
+    String adminsFilePath = application.getRealPath("/WEB-INF/data/admins.txt");
+    File adminsFile = new File(adminsFilePath);
+    if (adminsFile.exists()) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(adminsFile))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                if (line.trim().isEmpty()) continue;
+                String[] parts = line.split(",");
+                if (parts.length >= 3) {
+                    admins.add(parts);
+                }
+            }
+        } catch (IOException e) {
+            System.out.println("Error reading admins.txt: " + e.getMessage());
+        }
+    } else {
+        admins.add(new String[]{"admin1", "Admin One", "admin1@nexora.edu"});
+    }
+    request.setAttribute("admins", admins);
+
+    // Handle admin creation
+    if ("createAdmin".equals(action)) {
+        String username = request.getParameter("username");
+        String name = request.getParameter("name");
+        String email = request.getParameter("email");
+
+        boolean hasError = false;
+        String errorMessage = null;
+
+        if (username == null || username.trim().isEmpty() || name == null || name.trim().isEmpty() || email == null || email.trim().isEmpty()) {
+            errorMessage = "All fields are required.";
+            hasError = true;
+        } else if (!email.matches("^[A-Za-z0-9+_.-]+@(.+)$")) {
+            errorMessage = "Invalid email format.";
+            hasError = true;
+        } else {
+            for (String[] admin : admins) {
+                if (admin[0].equals(username)) {
+                    errorMessage = "An admin with this username already exists.";
+                    hasError = true;
+                    break;
+                }
+                if (admin[2].equals(email)) {
+                    errorMessage = "An admin with this email already exists.";
+                    hasError = true;
+                    break;
+                }
+            }
+        }
+
+        if (!hasError) {
+            String newAdmin = String.format("%s,%s,%s", username, name, email);
+            admins.add(new String[]{username, name, email});
+
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(adminsFile))) {
+                for (String[] admin : admins) {
+                    writer.write(String.join(",", admin));
+                    writer.newLine();
+                }
+            } catch (IOException e) {
+                System.out.println("Error writing to admins.txt: " + e.getMessage());
+                errorMessage = "Server error while saving admin.";
+                hasError = true;
+            }
+
+            if (!hasError) {
+                response.sendRedirect("admin-dashboard.jsp?activeTab=admin-management&message=admin_added");
+                return;
+            }
+        }
+        request.setAttribute("error", errorMessage);
+    }
+
+    // Handle admin update
+    if ("updateAdmin".equals(action)) {
+        String originalUsername = request.getParameter("originalUsername");
+        String username = request.getParameter("username");
+        String name = request.getParameter("name");
+        String email = request.getParameter("email");
+
+        boolean hasError = false;
+        String errorMessage = null;
+
+        if (username == null || username.trim().isEmpty() || name == null || name.trim().isEmpty() || email == null || email.trim().isEmpty()) {
+            errorMessage = "All fields are required.";
+            hasError = true;
+        } else if (!email.matches("^[A-Za-z0-9+_.-]+@(.+)$")) {
+            errorMessage = "Invalid email format.";
+            hasError = true;
+        } else if (!username.equals(originalUsername)) {
+            for (String[] admin : admins) {
+                if (admin[0].equals(username)) {
+                    errorMessage = "An admin with this username already exists.";
+                    hasError = true;
+                    break;
+                }
+            }
+        } else {
+            for (String[] admin : admins) {
+                if (admin[2].equals(email) && !admin[0].equals(originalUsername)) {
+                    errorMessage = "An admin with this email already exists.";
+                    hasError = true;
+                    break;
+                }
+            }
+        }
+
+        if (!hasError) {
+            boolean adminFound = false;
+            for (int i = 0; i < admins.size(); i++) {
+                if (admins.get(i)[0].equals(originalUsername)) {
+                    admins.set(i, new String[]{username, name, email});
+                    adminFound = true;
+                    break;
+                }
+            }
+
+            if (!adminFound) {
+                errorMessage = "Admin not found.";
+                hasError = true;
+            } else {
+                try (BufferedWriter writer = new BufferedWriter(new FileWriter(adminsFile))) {
+                    for (String[] admin : admins) {
+                        writer.write(String.join(",", admin));
+                        writer.newLine();
+                    }
+                } catch (IOException e) {
+                    System.out.println("Error writing to admins.txt: " + e.getMessage());
+                    errorMessage = "Server error while updating admin.";
+                    hasError = true;
+                }
+            }
+
+            if (!hasError) {
+                response.sendRedirect("admin-dashboard.jsp?activeTab=admin-management&message=admin_updated");
+                return;
+            }
+        }
+        request.setAttribute("error", errorMessage);
+    }
+
+    // Handle admin deletion
+    if ("deleteAdmin".equals(action)) {
+        String username = request.getParameter("username");
+        boolean adminFound = false;
+
+        for (int i = 0; i < admins.size(); i++) {
+            if (admins.get(i)[0].equals(username)) {
+                admins.remove(i);
+                adminFound = true;
+                break;
+            }
+        }
+
+        if (adminFound) {
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(adminsFile))) {
+                for (String[] admin : admins) {
+                    writer.write(String.join(",", admin));
+                    writer.newLine();
+                }
+            } catch (IOException e) {
+                System.out.println("Error writing to admins.txt: " + e.getMessage());
+                request.setAttribute("error", "Server error while deleting admin.");
+            }
+            response.sendRedirect("admin-dashboard.jsp?activeTab=admin-management&message=admin_deleted");
+            return;
+        } else {
+            request.setAttribute("error", "Admin not found.");
+        }
+    }
+
     String errorMessage = null;
     String error = request.getParameter("error");
     if (error != null) {
@@ -315,6 +488,15 @@
                 break;
             case "payment_updated":
                 successMessage = "Payment status successfully updated!";
+                break;
+            case "admin_added":
+                successMessage = "Admin successfully added!";
+                break;
+            case "admin_updated":
+                successMessage = "Admin successfully updated!";
+                break;
+            case "admin_deleted":
+                successMessage = "Admin successfully deleted!";
                 break;
         }
         request.setAttribute("message", successMessage);
@@ -1212,6 +1394,11 @@
                 <i class="fas fa-credit-card"></i> Payment Management
             </a>
         </li>
+        <li class="nav-item">
+            <a href="?activeTab=admin-management" class="nav-link <%= "admin-management".equals(activeTab) ? "active" : "" %>" data-section="admin-management" aria-label="Admin Management">
+                <i class="fas fa-user-shield"></i> Admin Management
+            </a>
+        </li>
     </ul>
 </div>
 
@@ -1628,286 +1815,325 @@
             </tbody>
         </table>
     </section>
-</div>
 
-<div id="addStudent" class="modal">
-    <div class="modal-content">
-        <button class="modal-close" onclick="closeModal('addStudent')" aria-label="Close Modal"><i class="fas fa-times"></i></button>
-        <h2>Add New Student</h2>
-        <form action="studentRegistration" method="post" class="add-student-form" onsubmit="return validateAddStudentForm(this)">
-            <input type="hidden" name="action" value="add">
-            <input type="hidden" name="activeTab" value="students">
-            <div class="form-group">
-                <label for="studentId" class="required">Student ID</label>
-                <input type="text" id="studentId" name="id" required placeholder="e.g., STU20230001">
-                <div class="error-text" id="studentIdError"></div>
-            </div>
-            <div class="form-group">
-                <label for="studentName" class="required">Full Name</label>
-                <input type="text" id="studentName" name="name" required placeholder="e.g., John Doe">
-                <div class="error-text" id="studentNameError"></div>
-            </div>
-            <div class="form-group">
-                <label for="studentEmail" class="required">Email</label>
-                <input type="email" id="studentEmail" name="email" required placeholder="e.g., john.doe@nexora.edu">
-                <div class="error-text" id="studentEmailError"></div>
-            </div>
-            <div class="button-group">
-                <button type="submit" id="addStudentBtn" class="btn-futuristic btn-futuristic-create" data-tooltip="Add this student" aria-label="Add Student">
-                    <i class="fas fa-user-plus"></i> Add Student
-                </button>
-            </div>
-        </form>
+    <section id="admin-management" class="content-section <%= "admin-management".equals(activeTab) ? "active" : "" %>">
+        <div class="section-header">
+            <h2><i class="fas fa-user-shield"></i> Admin Management</h2>
+            <button class="btn-futuristic btn-futuristic-create" data-tooltip="Add new admin" onclick="openModal('addAdmin')" aria-label="Add Admin">
+                <i class="fas fa-user-plus"></i> Add Admin
+            </button>
+        </div>
+
+        <div class="search-bar">
+            <input type="text" id="adminSearch" placeholder="Search admins by username or name..." onkeyup="searchAdmins()" aria-label="Search admins">
+            <i class="fas fa-search"></i>
+            <button class="btn btn-primary" onclick="clearAdminSearch()" aria-label="Clear Search">
+                <i class="fas fa-times"></i> Clear
+            </button>
+        </div>
+
+        <table class="data-table" id="adminTable">
+            <thead>
+            <tr>
+                <th>Username</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <%
+                if (admins != null && !admins.isEmpty()) {
+                    for (String[] admin : admins) {
+            %>
+            <tr class="admin-row">
+                <td><%= admin[0] %></td>
+                <td class="admin-name"><%= admin[1] %></td>
+                <td><%= admin[2] %></td>
+                <td>
+                    <button class="btn-futuristic btn-futuristic-update" data-tooltip="Edit this admin" onclick="openUpdateAdminModal('<%= admin[0] %>', '<%= admin[1] %>', '<%= admin[2] %>', '<%= admin.length > 3 ? admin[3] : "" %>')" aria-label="Update Admin">
+                        <i class="fas fa-pen-nib"></i> Update
+                    </button>
+                    <a href="admin-dashboard.jsp?action=deleteAdmin&username=<%= admin[0] %>&activeTab=admin-management" class="btn-futuristic btn-futuristic-delete" data-tooltip="Delete this admin" onclick="return confirmAdminDelete('<%= admin[0] %>')" aria-label="Delete Admin">
+                        <i class="fas fa-trash-can"></i> Delete
+                    </a>
+                </td>
+            </tr>
+            <%
+                }
+            } else {
+            %>
+            <tr>
+                <td colspan="4" style="text-align: center;">No admins available.</td>
+            </tr>
+            <% } %>
+            </tbody>
+        </table>
+    </section>
+
+    <div id="addAdmin" class="modal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal('addAdmin')" aria-label="Close Modal"><i class="fas fa-times"></i></button>
+            <h2>Add New Admin</h2>
+            <form action="admin-dashboard.jsp" method="post" class="add-student-form" onsubmit="return validateAddAdminForm(this)">
+                <input type="hidden" name="action" value="createAdmin">
+                <input type="hidden" name="activeTab" value="admin-management">
+                <div class="form-group">
+                    <label for="adminUsername" class="required">Username</label>
+                    <input type="text" id="adminUsername" name="username" required placeholder="e.g., admin2" aria-describedby="adminUsernameError">
+                    <div class="error-text" id="adminUsernameError"></div>
+                </div>
+                <div class="form-group">
+                    <label for="adminName" class="required">Full Name</label>
+                    <input type="text" id="adminName" name="name" required placeholder="e.g., Admin Two" aria-describedby="adminNameError">
+                    <div class="error-text" id="adminNameError"></div>
+                </div>
+                <div class="form-group">
+                    <label for="adminEmail" class="required">Email</label>
+                    <input type="email" id="adminEmail" name="email" required placeholder="e.g., admin2@nexora.edu" aria-describedby="adminEmailError">
+                    <div class="error-text" id="adminEmailError"></div>
+                </div>
+                <div class="form-group">
+                    <label for="adminPassword" class="required">Password</label>
+                    <input type="password" id="adminPassword" name="password" required placeholder="Enter a secure password" aria-describedby="adminPasswordError">
+                    <div class="error-text" id="adminPasswordError"></div>
+                </div>
+                <div class="button-group">
+                    <button type="submit" class="btn-futuristic btn-futuristic-create" data-tooltip="Add this admin" aria-label="Add Admin" onclick="return confirmAddAdmin()">
+                        <i class="fas fa-user-plus"></i> Add Admin
+                    </button>
+                </div>
+            </form>
+        </div>
     </div>
-</div>
 
-<div id="updateStudent" class="modal">
-    <div class="modal-content">
-        <button class="modal-close" onclick="closeModal('updateStudent')" aria-label="Close Modal"><i class="fas fa-times"></i></button>
-        <h2>Update Student</h2>
-        <form id="updateStudentForm" action="studentRegistration" method="post" onsubmit="return validateUpdateStudentForm()">
-            <input type="hidden" name="action" value="update">
-            <input type="hidden" name="activeTab" value="students">
-            <input type="hidden" name="originalId" id="updateOriginalId">
-            <div class="form-group">
-                <label for="updateStudentId" class="required">Student ID</label>
-                <input type="text" id="updateStudentId" name="id" required>
-                <div class="error-text" id="updateStudentIdError"></div>
-            </div>
-            <div class="form-group">
-                <label for="updateStudentName" class="required">Full Name</label>
-                <input type="text" id="updateStudentName" name="name" required>
-                <div class="error-text" id="updateStudentNameError"></div>
-            </div>
-            <div class="form-group">
-                <label for="updateStudentEmail" class="required">Email</label>
-                <input type="email" id="updateStudentEmail" name="email" required>
-                <div class="error-text" id="updateStudentEmailError"></div>
-            </div>
-            <div class="button-group">
-                <button type="submit" class="btn-futuristic btn-futuristic-update" data-tooltip="Update this student" aria-label="Update Student">
-                    <i class="fas fa-pen-nib"></i> Update Student
-                </button>
-            </div>
-        </form>
+    <div id="updateAdmin" class="modal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal('updateAdmin')" aria-label="Close Modal"><i class="fas fa-times"></i></button>
+            <h2>Update Admin</h2>
+            <form id="updateAdminForm" action="admin-dashboard.jsp" method="post" onsubmit="return validateUpdateAdminForm()">
+                <input type="hidden" name="action" value="updateAdmin">
+                <input type="hidden" name="activeTab" value="admin-management">
+                <input type="hidden" name="originalUsername" id="updateOriginalUsername">
+                <div class="form-group">
+                    <label for="updateAdminUsername" class="required">Username</label>
+                    <input type="text" id="updateAdminUsername" name="username" required aria-describedby="updateAdminUsernameError">
+                    <div class="error-text" id="updateAdminUsernameError"></div>
+                </div>
+                <div class="form-group">
+                    <label for="updateAdminName" class="required">Full Name</label>
+                    <input type="text" id="updateAdminName" name="name" required aria-describedby="updateAdminNameError">
+                    <div class="error-text" id="updateAdminNameError"></div>
+                </div>
+                <div class="form-group">
+                    <label for="updateAdminEmail" class="required">Email</label>
+                    <input type="email" id="updateAdminEmail" name="email" required aria-describedby="updateAdminEmailError">
+                    <div class="error-text" id="updateAdminEmailError"></div>
+                </div>
+                <div class="form-group">
+                    <label for="updateAdminPassword" class="required">Password</label>
+                    <input type="password" id="updateAdminPassword" name="password" placeholder="Leave blank to keep current password" aria-describedby="updateAdminPasswordError">
+                    <div class="error-text" id="updateAdminPasswordError"></div>
+                </div>
+                <div class="button-group">
+                    <button type="submit" class="btn-futuristic btn-futuristic-update" data-tooltip="Update this admin" aria-label="Update Admin">
+                        <i class="fas fa-pen-nib"></i> Update Admin
+                    </button>
+                </div>
+            </form>
+        </div>
     </div>
-</div>
 
-<div id="updateCourse" class="modal">
-    <div class="modal-content">
-        <button class="modal-close" onclick="closeModal('updateCourse')" aria-label="Close Modal"><i class="fas fa-times"></i></button>
-        <h2>Update Course</h2>
-        <form id="updateCourseForm" action="admin-dashboard.jsp" method="post" onsubmit="return validateUpdateCourseForm()">
-            <input type="hidden" name="action" value="update">
-            <input type="hidden" name="activeTab" value="courses">
-            <input type="hidden" name="originalCourseCode" id="updateOriginalCourseCode">
-            <div class="form-group">
-                <label for="updateCourseCode" class="required">Course Code</label>
-                <input type="text" id="updateCourseCode" name="courseCode" required>
-                <div class="error-text" id="updateCourseCodeError"></div>
-            </div>
-            <div class="form-group">
-                <label for="updateTitle" class="required">Title</label>
-                <input type="text" id="updateTitle" name="title" required>
-                <div class="error-text" id="updateTitleError"></div>
-            </div>
-            <div class="form-group">
-                <label for="updateCredits" class="required">Credits</label>
-                <input type="number" id="updateCredits" name="credits" required min="1">
-                <div class="error-text" id="updateCreditsError"></div>
-            </div>
-            <div class="form-group">
-                <label for="updateDepartment" class="required">Department</label>
-                <select id="updateDepartment" name="department" required>
-                    <option value="">Select Department</option>
-                    <option value="Computer Science">Computer Science</option>
-                    <option value="Mathematics">Mathematics</option>
-                    <option value="Physics">Physics</option>
-                </select>
-                <div class="error-text" id="updateDepartmentError"></div>
-            </div>
-            <div class="form-group">
-                <label for="updateProfessor">Professor</label>
-                <input type="text" id="updateProfessor" name="professor" placeholder="e.g., Dr. Smith">
-            </div>
-            <div class="form-group syllabus-group">
-                <label for="updateSyllabus">Syllabus</label>
-                <textarea id="updateSyllabus" name="syllabus" placeholder="e.g., Basic programming concepts" rows="4"></textarea>
-            </div>
-            <div class="button-group">
-                <button type="submit" class="btn-futuristic btn-futuristic-update" data-tooltip="Update this course" aria-label="Update Course">
-                    <i class="fas fa-pen-nib"></i> Update Course
-                </button>
-            </div>
-        </form>
-    </div>
-</div>
-
-<div id="updatePayment" class="modal">
-    <div class="modal-content">
-        <button class="modal-close" onclick="closeModal('updatePayment')" aria-label="Close Modal"><i class="fas fa-times"></i></button>
-        <h2>Update Payment Status</h2>
-        <form id="updatePaymentForm" action="payment" method="post" onsubmit="return validateUpdatePaymentForm()">
-            <input type="hidden" name="action" value="updateStatus">
-            <input type="hidden" name="activeTab" value="payment">
-            <input type="hidden" name="invoiceId" id="updateInvoiceId">
-            <div class="form-group">
-                <label for="updateStatus" class="required">Status</label>
-                <select id="updateStatus" name="status" required>
-                    <option value="paid">Paid</option>
-                    <option value="pending">Pending</option>
-                    <option value="overdue">Overdue</option>
-                </select>
-                <div class="error-text" id="updateStatusError"></div>
-            </div>
-            <div class="button-group">
-                <button type="submit" class="btn-futuristic btn-futuristic-update" data-tooltip="Update payment status" aria-label="Update Payment">
-                    <i class="fas fa-pen-nib"></i> Update Payment
-                </button>
-            </div>
-        </form>
-    </div>
-</div>
-
-<script>
-    const navLinks = document.querySelectorAll('.nav-link');
-    const sections = document.querySelectorAll('.content-section');
-    const loadingOverlay = document.getElementById('loadingOverlay');
-
-    function showSection(sectionId) {
-        sections.forEach(section => {
-            section.classList.remove('active');
-            section.style.display = 'none';
-        });
-        const targetSection = document.getElementById(sectionId);
-        if (targetSection) {
-            targetSection.classList.add('active');
-            targetSection.style.display = 'block';
+    <script>
+        function openModal(modalId) {
+            const modal = document.getElementById(modalId);
+            modal.style.display = 'block';
+            setTimeout(() => {
+                modal.classList.add('show');
+            }, 10);
         }
 
-        navLinks.forEach(link => {
-            link.classList.remove('active');
-            if (link.getAttribute('data-section') === sectionId) {
-                link.classList.add('active');
+        function closeModal(modalId) {
+            const modal = document.getElementById(modalId);
+            modal.classList.remove('show');
+            setTimeout(() => {
+                modal.style.display = 'none';
+            }, 300);
+        }
+
+        function openUpdateAdminModal(username, name, email, currentPassword) {
+            document.getElementById('updateOriginalUsername').value = username;
+            document.getElementById('updateAdminUsername').value = username;
+            document.getElementById('updateAdminName').value = name;
+            document.getElementById('updateAdminEmail').value = email;
+            document.getElementById('updateAdminPassword').value = currentPassword || '';
+            openModal('updateAdmin');
+        }
+
+        function confirmAdminDelete(username) {
+            return confirm(`Are you sure you want to delete the admin "${username}"? This action cannot be undone.`);
+        }
+
+        function confirmAddAdmin() {
+            return confirm("Are you sure you want to add this admin? Please verify the details before proceeding.");
+        }
+
+        function validateAddAdminForm(form) {
+            let isValid = true;
+            const username = form.querySelector('#adminUsername').value.trim();
+            const name = form.querySelector('#adminName').value.trim();
+            const email = form.querySelector('#adminEmail').value.trim();
+            const password = form.querySelector('#adminPassword').value.trim();
+
+            // Reset error messages
+            form.querySelector('#adminUsernameError').style.display = 'none';
+            form.querySelector('#adminNameError').style.display = 'none';
+            form.querySelector('#adminEmailError').style.display = 'none';
+            form.querySelector('#adminPasswordError').style.display = 'none';
+
+            // Username validation: alphanumeric, 3-20 characters
+            const usernameRegex = /^[a-zA-Z0-9]{3,20}$/;
+            if (!usernameRegex.test(username)) {
+                form.querySelector('#adminUsernameError').textContent = 'Username must be 3-20 alphanumeric characters.';
+                form.querySelector('#adminUsernameError').style.display = 'block';
+                isValid = false;
             }
-        });
-    }
 
-    navLinks.forEach(link => {
-        link.addEventListener('click', (e) => {
-            e.preventDefault();
-            const sectionId = link.getAttribute('data-section');
-            showSection(sectionId);
-            history.pushState(null, '', `?activeTab=${sectionId}`);
-        });
-    });
+            // Name validation: letters and spaces, 2-50 characters
+            const nameRegex = /^[a-zA-Z\s]{2,50}$/;
+            if (!nameRegex.test(name)) {
+                form.querySelector('#adminNameError').textContent = 'Name must be 2-50 characters, letters and spaces only.';
+                form.querySelector('#adminNameError').style.display = 'block';
+                isValid = false;
+            }
 
-    const urlParams = new URLSearchParams(window.location.search);
-    const activeTab = urlParams.get('activeTab') || 'dashboard';
-    showSection(activeTab);
+            // Email validation: stricter regex
+            const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+            if (!emailRegex.test(email)) {
+                form.querySelector('#adminEmailError').textContent = 'Please enter a valid email address.';
+                form.querySelector('#adminEmailError').style.display = 'block';
+                isValid = false;
+            }
 
-    window.addEventListener('popstate', () => {
-        const newParams = new URLSearchParams(window.location.search);
-        const newTab = newParams.get('activeTab') || 'dashboard';
-        showSection(newTab);
-    });
+            // Password validation: minimum 8 characters, at least one letter and one number
+            const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+            if (!passwordRegex.test(password)) {
+                form.querySelector('#adminPasswordError').textContent = 'Password must be at least 8 characters with letters and numbers.';
+                form.querySelector('#adminPasswordError').style.display = 'block';
+                isValid = false;
+            }
 
-    function showLoading() {
-        loadingOverlay.style.display = 'flex';
-    }
+            if (isValid) {
+                // Show loading overlay
+                document.getElementById('loadingOverlay').style.display = 'flex';
+            }
 
-    function hideLoading() {
-        loadingOverlay.style.display = 'none';
-    }
-
-    function openModal(modalId) {
-        const modal = document.getElementById(modalId);
-        modal.style.display = 'block';
-        setTimeout(() => {
-            modal.classList.add('show');
-        }, 10);
-    }
-
-    function closeModal(modalId) {
-        const modal = document.getElementById(modalId);
-        modal.classList.remove('show');
-        setTimeout(() => {
-            modal.style.display = 'none';
-        }, 300);
-    }
-
-    function openUpdateModal(courseCode, title, credits, department, professor, syllabus) {
-        document.getElementById('updateOriginalCourseCode').value = courseCode;
-        document.getElementById('updateCourseCode').value = courseCode;
-        document.getElementById('updateTitle').value = title;
-        document.getElementById('updateCredits').value = credits;
-        document.getElementById('updateDepartment').value = department;
-        document.getElementById('updateProfessor').value = professor;
-        document.getElementById('updateSyllabus').value = syllabus;
-        openModal('updateCourse');
-    }
-
-    function openUpdateStudentModal(id, name, email) {
-        document.getElementById('updateOriginalId').value = id;
-        document.getElementById('updateStudentId').value = id;
-        document.getElementById('updateStudentName').value = name;
-        document.getElementById('updateStudentEmail').value = email;
-        openModal('updateStudent');
-    }
-
-    function openUpdatePaymentModal(invoiceId, currentStatus) {
-        document.getElementById('updateInvoiceId').value = invoiceId;
-        document.getElementById('updateStatus').value = currentStatus;
-        openModal('updatePayment');
-    }
-
-    window.onclick = function(e) {
-        if (e.target.className === 'modal') {
-            closeModal(e.target.id);
-        }
-    }
-
-    function toggleCourseSection(sectionId) {
-        const content = document.getElementById(sectionId);
-        content.classList.toggle('active');
-    }
-
-    function confirmDelete(courseCode) {
-        return confirm('Are you sure you want to delete the course "' + courseCode + '"?');
-    }
-
-    function validateAddStudentForm(form) {
-        const idField = form.querySelector('[name="id"]').id;
-        const nameField = form.querySelector('[name="name"]').id;
-        const emailField = form.querySelector('[name="email"]').id;
-
-        const id = document.getElementById(idField).value.trim();
-        const name = document.getElementById(nameField).value.trim();
-        const email = document.getElementById(emailField).value.trim();
-
-        let isValid = true;
-
-        document.getElementById(idField + 'Error').style.display = 'none';
-        document.getElementById(nameField + 'Error').style.display = 'none';
-        document.getElementById(emailField + 'Error').style.display = 'none';
-
-        if (!id) {
-            document.getElementById(idField + 'Error').textContent = 'Student ID is required';
-            document.getElementById(idField + 'Error').style.display = 'block';
-            isValid = false;
-        } else if (!id.match(/^STU\d{8}$/)) {
-            document.getElementById(idField + 'Error').textContent = 'Student ID must be in format STUYYYYXXXX';
-            document.getElementById(idField + 'Error').style.display = 'block';
-            isValid = false;
+            return isValid;
         }
 
-        if (!name) {
-            document.getElementById(nameField + 'Error').textContent = 'Full name is required';
-            document.getElementById(nameField + 'Error').style.display = 'block';
-            isValid = false;
-        } else if (!name.match(/^[A-Za-z\s]+$/)) {
-            document.getElementById(nameField + 'Error').textContent = 'Name can only contain letters and spaces';
-            document.getElementById(nameField + 'Error').style.display = 'block';
-            isValid = false;
+        function validateUpdateAdminForm() {
+            let isValid = true;
+            const username = document.getElementById('updateAdminUsername').value.trim();
+            const name = document.getElementById('updateAdminName').value.trim();
+            const email = document.getElementById('updateAdminEmail').value.trim();
+            const password = document.getElementById('updateAdminPassword').value.trim();
+
+            // Reset error messages
+            document.getElementById('updateAdminUsernameError').style.display = 'none';
+            document.getElementById('updateAdminNameError').style.display = 'none';
+            document.getElementById('updateAdminEmailError').style.display = 'none';
+            document.getElementById('updateAdminPasswordError').style.display = 'none';
+
+            // Username validation: alphanumeric, 3-20 characters
+            const usernameRegex = /^[a-zA-Z0-9]{3,20}$/;
+            if (!usernameRegex.test(username)) {
+                document.getElementById('updateAdminUsernameError').textContent = 'Username must be 3-20 alphanumeric characters.';
+                document.getElementById('updateAdminUsernameError').style.display = 'block';
+                isValid = false;
+            }
+
+            // Name validation: letters and spaces, 2-50 characters
+            const nameRegex = /^[a-zA-Z\s]{2,50}$/;
+            if (!nameRegex.test(name)) {
+                document.getElementById('updateAdminNameError').textContent = 'Name must be 2-50 characters, letters and spaces only.';
+                document.getElementById('updateAdminNameError').style.display = 'block';
+                isValid = false;
+            }
+
+            // Email validation: stricter regex
+            const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+            if (!emailRegex.test(email)) {
+                document.getElementById('updateAdminEmailError').textContent = 'Please enter a valid email address.';
+                document.getElementById('updateAdminEmailError').style.display = 'block';
+                isValid = false;
+            }
+
+            // Password validation: optional, but must meet criteria if provided
+            if (password) {
+                const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+                if (!passwordRegex.test(password)) {
+                    document.getElementById('updateAdminPasswordError').textContent = 'Password must be at least 8 characters with letters and numbers.';
+                    document.getElementById('updateAdminPasswordError').style.display = 'block';
+                    isValid = false;
+                }
+            }
+
+            if (isValid) {
+                // Show loading overlay
+                document.getElementById('loadingOverlay').style.display = 'flex';
+            }
+
+            return isValid;
         }
 
+        function searchAdmins() {
+            const input = document.getElementById('adminSearch').value.toLowerCase();
+            const rows = document.querySelectorAll('#adminTable .admin-row');
+
+            rows.forEach(row => {
+                const username = row.querySelector('td:nth-child(1)').textContent.toLowerCase();
+                const name = row.querySelector('.admin-name').textContent.toLowerCase();
+                if (username.includes(input) || name.includes(input)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        }
+
+        function clearAdminSearch() {
+            const searchInput = document.getElementById('adminSearch');
+            searchInput.value = '';
+            searchAdmins();
+        }
+    </script>
+
+    <style>
+        /* Enhanced table row hover effect */
+        .data-table .admin-row:hover {
+            background: rgba(0, 242, 254, 0.1);
+            transition: background 0.3s ease;
+        }
+
+        /* Improved modal styling */
+        .modal-content {
+            box-shadow: 0 0 20px rgba(0, 242, 254, 0.3);
+            border: 1px solid rgba(0, 242, 254, 0.2);
+        }
+
+        .modal-content h2 {
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Adjust search bar layout */
+        .search-bar {
+            position: relative;
+            align-items: center;
+        }
+
+        .search-bar button {
+            margin-left: 10px;
+        }
+    </style>

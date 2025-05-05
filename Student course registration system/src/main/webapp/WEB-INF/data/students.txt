@@ -1386,3 +1386,5 @@ ID,Name,Email,Username
 5D6E7F8A,Ashani Abeyratne,ashani2003@gmail.com,ashani2003
 6E7F8A9B,Shanuli Dassanayake,shanuli2001@gmail.com,shanuli2001
 51DB2816,Gabbie Carter,gabbie2004@gmail.com,gabbie2004
+69624D5F,Chamuditha Samarawickrama,chamuditha2004@gmail.com,chamuditha2004
+FDB7AE5D,Adriana Chechik,adriana2004@gmail.com,adriana2004,student

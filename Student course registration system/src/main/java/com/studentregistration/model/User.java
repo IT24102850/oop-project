@@ -10,7 +10,7 @@ public class User {
     private String password;
     private String role;
     private String email;
-    private String fullName;
+    private String name; // Renamed from fullName to name
     private boolean active;
     private LocalDateTime lastLogin;
 
@@ -24,11 +24,11 @@ public class User {
     }
 
     // Constructor for registration (matches Admin's needs)
-    public User(String email, String password, String fullName, String role, boolean isVerified) {
+    public User(String email, String password, String name, String role, boolean isVerified) {
         this();
         this.email = email;
         this.password = password;
-        this.fullName = fullName;
+        this.name = name; // Updated to name
         this.role = role;
         this.active = isVerified;
         this.username = email; // Assume email as username
@@ -43,10 +43,10 @@ public class User {
         this.role = role;
     }
 
-    public User(int id, String username, String password, String role, String email, String fullName) {
+    public User(int id, String username, String password, String role, String email, String name) { // Updated to name
         this(id, username, password, role);
         this.email = email;
-        this.fullName = fullName;
+        this.name = name; // Updated to name
     }
 
     // Getters and Setters
@@ -63,7 +63,7 @@ public class User {
 
     public String getRole() { return role; }
     public void setRole(String role) {
-        if ("student".equalsIgnoreCase(role) || "admin".equalsIgnoreCase(role) || "superadmin".equalsIgnoreCase(role)) {
+        if ("student".equalsIgnoreCase(role) || "admin".equalsIgnoreCase(role)) {
             this.role = role.toLowerCase();
         } else {
             throw new IllegalArgumentException("Invalid role specified");
@@ -78,9 +78,9 @@ public class User {
         this.email = email;
     }
 
-    public String getFullName() { return fullName; }
-    public void setFullName(String fullName) {
-        this.fullName = fullName != null ? fullName.trim() : null;
+    public String getName() { return name; } // Renamed from getFullName
+    public void setName(String name) { // Renamed from setFullName
+        this.name = name != null ? name.trim() : null;
     }
 
     public boolean isActive() { return active; }
@@ -91,40 +91,33 @@ public class User {
 
     // Business Logic Methods
     public boolean hasPermission(String requiredPermission) {
-        if ("admin".equals(role) || "superadmin".equals(role)) {
+        if ("admin".equals(role)) {
             return true;
         }
         return "student".equals(role) && !requiredPermission.startsWith("admin:");
     }
 
-    // File Storage Format
+    // File Storage Format (updated to match admins.txt format)
     public String toFileString() {
-        return String.format("%d|%s|%s|%s|%s|%s|%b|%s",
-                id,
+        return String.format("%s,%s,%s,%s,%s",
                 username,
-                password,
-                role,
+                name,
                 email,
-                fullName,
-                active,
-                lastLogin != null ? lastLogin.format(DATE_TIME_FORMATTER) : "null");
+                password,
+                role);
     }
 
     public static User fromFileString(String fileLine) {
-        String[] parts = fileLine.split("\\|");
-        if (parts.length >= 8) {
+        String[] parts = fileLine.split(",");
+        if (parts.length >= 5) {
             User user = new User();
-            user.setId(Integer.parseInt(parts[0]));
-            user.setUsername(parts[1]);
-            user.setPassword(parts[2]);
-            user.setRole(parts[3]);
-            user.setEmail(parts[4]);
-            user.setFullName(parts[5]);
-            user.setActive(Boolean.parseBoolean(parts[6]));
-            if (!"null".equals(parts[7])) {
-                user.setLastLogin(LocalDateTime.parse(parts[7],
-                        DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
-            }
+            user.setId(0); // Placeholder ID
+            user.setUsername(parts[0]);
+            user.setName(parts[1]); // Updated to name
+            user.setEmail(parts[2]);
+            user.setPassword(parts[3]);
+            user.setRole(parts[4]);
+            user.setActive(true); // Default to active
             return user;
         }
         throw new IllegalArgumentException("Invalid user data format");
@@ -153,7 +146,7 @@ public class User {
                 ", username='" + username + '\'' +
                 ", role='" + role + '\'' +
                 ", email='" + email + '\'' +
-                ", fullName='" + fullName + '\'' +
+                ", name='" + name + '\'' + // Updated to name
                 ", active=" + active +
                 ", lastLogin=" + lastLogin +
                 '}';

@@ -1382,6 +1382,10 @@
         </div>
     </section>
 
+
+
+
+
     <section id="courses" class="content-section">
         <div class="dashboard-header">
             <div class="greeting">

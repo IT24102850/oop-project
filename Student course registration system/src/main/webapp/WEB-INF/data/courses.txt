@@ -103,3 +103,4 @@ SE4230,Software Engineering,2,Computer Science,Dr. Suriyaa,Web Development,true
 ML5687,Advanced Programming,2,Computer Science,Prof. Lakmal,Machine Learning,true
 LG7490,Abstract Algebra,4,Mathematics,Dr. Rajapaksha,Discrete Maths,true
 CS110,Introduction to AstroPhysics,4,Physics,Dr.Kandula,Key concepts of AstroPhysics,true
+CS432,WordPress Management,4,Computer Science,Dr.Sriyani,Basic concepts,true
