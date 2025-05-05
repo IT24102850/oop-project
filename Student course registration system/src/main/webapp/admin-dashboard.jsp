@@ -1488,12 +1488,38 @@
                 <td class="student-name"><%= student[1] %></td>
                 <td><%= student[2] %></td>
                 <td>
-                    <button class="btn-futuristic btn-futuristic-update" data-tooltip="Edit this student" onclick="openUpdateStudentModal('<%= student[0] %>', '<%= student[1] %>', '<%= student[2] %>')" aria-label="Update Student">
+                    <button class="btn-futuristic btn-futuristic-update" data-tooltip="Edit this student" onclick="toggleUpdateForm('<%= student[0] %>')" aria-label="Update Student">
                         <i class="fas fa-pen-nib"></i> Update
                     </button>
                     <a href="studentRegistration?action=delete&id=<%= student[0] %>&activeTab=students" class="btn-futuristic btn-futuristic-delete" data-tooltip="Delete this student" onclick="return confirmStudentDelete('<%= student[0] %>')" aria-label="Delete Student">
                         <i class="fas fa-trash-can"></i> Delete
                     </a>
+                </td>
+            </tr>
+            <tr id="update-form-<%= student[0] %>" class="update-form-row" style="display: none;">
+                <td colspan="4">
+                    <form action="studentRegistration" method="post" class="inline-student-form" onsubmit="return validateUpdateStudentForm(this, '<%= student[0] %>')">
+                        <input type="hidden" name="action" value="update">
+                        <input type="hidden" name="id" value="<%= student[0] %>">
+                        <div class="form-group">
+                            <label for="updateStudentName-<%= student[0] %>" class="required">Full Name</label>
+                            <input type="text" id="updateStudentName-<%= student[0] %>" name="name" value="<%= student[1] %>" required>
+                            <div class="error-text" id="updateStudentNameError-<%= student[0] %>"></div>
+                        </div>
+                        <div class="form-group">
+                            <label for="updateStudentEmail-<%= student[0] %>" class="required">Email</label>
+                            <input type="email" id="updateStudentEmail-<%= student[0] %>" name="email" value="<%= student[2] %>" required>
+                            <div class="error-text" id="updateStudentEmailError-<%= student[0] %>"></div>
+                        </div>
+                        <div class="button-group">
+                            <button type="submit" class="btn-futuristic btn-futuristic-create" data-tooltip="Save changes" aria-label="Save Changes">
+                                <i class="fas fa-save"></i> Save
+                            </button>
+                            <button type="button" class="btn-futuristic btn-futuristic-cancel" data-tooltip="Cancel" onclick="toggleUpdateForm('<%= student[0] %>')" aria-label="Cancel Update">
+                                <i class="fas fa-times"></i> Cancel
+                            </button>
+                        </div>
+                    </form>
                 </td>
             </tr>
             <%
@@ -1523,8 +1549,47 @@
                 }
             }
         }
-    </script>
 
+        function toggleUpdateForm(studentId) {
+            let formRow = document.getElementById("update-form-" + studentId);
+            if (formRow.style.display === "none" || formRow.style.display === "") {
+                formRow.style.display = "table-row";
+            } else {
+                formRow.style.display = "none";
+            }
+        }
+
+        function validateUpdateStudentForm(form, studentId) {
+            let name = form.querySelector(`#updateStudentName-${studentId}`).value.trim();
+            let email = form.querySelector(`#updateStudentEmail-${studentId}`).value.trim();
+            let nameError = document.getElementById(`updateStudentNameError-${studentId}`);
+            let emailError = document.getElementById(`updateStudentEmailError-${studentId}`);
+
+            let isValid = true;
+            nameError.textContent = "";
+            emailError.textContent = "";
+
+            if (name === "") {
+                nameError.textContent = "Full Name is required.";
+                isValid = false;
+            }
+
+            let emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailPattern.test(email)) {
+                emailError.textContent = "Please enter a valid email address.";
+                isValid = false;
+            }
+
+            if (isValid) {
+                return confirm(`Are you sure you want to update student with ID ${studentId}?`);
+            }
+            return false;
+        }
+
+        function confirmStudentDelete(studentId) {
+            return confirm(`Are you sure you want to delete student with ID ${studentId}?`);
+        }
+    </script>
 
 
 

@@ -1520,6 +1520,10 @@
         </div>
     </section>
 
+
+
+
+
     <section id="payment" class="content-section">
         <div class="dashboard-header">
             <div class="greeting">
@@ -1647,14 +1651,15 @@
                     <td><%= fee[7] %></td>
                     <td><%= fee[8].isEmpty() ? "N/A" : fee[8] %></td>
                     <td class="payment-actions">
-                        <% if ("pending".equals(fee[4]) && !"true".equals(fee[6])) { %>
-                        <form action="fee" method="post" class="payment-action-form">
+                        <% if ("pending".equals(fee[4]) && !"true".equals(fee[6]) && isOverdue) { %>
+                        <form action="fee" method="post" class="payment-action-form" id="waiverForm-<%= fee[0] %>" style="display: inline-block; margin-right: 5px;">
                             <input type="hidden" name="action" value="applyWaiver">
                             <input type="hidden" name="invoiceId" value="<%= fee[0] %>">
                             <input type="hidden" name="amount" value="<%= fee[2] %>">
                             <input type="hidden" name="studentId" value="<%= studentId %>">
-                            <button type="submit" class="btn btn-primary btn-sm" title="Apply Waiver">
-                                <i class="fas fa-hand-holding-usd"></i>
+                            <input type="text" name="waiverAmount" placeholder="Waiver Amount" style="width: 80px; padding: 5px;" required>
+                            <button type="submit" class="btn btn-primary btn-sm" title="Apply Late Fee Waiver">
+                                <i class="fas fa-hand-holding-usd"></i> Apply Waiver
                             </button>
                         </form>
                         <% } %>
@@ -1683,15 +1688,16 @@
                             </button>
                         </form>
                         <% } %>
-                        <% if ("paid".equals(fee[4])) { %>
-                        <form action="fee" method="post" class="payment-action-form">
+                        <% if ("paid".equals(paymentStatus)) { %>
+                        <button type="button" class="btn btn-outline btn-sm" title="Cancel Payment" onclick="confirmCancelPayment('<%= fee[0] %>', '<%= fee[2] %>', '<%= studentId %>')">
+                            <i class="fas fa-undo"></i> Cancel
+                        </button>
+                        <form action="fee" method="post" class="payment-action-form" id="cancelForm-<%= fee[0] %>" style="display: none;">
                             <input type="hidden" name="action" value="cancelPayment">
                             <input type="hidden" name="invoiceId" value="<%= fee[0] %>">
                             <input type="hidden" name="amount" value="<%= fee[2] %>">
                             <input type="hidden" name="studentId" value="<%= studentId %>">
-                            <button type="submit" class="btn btn-outline btn-sm" title="Cancel Payment">
-                                <i class="fas fa-undo"></i>
-                            </button>
+                            <button type="submit" class="btn btn-outline btn-sm" style="display: none;">Confirm Cancel</button>
                         </form>
                         <% } %>
                     </td>
@@ -1701,6 +1707,47 @@
             </table>
         </div>
     </section>
+
+    <script>
+        function updateSubscriptionAmount() {
+            let select = document.getElementById("subscriptionPlan");
+            let amountInput = document.getElementById("subscriptionAmount");
+            let selectedOption = select.options[select.selectedIndex];
+            amountInput.value = selectedOption.getAttribute("data-amount") || "";
+        }
+
+        function togglePaymentDetails() {
+            let paymentMethod = document.getElementById("paymentMethod").value;
+            let paymentDetails = document.getElementById("paymentDetails");
+            let groups = ["cardNumberGroup", "expiryDateGroup", "cvvGroup", "accountNumberGroup", "routingNumberGroup", "paypalEmailGroup", "cryptoWalletGroup"];
+
+            paymentDetails.style.display = paymentMethod ? "block" : "none";
+            groups.forEach(group => document.getElementById(group).style.display = "none");
+
+            if (paymentMethod) {
+                if (["creditCard", "debitCard"].includes(paymentMethod)) {
+                    ["cardNumberGroup", "expiryDateGroup", "cvvGroup"].forEach(group => document.getElementById(group).style.display = "block");
+                } else if (paymentMethod === "bankTransfer") {
+                    ["accountNumberGroup", "routingNumberGroup"].forEach(group => document.getElementById(group).style.display = "block");
+                } else if (paymentMethod === "payPal") {
+                    document.getElementById("paypalEmailGroup").style.display = "block";
+                } else if (paymentMethod === "crypto") {
+                    document.getElementById("cryptoWalletGroup").style.display = "block";
+                }
+            }
+        }
+
+        function confirmCancelPayment(invoiceId, amount, studentId) {
+            if (confirm(`Are you sure you want to cancel the payment for Invoice ID ${invoiceId}?`)) {
+                let form = document.getElementById(`cancelForm-${invoiceId}`);
+                form.submit();
+            }
+        }
+    </script>
+
+
+
+
 
     <section id="settings" class="content-section">
         <div class="dashboard-header">
