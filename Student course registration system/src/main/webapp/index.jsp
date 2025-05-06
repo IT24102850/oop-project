@@ -754,6 +754,7 @@
             color: var(--text-color);
         }
 
+<<<<<<< HEAD
         /* Reviews Section - Slideshow and Form */
         .reviews {
             padding: 120px 5%;
@@ -927,6 +928,8 @@
             box-shadow: 0 10px 20px rgba(255, 107, 107, 0.3);
         }
 
+=======
+>>>>>>> a4aa5e08dd87c6be13716062d6db6180df5c0c98
         /* CTA Section - Parallax Effect */
         .cta-section {
             padding: 180px 5%;
@@ -1354,18 +1357,6 @@
                 grid-template-columns: 1fr;
                 gap: 40px;
             }
-
-            .reviews-slideshow {
-                height: 300px;
-            }
-
-            .review-text {
-                font-size: 1.2rem;
-            }
-
-            .review-author {
-                font-size: 1rem;
-            }
         }
 
         @media (max-width: 576px) {
@@ -1396,6 +1387,7 @@
             .footer-logo {
                 font-size: 1.8rem;
             }
+<<<<<<< HEAD
 
             .review-form-container {
                 padding: 20px;
@@ -1410,6 +1402,8 @@
             .review-form button {
                 font-size: 1rem;
             }
+=======
+>>>>>>> a4aa5e08dd87c6be13716062d6db6180df5c0c98
         }
     </style>
 </head>
@@ -1523,6 +1517,7 @@
     </div>
 </section>
 
+<<<<<<< HEAD
 <!-- Reviews Section -->
 <section class="reviews">
     <h2 class="section-title">What Our Students Say</h2>
@@ -1577,6 +1572,8 @@
     </div>
 </section>
 
+=======
+>>>>>>> a4aa5e08dd87c6be13716062d6db6180df5c0c98
 <!-- CTA Section -->
 <section class="cta-section">
     <div class="cta-bg-elements">
@@ -1698,6 +1695,7 @@
 
     observer.observe(statsSection);
 
+<<<<<<< HEAD
     // Reviews Slideshow
     const slides = document.querySelectorAll('.review-slide');
     let currentSlide = 0;
@@ -1764,6 +1762,8 @@
         document.getElementById('review-select').value = '-1';
     }
 
+=======
+>>>>>>> a4aa5e08dd87c6be13716062d6db6180df5c0c98
     // Scroll To Top Button
     const scrollTop = document.querySelector('.scroll-top');
     window.addEventListener('scroll', function() {

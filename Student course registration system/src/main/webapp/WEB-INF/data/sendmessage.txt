@@ -1,3 +1,8 @@
+<<<<<<< HEAD
 2025-05-05 00:07:39 | Methsani Liyanapathirana | methsani2004@gamil.com | Data sciencetic | I want know these courses
 2025-05-05 00:20:37 | Lakna Buddini | Lakna2004@gmail.com | Intractive media | I want to know these details
 2025-05-05 00:27:54 | Lakna Buddini | Lakna2004@gmail.com | Intractive media | I want to know these details
+=======
+2025-05-04 23:25:31 | hasiru chamika | hasiru2004@gmail.com | hiii | asdfgh
+
+>>>>>>> a4aa5e08dd87c6be13716062d6db6180df5c0c98

@@ -3,7 +3,6 @@ package com.studentregistration.dao;
 import com.studentregistration.model.User;
 import com.studentregistration.util.PasswordUtil;
 import java.io.*;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -24,37 +23,64 @@ public class UserDAO {
             try {
                 file.getParentFile().mkdirs();
                 file.createNewFile();
-                createDefaultAdminAccount();
+                logger.info("Initialized admin data file: " + filePath);
             } catch (IOException e) {
-                logger.log(Level.SEVERE, "Failed to initialize user data file", e);
+                logger.log(Level.SEVERE, "Failed to initialize admin data file", e);
+                throw new RuntimeException("File initialization failed", e);
             }
-        }
-    }
-
-    private void createDefaultAdminAccount() {
-        User admin = new User();
-        admin.setId(1);
-        admin.setUsername("Hasiru");
-        admin.setPassword(PasswordUtil.hashPassword("hasiru2004"));
-        admin.setRole("admin");
-
-        try {
-            addUser(admin);
-            logger.info("Default admin account created");
-        } catch (Exception e) {
-            logger.log(Level.SEVERE, "Failed to create default admin", e);
         }
     }
 
     public void addUser(User user) {
         validateUser(user);
         checkDuplicateUsername(user.getUsername());
+        user.setPassword(PasswordUtil.hashPassword(user.getPassword())); // Hash password
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, true))) {
             writer.write(userToCsv(user));
             writer.newLine();
+            logger.info("Admin added: " + user.getEmail());
         } catch (IOException e) {
-            handleIOException("Failed to add user to file", e);
+            handleIOException("Failed to add admin to file", e);
+        }
+    }
+
+    public void updateUser(User user, String originalUsername) {
+        List<User> users = new ArrayList<>();
+        boolean updated = false;
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                User existingUser = parseUser(line);
+                if (existingUser != null && existingUser.getUsername().equalsIgnoreCase(originalUsername)) {
+                    if (!user.getPassword().equals(existingUser.getPassword())) {
+                        user.setPassword(PasswordUtil.hashPassword(user.getPassword())); // Hash new password
+                    }
+                    users.add(user);
+                    updated = true;
+                    logger.info("Admin updated: " + user.getEmail());
+                } else {
+                    users.add(existingUser);
+                }
+            }
+        } catch (IOException e) {
+            handleIOException("Failed to read admins for update", e);
+        }
+
+        if (updated) {
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
+                for (User u : users) {
+                    if (u != null) {
+                        writer.write(userToCsv(u));
+                        writer.newLine();
+                    }
+                }
+            } catch (IOException e) {
+                handleIOException("Failed to write updated admin data", e);
+            }
+        } else {
+            throw new IllegalArgumentException("No admin found with username: " + originalUsername);
         }
     }
 
@@ -67,7 +93,7 @@ public class UserDAO {
                 if (user != null) users.add(user);
             }
         } catch (IOException e) {
-            handleIOException("Failed to read users from file", e);
+            handleIOException("Failed to read admins from file", e);
         }
         return users;
     }
@@ -79,93 +105,38 @@ public class UserDAO {
                 .orElse(null);
     }
 
-    // **Admin-Specific Auth: Read (R) - Monitor active admin sessions**
-    public List<User> getActiveAdminSessions() {
-        List<User> activeAdmins = new ArrayList<>();
-        LocalDateTime now = LocalDateTime.now();
-        for (User user : getAllUsers()) {
-            if (("admin".equals(user.getRole()) || "superadmin".equals(user.getRole())) &&
-                    user.getLastLogin() != null &&
-                    user.getLastLogin().plusHours(1).isAfter(now)) { // 1-hour session timeout
-                activeAdmins.add(user);
-            }
-        }
-        logger.info("Retrieved " + activeAdmins.size() + " active admin sessions");
-        return activeAdmins;
-    }
-
-    // **Admin-Specific Auth: Update (U) - Force password resets for compromised accounts**
-    public void forcePasswordReset(String username) {
+    public void deleteUser(String username) {
         List<User> users = new ArrayList<>();
-        boolean updated = false;
+        boolean deleted = false;
 
         try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
             String line;
             while ((line = reader.readLine()) != null) {
-                User user = User.fromFileString(line);
-                if (user.getUsername().equalsIgnoreCase(username) &&
-                        ("admin".equals(user.getRole()) || "superadmin".equals(user.getRole()))) {
-                    user.setPassword(PasswordUtil.hashPassword("tempPassword123")); // Temporary password
-                    updated = true;
-                    logger.info("Forced password reset for admin: " + username);
+                User user = parseUser(line);
+                if (user != null && !user.getUsername().equalsIgnoreCase(username)) {
+                    users.add(user);
+                } else {
+                    deleted = true;
+                    logger.info("Admin deleted: " + username);
                 }
-                users.add(user);
             }
         } catch (IOException e) {
-            logger.log(Level.SEVERE, "Failed to force password reset", e);
-            throw new RuntimeException("Failed to force password reset", e);
+            handleIOException("Failed to read admins for deletion", e);
         }
 
-        if (updated) {
+        if (deleted) {
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
                 for (User user : users) {
-                    writer.write(user.toFileString());
-                    writer.newLine();
+                    if (user != null) {
+                        writer.write(userToCsv(user));
+                        writer.newLine();
+                    }
                 }
             } catch (IOException e) {
-                logger.log(Level.SEVERE, "Failed to write updated user data", e);
-                throw new RuntimeException("Failed to update user data after password reset", e);
+                handleIOException("Failed to write updated admin data after deletion", e);
             }
         } else {
-            logger.warning("No admin user found with username: " + username);
-            throw new IllegalArgumentException("No admin user found with username: " + username);
-        }
-    }
-
-    // **Admin-Specific Auth: Delete (D) - Deactivate suspicious accounts**
-    public void deactivateAccount(String username) {
-        List<User> users = new ArrayList<>();
-        boolean deactivated = false;
-
-        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                User user = User.fromFileString(line);
-                if (user.getUsername().equalsIgnoreCase(username)) {
-                    user.setActive(false);
-                    deactivated = true;
-                    logger.info("Deactivated account: " + username);
-                }
-                users.add(user);
-            }
-        } catch (IOException e) {
-            logger.log(Level.SEVERE, "Failed to deactivate account", e);
-            throw new RuntimeException("Failed to deactivate account", e);
-        }
-
-        if (deactivated) {
-            try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
-                for (User user : users) {
-                    writer.write(user.toFileString());
-                    writer.newLine();
-                }
-            } catch (IOException e) {
-                logger.log(Level.SEVERE, "Failed to write updated user data", e);
-                throw new RuntimeException("Failed to update user data after deactivation", e);
-            }
-        } else {
-            logger.warning("No user found with username: " + username);
-            throw new IllegalArgumentException("No user found with username: " + username);
+            throw new IllegalArgumentException("No admin found with username: " + username);
         }
     }
 
@@ -184,15 +155,28 @@ public class UserDAO {
 
     private String userToCsv(User user) {
         return String.join(",",
-                String.valueOf(user.getId()),
                 user.getUsername(),
+                user.getName(),
+                user.getEmail(),
                 user.getPassword(),
                 user.getRole());
     }
 
     private User parseUser(String csvLine) {
         try {
-            return User.fromFileString(csvLine);
+            String[] parts = csvLine.split(",");
+            if (parts.length >= 5) {
+                User user = new User();
+                user.setId(0); // Placeholder ID
+                user.setUsername(parts[0]);
+                user.setName(parts[1]);
+                user.setEmail(parts[2]);
+                user.setPassword(parts[3]);
+                user.setRole(parts[4]);
+                user.setActive(true); // Default to active
+                return user;
+            }
+            return null;
         } catch (Exception e) {
             logger.log(Level.WARNING, "Failed to parse user line: " + csvLine, e);
             return null;

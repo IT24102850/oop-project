@@ -375,7 +375,11 @@
     }
 
     .info-icon {
+<<<<<<< HEAD
       width: 60px;
+=======
+      width: 60px77
+>>>>>>> a4aa5e08dd87c6be13716062d6db6180df5c0c98
       height: 60px;
       background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
       border-radius: 50%;
@@ -525,7 +529,11 @@
       overflow: hidden;
       margin-top: 50px;
       border: 1px solid rgba(0, 242, 254, 0.3);
+<<<<<<< HEAD
       box-shadow: var(--box-shadow);
+=======
+      box-shadow: var--box-shadow);
+>>>>>>> a4aa5e08dd87c6be13716062d6db6180df5c0c98
       transition: transform 0.3s;
     }
 
@@ -846,6 +854,11 @@
     });
   });
 
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> a4aa5e08dd87c6be13716062d6db6180df5c0c98
   document.querySelector('.scroll-top').addEventListener('click', () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   });
