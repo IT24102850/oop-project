@@ -3,6 +3,14 @@
   <component name="WebContextManager">
     <option name="state">
       <map>
+<<<<<<< Updated upstream
+=======
+<<<<<<< Updated upstream
+=======
+        <entry key="file://$PROJECT_DIR$/src/main/webapp/admin-dashboard.jsp" value="file://$PROJECT_DIR$/src/main/webapp" />
+>>>>>>> Stashed changes
+        <entry key="file://$PROJECT_DIR$/src/main/webapp/courses.jsp" value="file://$PROJECT_DIR$/src/main/webapp" />
+>>>>>>> Stashed changes
         <entry key="file://$PROJECT_DIR$/src/main/webapp/index.jsp" value="file://$PROJECT_DIR$/src/main/webapp" />
         <entry key="file://$PROJECT_DIR$/src/main/webapp/signUp.jsp" value="file://$PROJECT_DIR$/src/main/webapp" />
         <entry key="file://$PROJECT_DIR$/src/main/webapp/totalStudents.jsp" value="file://$PROJECT_DIR$/src/main/webapp" />
