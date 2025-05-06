@@ -49,3 +49,4 @@ INV1746468652094,null,129.99,2025-08-31,pending,,false,0.00,crypto,quarterly,202
 INV1746468681727,null,129.99,2025-08-31,pending,,false,0.00,crypto,quarterly,2025-05-31
 INV1746469433254,64F12262,499.99,2026-05-23,pending,,false,0.00,crypto,yearly,2025-05-23
 INV1746469435883,64F12262,499.99,2026-05-23,pending,,false,0.00,crypto,yearly,2025-05-23
+INV1746518332058,CB22FF44,129.99,2025-08-22,pending,,false,0.00,payPal,quarterly,2025-05-22

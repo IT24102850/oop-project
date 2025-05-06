@@ -1131,6 +1131,12 @@
             </a>
         </li>
         <li class="nav-item">
+            <a href="#" class="nav-link" data-section="loginHistory">
+                <i class="fas fa-history"></i> <span>Login History</span>
+            </a>
+        </li>
+
+        <li class="nav-item">
             <a href="#" class="nav-link" data-section="payment">
                 <i class="fas fa-credit-card"></i> <span>Payment</span>
             </a>
@@ -1140,6 +1146,7 @@
                 <i class="fas fa-cog"></i> <span>Settings</span>
             </a>
         </li>
+
     </ul>
 </div>
 
@@ -1929,6 +1936,74 @@
                             <i class="fas fa-trash-alt"></i> Delete Account
                         </button>
                     </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <%@ page import="java.io.*, java.util.*" %>
+    <%!
+        private List<String[]> loadLoginHistory(String studentId, String filePath) {
+            List<String[]> loginHistory = new ArrayList<>();
+            File file = new File(filePath);
+            if (!file.exists()) return loginHistory;
+
+            try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    if (!line.trim().isEmpty()) {
+                        String[] parts = line.split(",");
+                        if (parts.length >= 4 && parts[0].equals(studentId)) {
+                            loginHistory.add(parts);
+                        }
+                    }
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return loginHistory;
+        }
+    %>
+
+    <%
+        // Load login history
+        String loginHistoryFilePath = application.getRealPath("/WEB-INF/data/login_history.txt");
+        List<String[]> loginHistory = loadLoginHistory(studentId, loginHistoryFilePath);
+    %>
+
+    <section id="loginHistory" class="content-section">
+        <div class="dashboard-header">
+            <div class="greeting">
+                <h1>Login History</h1>
+                <p>View your recent login activity</p>
+            </div>
+        </div>
+
+        <div class="settings-container">
+            <div class="settings-form">
+                <% if (loginHistory.isEmpty()) { %>
+                <div class="form-group">
+                    <p>No login history available.</p>
+                </div>
+                <% } else { %>
+                <% for (String[] login : loginHistory) {
+                    String date = login[1];
+                    String time = login[2];
+                    String ip = login[3];
+                    String status = login.length > 4 ? login[4] : "Success";
+                %>
+                <div class="form-group">
+                    <label>Date: <%= date %></label>
+                    <p>Time: <%= time %></p>
+                    <p>IP Address: <%= ip %></p>
+                    <p>Status: <span class="<%= "Failed".equals(status) ? "status-cell overdue" : "status-cell" %>"><%= status %></span></p>
+                </div>
+                <% } %>
+                <% } %>
+                <div class="form-group">
+                    <button class="btn btn-primary" onclick="alert('Login history refreshed!'); location.reload();">
+                        <i class="fas fa-sync-alt"></i> Refresh
+                    </button>
                 </div>
             </div>
         </div>
