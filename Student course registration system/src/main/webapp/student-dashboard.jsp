@@ -1281,7 +1281,7 @@
         String name = profileData[1].isEmpty() ? (displayName != null ? displayName : "Unknown User") : profileData[1];
         String dob = profileData[2].isEmpty() ? "2001-03-15" : profileData[2];
         String gender = profileData[3].isEmpty() ? "Male" : profileData[3];
-       
+
         String phone = profileData[5].isEmpty() ? "+94 77 123 4567" : profileData[5];
         String address = profileData[6].isEmpty() ? "123 University Dorm, Colombo" : profileData[6];
         String degree = profileData[7].isEmpty() ? "BSc Computer Science" : profileData[7];
