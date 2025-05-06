@@ -1,5 +1,7 @@
 INV1746263263404,64F12262,129.99,2025-08-29,pending,,false,0.00,crypto,quarterly,2025-05-29
 INV1746263290530,64F12262,499.99,2026-05-13,pending,,false,0.00,payPal,yearly,2025-05-13
+INV1746263263404,64F12262,129.99,2025-08-29,pending,,false,0.00,crypto,quarterly,2025-05-29
+INV1746263290530,64F12262,499.99,2026-05-13,pending,,false,0.00,payPal,yearly,2025-05-13
 INV1746330215932,64F12262,129.99,2025-08-29,pending,,false,0.00,bankTransfer,quarterly,2025-05-29
 INV1746336865917,64F12262,129.99,2025-08-27,pending,,false,0.00,creditCard,quarterly,2025-05-27
 INV1746336869966,64F12262,129.99,2025-08-27,pending,,false,0.00,creditCard,quarterly,2025-05-27
@@ -36,3 +38,14 @@ INV1746461701997,6BFF41A6,129.99,2025-08-24,pending,,false,0.00,debitCard,quarte
 INV1746461702161,6BFF41A6,129.99,2025-08-24,pending,,false,0.00,debitCard,quarterly,2025-05-24
 INV1746461702324,6BFF41A6,129.99,2025-08-24,pending,,false,0.00,debitCard,quarterly,2025-05-24
 INV1746461702622,6BFF41A6,129.99,2025-08-24,pending,,false,0.00,debitCard,quarterly,2025-05-24
+INV1746468536670,null,49.99,2025-06-23,pending,,false,0.00,crypto,monthly,2025-05-23
+INV1746468539471,null,49.99,2025-06-23,pending,,false,0.00,crypto,monthly,2025-05-23
+INV1746468635528,null,129.99,2025-08-31,pending,,false,0.00,crypto,quarterly,2025-05-31
+INV1746468649698,null,129.99,2025-08-31,pending,,false,0.00,crypto,quarterly,2025-05-31
+INV1746468650333,null,129.99,2025-08-31,pending,,false,0.00,crypto,quarterly,2025-05-31
+INV1746468650938,null,129.99,2025-08-31,pending,,false,0.00,crypto,quarterly,2025-05-31
+INV1746468651590,null,129.99,2025-08-31,pending,,false,0.00,crypto,quarterly,2025-05-31
+INV1746468652094,null,129.99,2025-08-31,pending,,false,0.00,crypto,quarterly,2025-05-31
+INV1746468681727,null,129.99,2025-08-31,pending,,false,0.00,crypto,quarterly,2025-05-31
+INV1746469433254,64F12262,499.99,2026-05-23,pending,,false,0.00,crypto,yearly,2025-05-23
+INV1746469435883,64F12262,499.99,2026-05-23,pending,,false,0.00,crypto,yearly,2025-05-23
