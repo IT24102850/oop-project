@@ -1245,6 +1245,53 @@
         </div>
     </section>
 
+
+    <%@ page import="java.io.*, java.util.*" %>
+    <%!
+        private String[] loadProfileData(String studentId, String filePath) {
+            String[] profileData = new String[13];
+            for (int i = 0; i < 13; i++) profileData[i] = "";
+
+            File file = new File(filePath);
+            if (!file.exists()) return profileData;
+
+            try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    if (!line.trim().isEmpty()) {
+                        String[] parts = line.split(",", -1);
+                        if (parts.length == 13 && parts[0].equals(studentId)) {
+                            return parts;
+                        }
+                    }
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return profileData;
+        }
+    %>
+
+    <%
+        // Load profile data
+        String filePath = application.getRealPath("/WEB-INF/data/Profile/profiles.txt");
+        String[] profileData = loadProfileData(studentIdBadge, filePath);
+
+// Assign profile data to variables with defaults
+        String name = profileData[1].isEmpty() ? (displayName != null ? displayName : "Unknown User") : profileData[1];
+        String dob = profileData[2].isEmpty() ? "2001-03-15" : profileData[2];
+        String gender = profileData[3].isEmpty() ? "Male" : profileData[3];
+       
+        String phone = profileData[5].isEmpty() ? "+94 77 123 4567" : profileData[5];
+        String address = profileData[6].isEmpty() ? "123 University Dorm, Colombo" : profileData[6];
+        String degree = profileData[7].isEmpty() ? "BSc Computer Science" : profileData[7];
+        String enrolled = profileData[8].isEmpty() ? "2020-09" : profileData[8];
+        String gpa = profileData[9].isEmpty() ? "3.72/4.00" : profileData[9];
+        String password = profileData[10];
+        String twoFA = profileData[11].isEmpty() ? "Not Enabled" : profileData[11];
+        String profilePic = profileData[12];
+    %>
+
     <section id="profile" class="content-section">
         <div class="dashboard-header">
             <div class="greeting">
@@ -1252,7 +1299,7 @@
                 <p>Personalize your academic identity</p>
             </div>
             <div class="user-actions">
-                <button class="btn btn-primary" onclick="alert('Profile refreshed!')">
+                <button class="btn btn-primary" onclick="location.reload()">
                     <i class="fas fa-sync-alt"></i> Refresh
                 </button>
             </div>
@@ -1262,20 +1309,25 @@
             <div class="profile-card">
                 <div class="profile-header">
                     <div class="user-avatar-holographic">
-                        <img src="https://via.placeholder.com/150" alt="Profile Picture" class="avatar-image">
+                        <img src="<%= profilePic != null && !profilePic.isEmpty() ? "ProfileServlet?action=getPicture&studentId=" + studentIdBadge + "&pic=" + profilePic : "https://via.placeholder.com/150" %>" alt="Profile Picture" class="avatar-image" id="profileImage">
                         <div class="avatar-actions">
-                            <button class="btn btn-outline avatar-upload" onclick="alert('Upload new avatar')">
-                                <i class="fas fa-camera"></i> Update
-                            </button>
-                            <button class="btn btn-outline avatar-edit" onclick="alert('Customize avatar')">
+                            <form action="ProfileServlet" method="post" enctype="multipart/form-data" class="avatar-upload-form" id="uploadForm">
+                                <input type="hidden" name="action" value="uploadPicture">
+                                <input type="hidden" name="studentId" value="<%= studentIdBadge %>">
+                                <input type="file" id="avatarUpload" name="avatar" accept="image/*" onchange="previewImage(event)" required>
+                                <button type="submit" class="btn btn-outline avatar-upload" title="Upload new avatar">
+                                    <i class="fas fa-camera"></i> Upload
+                                </button>
+                            </form>
+                            <button class="btn btn-outline avatar-edit" onclick="alert('Customize avatar feature not implemented yet')">
                                 <i class="fas fa-magic"></i> Customize
                             </button>
                         </div>
                     </div>
                     <div class="profile-info">
-                        <h2><%= displayName %></h2>
+                        <h2><%= name %></h2>
                         <div class="student-id-badge">
-                            <i class="fas fa-id-card"></i> <%= studentIdBadge %>
+                            <i class="fas fa-id-card"></i> <%= studentIdBadge != null ? studentIdBadge : "N/A" %>
                         </div>
                         <div class="verification-status">
                             <i class="fas fa-shield-check verified"></i> Verified Student
@@ -1297,90 +1349,189 @@
 
                 <div class="tab-content">
                     <div class="tab-pane active" id="personal-tab">
-                        <div class="detail-grid">
+                        <form action="ProfileServlet" method="post" class="detail-grid" onsubmit="return validatePersonalForm()">
+                            <input type="hidden" name="action" value="updatePersonal">
+                            <input type="hidden" name="studentId" value="<%= studentIdBadge %>">
                             <div class="detail-card">
                                 <h3><i class="fas fa-user-tag"></i> Basic Info</h3>
                                 <div class="detail-item">
-                                    <label>Name:</label>
-                                    <p><%= displayName %></p>
-                                    <button class="btn-edit" onclick="alert('Edit name')"><i class="fas fa-pencil-alt"></i></button>
+                                    <label for="name">Name:</label>
+                                    <input type="text" id="name" name="name" value="<%= name %>" required>
+                                    <div class="error-text" id="nameError"></div>
                                 </div>
                                 <div class="detail-item">
-                                    <label>DOB:</label>
-                                    <p>March 15, 2001</p>
+                                    <label for="dob">DOB:</label>
+                                    <input type="date" id="dob" name="dob" value="<%= dob %>" required>
                                 </div>
                                 <div class="detail-item">
-                                    <label>Gender:</label>
-                                    <p>Male</p>
+                                    <label for="gender">Gender:</label>
+                                    <select id="gender" name="gender" required>
+                                        <option value="Male" <%= "Male".equals(gender) ? "selected" : "" %>>Male</option>
+                                        <option value="Female" <%= "Female".equals(gender) ? "selected" : "" %>>Female</option>
+                                        <option value="Other" <%= "Other".equals(gender) ? "selected" : "" %>>Other</option>
+                                    </select>
                                 </div>
                             </div>
                             <div class="detail-card">
                                 <h3><i class="fas fa-address-book"></i> Contact</h3>
                                 <div class="detail-item">
-                                    <label>Email:</label>
-                                    <p><%= email != null ? email : "john.doe@nexora.edu" %></p>
+                                    <label for="email">Email:</label>
+                                    <input type="email" id="email" name="email" value="<%= email %>" required>
+                                    <div class="error-text" id="emailError"></div>
                                 </div>
                                 <div class="detail-item">
-                                    <label>Phone:</label>
-                                    <p>+94 77 123 4567</p>
+                                    <label for="phone">Phone:</label>
+                                    <input type="tel" id="phone" name="phone" value="<%= phone %>" required>
                                 </div>
                                 <div class="detail-item">
-                                    <label>Address:</label>
-                                    <p>123 University Dorm, Colombo</p>
+                                    <label for="address">Address:</label>
+                                    <input type="text" id="address" name="address" value="<%= address %>" required>
                                 </div>
                             </div>
-                        </div>
+                            <div class="profile-actions">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-save"></i> Save Changes
+                                </button>
+                            </div>
+                        </form>
                     </div>
                     <div class="tab-pane" id="academic-tab">
-                        <div class="detail-grid">
+                        <form action="ProfileServlet" method="post" class="detail-grid" onsubmit="return validateAcademicForm()">
+                            <input type="hidden" name="action" value="updateAcademic">
+                            <input type="hidden" name="studentId" value="<%= studentIdBadge %>">
                             <div class="detail-card">
                                 <h3><i class="fas fa-graduation-cap"></i> Program</h3>
                                 <div class="detail-item">
-                                    <label>Degree:</label>
-                                    <p>BSc Computer Science</p>
+                                    <label for="degree">Degree:</label>
+                                    <input type="text" id="degree" name="degree" value="<%= degree %>" required>
                                 </div>
                                 <div class="detail-item">
-                                    <label>Enrolled:</label>
-                                    <p>September 2020</p>
+                                    <label for="enrolled">Enrolled:</label>
+                                    <input type="month" id="enrolled" name="enrolled" value="<%= enrolled %>" required>
                                 </div>
                                 <div class="detail-item">
-                                    <label>GPA:</label>
-                                    <p>3.72/4.00</p>
+                                    <label for="gpa">GPA:</label>
+                                    <input type="text" id="gpa" name="gpa" value="<%= gpa %>" required pattern="[0-4]\.\d{2}/4\.00">
+                                    <div class="error-text" id="gpaError"></div>
                                 </div>
                             </div>
-                        </div>
+                            <div class="profile-actions">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-save"></i> Save Changes
+                                </button>
+                            </div>
+                        </form>
                     </div>
                     <div class="tab-pane" id="security-tab">
-                        <div class="detail-grid">
+                        <form action="ProfileServlet" method="post" class="detail-grid" onsubmit="return validateSecurityForm()">
+                            <input type="hidden" name="action" value="updateSecurity">
+                            <input type="hidden" name="studentId" value="<%= studentIdBadge %>">
                             <div class="detail-card">
                                 <h3><i class="fas fa-lock"></i> Security</h3>
                                 <div class="detail-item">
-                                    <label>Password:</label>
-                                    <p>••••••••</p>
-                                    <button class="btn btn-outline" onclick="alert('Change password')">
-                                        <i class="fas fa-sync-alt"></i> Change
-                                    </button>
+                                    <label for="password">Password:</label>
+                                    <input type="password" id="password" name="password" placeholder="Enter new password">
+                                    <div class="error-text" id="passwordError"></div>
+                                </div>
+                                <div class="detail-item">
+                                    <label for="confirmPassword">Confirm Password:</label>
+                                    <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm new password">
+                                    <div class="error-text" id="confirmPasswordError"></div>
                                 </div>
                                 <div class="detail-item">
                                     <label>2FA:</label>
-                                    <p>Not Enabled</p>
-                                    <button class="btn btn-primary" onclick="alert('Enable 2FA')">
-                                        <i class="fas fa-toggle-on"></i> Enable
-                                    </button>
+                                    <input type="checkbox" id="twoFA" name="twoFA" <%= "Enabled".equals(twoFA) ? "checked" : "" %>>
+                                    <label for="twoFA" class="checkbox-label">Enable 2FA</label>
                                 </div>
                             </div>
-                        </div>
+                            <div class="profile-actions">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-save"></i> Save Changes
+                                </button>
+                            </div>
+                        </form>
                     </div>
-                </div>
-
-                <div class="profile-actions">
-                    <button class="btn btn-primary" onclick="alert('Changes saved!')">
-                        <i class="fas fa-save"></i> Save Changes
-                    </button>
                 </div>
             </div>
         </div>
     </section>
+
+    <script>
+        function previewImage(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('profileImage').src = e.target.result;
+                }
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function validatePersonalForm() {
+            let isValid = true;
+            let name = document.getElementById("name").value.trim();
+            let email = document.getElementById("email").value.trim();
+            let nameError = document.getElementById("nameError");
+            let emailError = document.getElementById("emailError");
+
+            nameError.textContent = "";
+            emailError.textContent = "";
+
+            if (name === "") {
+                nameError.textContent = "Name is required.";
+                isValid = false;
+            }
+            let emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailPattern.test(email)) {
+                emailError.textContent = "Please enter a valid email address.";
+                isValid = false;
+            }
+            return isValid;
+        }
+
+        function validateAcademicForm() {
+            let isValid = true;
+            let gpa = document.getElementById("gpa").value.trim();
+            let gpaError = document.getElementById("gpaError");
+
+            gpaError.textContent = "";
+            if (!gpa.match(/[0-4]\.\d{2}\/4\.00/)) {
+                gpaError.textContent = "GPA must be in format X.XX/4.00 (e.g., 3.72/4.00).";
+                isValid = false;
+            }
+            return isValid;
+        }
+
+        function validateSecurityForm() {
+            let isValid = true;
+            let password = document.getElementById("password").value;
+            let confirmPassword = document.getElementById("confirmPassword").value;
+            let passwordError = document.getElementById("passwordError");
+            let confirmPasswordError = document.getElementById("confirmPasswordError");
+
+            passwordError.textContent = "";
+            confirmPasswordError.textContent = "";
+
+            if (password && password.length < 8) {
+                passwordError.textContent = "Password must be at least 8 characters.";
+                isValid = false;
+            }
+            if (password && password !== confirmPassword) {
+                confirmPasswordError.textContent = "Passwords do not match.";
+                isValid = false;
+            }
+            if (confirmPassword && !password) {
+                passwordError.textContent = "Please enter a password.";
+                isValid = false;
+            }
+            return isValid;
+        }
+    </script>
+
+
+
+
 
     <section id="courses" class="content-section">
         <div class="dashboard-header">
