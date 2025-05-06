@@ -75,6 +75,6 @@ public class ProcessPaymentServlet extends HttpServlet {
         }
 
         // Redirect to registration.jsp
-        response.sendRedirect("index.jsp");
+        response.sendRedirect("student-dashboard.jsp");
     }
 }

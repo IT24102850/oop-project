@@ -1,9 +1,0 @@
-Course ID: QC301
-Full Name: Hasiru Chamika
-Email: hasiru2004@gmail.com
-Phone: 0741906332
-Education Level: phd
-Programming Experience: 5+
-Learning Goals: Explore the frontiers of quantum computing
-Terms Accepted: Yes
-Submission Time: Wed Apr 16 21:26:43 IST 2025

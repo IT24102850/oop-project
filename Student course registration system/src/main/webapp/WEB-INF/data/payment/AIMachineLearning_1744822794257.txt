@@ -1,9 +1,0 @@
-Action: payment
-Course: AIMachineLearning ($599)
-Start Date: 2025-04-29
-Study Mode: online
-Emergency Contact: 0775319911
-Payment Plan: N/A
-Payment Method: Bank Transfer
-Amount: $599
-Submission Time: Wed Apr 16 22:29:54 IST 2025

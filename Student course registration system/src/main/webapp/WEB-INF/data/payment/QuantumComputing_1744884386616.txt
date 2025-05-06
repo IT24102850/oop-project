@@ -1,9 +1,0 @@
-Action: payment
-Course: QuantumComputing ($699)
-Start Date: 2025-04-07
-Study Mode: inperson
-Emergency Contact: 0760203456
-Payment Plan: N/A
-Payment Method: Bank Transfer
-Amount: $699
-Submission Time: Thu Apr 17 15:36:26 IST 2025
