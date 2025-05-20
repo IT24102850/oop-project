@@ -1,5 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="java.io.*, java.util.*" %>
+<%!
+    // Declare coursesList at the page level to make it accessible across scriptlets
+    List<String[]> coursesList = new ArrayList<>();
+%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -58,7 +62,7 @@
             color: var(--dark-color);
         }
 
-        /* Header Section - Same as index.jsp */
+        /* Header Section */
         .header {
             position: fixed;
             top: 0;
@@ -402,6 +406,7 @@
             font-size: 0.9rem;
             margin-bottom: 15px;
             transition: var(--transition);
+            text-transform: capitalize;
         }
 
         .course-card:hover .course-category {
@@ -417,6 +422,13 @@
 
         .course-card:hover .course-title {
             color: var(--primary-color);
+        }
+
+        .course-code {
+            color: var(--primary-color);
+            font-size: 0.9em;
+            margin-right: 10px;
+            font-weight: 500;
         }
 
         .course-description {
@@ -516,7 +528,7 @@
             transform: translateY(-3px);
         }
 
-        /* Footer - Same as index.jsp */
+        /* Footer */
         .footer {
             background: var(--darker-color);
             padding: 100px 5% 50px;
@@ -531,11 +543,10 @@
             top: 0;
             left: 0;
             width: 100%;
-            path/to/image.jpg
             height: 100%;
-        background: url('./images/grid-pattern.png') center/cover;
-        opacity: 0.03;
-        z-index: 0;
+            background: url('./images/grid-pattern.png') center/cover;
+            opacity: 0.03;
+            z-index: 0;
         }
 
         .footer-grid {
@@ -847,7 +858,6 @@
             <ul>
                 <li><a href="index.jsp">Home</a></li>
                 <li><a href="courses.jsp" class="active">Courses</a></li>
-                <li><a href="Apply%20Course.jsp">Registration</a></li>
                 <li><a href="aboutus.jsp">About Us</a></li>
                 <li><a href="contact.jsp">Contact</a></li>
             </ul>
@@ -880,74 +890,92 @@
     </div>
 
     <%
+        // Define category, duration, level, and description mappings based on courseId
+        Map<String, String> categoryMap = new HashMap<>();
+        categoryMap.put("CS401", "programming");
+        categoryMap.put("AI301", "ai");
+        categoryMap.put("DB202", "data");
+        categoryMap.put("WD101", "web");
+        categoryMap.put("CY501", "cyber");
+        categoryMap.put("MD301", "mobile");
+
+        Map<String, String> durationMap = new HashMap<>();
+        durationMap.put("CS401", "40 Hours");
+        durationMap.put("AI301", "90 Hours");
+        durationMap.put("DB202", "60 Hours");
+        durationMap.put("WD101", "50 Hours");
+        durationMap.put("CY501", "70 Hours");
+        durationMap.put("MD301", "55 Hours");
+
+        Map<String, String> levelMap = new HashMap<>();
+        levelMap.put("CS401", "Beginner");
+        levelMap.put("AI301", "Advanced");
+        levelMap.put("DB202", "Intermediate");
+        levelMap.put("WD101", "Beginner");
+        levelMap.put("CY501", "Intermediate");
+        levelMap.put("MD301", "Intermediate");
+
+        Map<String, String> descriptionMap = new HashMap<>();
+        descriptionMap.put("CS401", "Master the fundamentals of programming with hands-on projects in multiple languages, guided by expert instructors.");
+        descriptionMap.put("AI301", "Dive deep into artificial intelligence and machine learning, building advanced models with real-world applications.");
+        descriptionMap.put("DB202", "Learn data science techniques, from data analysis to visualization, using industry-standard tools and datasets.");
+        descriptionMap.put("WD101", "Build responsive and dynamic websites using HTML, CSS, JavaScript, and modern frameworks.");
+        descriptionMap.put("CY501", "Explore cybersecurity principles, including ethical hacking and network security, with practical labs.");
+        descriptionMap.put("MD301", "Develop cross-platform mobile applications using Flutter and React Native, with real-world projects.");
+
+        // Define image mappings based on courseId
+        Map<String, String> imageMap = new HashMap<>();
+        imageMap.put("CS401", "./images/course1.jpg");
+        imageMap.put("AI301", "./images/course6.jpg");
+        imageMap.put("DB202", "./images/course3.jpg");
+        imageMap.put("WD101", "./images/course2.jpg");
+        imageMap.put("CY501", "./images/course4.jpg");
+        imageMap.put("MD301", "./images/course5.jpg");
+
         // Read courses from courses.txt
-        List<String[]> courses = new ArrayList<>();
         String coursesFilePath = application.getRealPath("/WEB-INF/data/courses.txt");
-        File coursesFile = new File(coursesFilePath);
-        if (coursesFile.exists()) {
-            try (BufferedReader reader = new BufferedReader(new FileReader(coursesFile))) {
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    if (line.trim().isEmpty()) continue;
-                    String[] parts = line.split(",");
-                    if (parts.length >= 7 && "true".equals(parts[6])) { // Only active courses
-                        courses.add(parts);
-                    }
+        try (BufferedReader reader = new BufferedReader(new FileReader(coursesFilePath))) {
+            String line;
+            coursesList.clear(); // Clear the list to avoid duplicates
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split(",");
+                if (parts.length >= 4) {
+                    coursesList.add(parts);
                 }
-            } catch (IOException e) {
-                System.out.println("Error reading courses.txt: " + e.getMessage());
             }
+        } catch (IOException e) {
+            out.print("<p>Error loading courses: " + e.getMessage() + "</p>");
         }
-
-        // Map departments to categories
-        Map<String, String> departmentToCategory = new HashMap<>();
-        departmentToCategory.put("Computer Science", "programming");
-        departmentToCategory.put("Mathematics", "data");
-        departmentToCategory.put("Physics", "data");
-
-        // Map departments to images
-        Map<String, String> departmentToImage = new HashMap<>();
-        departmentToImage.put("Computer Science", "./images/course1.jpg");
-        departmentToImage.put("Mathematics", "./images/course3.jpg");
-        departmentToImage.put("Physics", "./images/course3.jpg");
     %>
 
     <div class="courses-grid">
         <%
-            if (courses.isEmpty()) {
-        %>
-        <p style="text-align: center; color: var(--text-muted);">No active courses available.</p>
-        <%
-        } else {
-            for (String[] course : courses) {
-                String courseCode = course[0];
-                String title = course[1];
-                String credits = course[2];
-                String department = course[3];
-                String professor = course[4];
-                String syllabus = course[5];
-                String category = departmentToCategory.getOrDefault(department, "programming");
-                String image = departmentToImage.getOrDefault(department, "./images/course1.jpg");
-                // Estimate duration (e.g., 10 hours per credit)
-                int estimatedHours = Integer.parseInt(credits) * 10;
-                // Determine level based on credits
-                String level = Integer.parseInt(credits) <= 2 ? "Beginner" : (Integer.parseInt(credits) <= 3 ? "Intermediate" : "Advanced");
+            for (String[] course : coursesList) {
+                String courseId = course[0];
+                String courseCode = course[1];
+                String courseTitle = course[2];
+                String instructor = course[3];
+
+                String category = categoryMap.getOrDefault(courseId, "programming");
+                String duration = durationMap.getOrDefault(courseId, "50 Hours");
+                String level = levelMap.getOrDefault(courseId, "Intermediate");
+                String description = descriptionMap.getOrDefault(courseId, "Learn the core concepts of " + courseTitle + " with hands-on projects and expert guidance from " + instructor + ".");
+                String image = imageMap.getOrDefault(courseId, "./images/course1.jpg");
         %>
         <div class="course-card" data-category="<%= category %>">
-            <img src="<%= image %>" alt="<%= title %>" class="course-image">
+            <img src="<%= image %>" alt="<%= courseTitle %>" class="course-image">
             <div class="course-content">
-                <span class="course-category"><%= department %></span>
-                <h3 class="course-title"><%= title %></h3>
-                <p class="course-description"><%= syllabus %></p>
+                <span class="course-category"><%= category %></span>
+                <h3 class="course-title"><span class="course-code">[<%= courseCode %>]</span> <%= courseTitle %></h3>
+                <p class="course-description"><%= description %></p>
                 <div class="course-meta">
-                    <span class="course-meta-item"><i class="fas fa-clock"></i> <%= estimatedHours %> Hours</span>
+                    <span class="course-meta-item"><i class="fas fa-clock"></i> <%= duration %></span>
                     <span class="course-meta-item"><i class="fas fa-user-graduate"></i> <%= level %></span>
                 </div>
-                <a href="./courses/<%= courseCode.toLowerCase() %>.html" class="course-btn">Enroll Now <i class="fas fa-arrow-right"></i></a>
+                <a href="enroll.jsp?courseId=<%= courseId %>" class="course-btn">Enroll Now <i class="fas fa-arrow-right"></i></a>
             </div>
         </div>
         <%
-                }
             }
         %>
     </div>
@@ -972,7 +1000,7 @@
             <ul class="footer-links">
                 <li><a href="index.jsp">Home</a></li>
                 <li><a href="courses.jsp">Courses</a></li>
-                <li><a href="Apply%20Course.jsp">Registration</a></li>
+                <li><a href="registration.jsp">Registration</a></li>
                 <li><a href="aboutus.jsp">About Us</a></li>
                 <li><a href="contact.jsp">Contact</a></li>
             </ul>
@@ -999,7 +1027,7 @@
         </div>
     </div>
     <div class="footer-bottom">
-        <p>&copy; 2025 NexoraSkill. All rights reserved. | Designed with <i class="fas fa-heart" style="color: var(--accent-color);"></i> for the future of education</p>
+        <p>© 2025 NexoraSkill. All rights reserved. | Designed with <i class="fas fa-heart" style="color: var(--accent-color);"></i> for the future of education</p>
     </div>
 </footer>
 
@@ -1040,7 +1068,10 @@
     });
 
     scrollTop.addEventListener('click', function() {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
     });
 
     // Category Filter
@@ -1048,14 +1079,15 @@
     const courseCards = document.querySelectorAll('.course-card');
 
     categoryButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            const category = this.getAttribute('data-category');
-
-            // Update active button
+        button.addEventListener('click', () => {
+            // Remove active class from all buttons
             categoryButtons.forEach(btn => btn.classList.remove('active'));
-            this.classList.add('active');
+            // Add active class to clicked button
+            button.classList.add('active');
 
-            // Filter courses
+            const category = button.getAttribute('data-category');
+
+            // Show/hide course cards based on category
             courseCards.forEach(card => {
                 const cardCategory = card.getAttribute('data-category');
                 if (category === 'all' || cardCategory === category) {

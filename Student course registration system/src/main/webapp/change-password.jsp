@@ -1,4 +1,3 @@
-
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html lang="en">
@@ -171,63 +170,58 @@
             color: #ff0000;
             border: 1px solid rgba(255, 0, 0, 0.3);
         }
+
+        .message.success {
+            background: rgba(76, 175, 80, 0.1);
+            color: var(--success-color);
+            border: 1px solid rgba(76, 175, 80, 0.3);
+        }
     </style>
 </head>
 <body>
 <div class="change-password-container">
     <div class="change-password-header">
-        <% if (session.getAttribute("email") != null) { %>
-        <h1>Change Your Password</h1>
-        <p>Update your password securely. Please enter your current password and your new password below.</p>
-        <% } else { %>
         <h1>Reset Your Password</h1>
         <p>Please enter your email and new password to reset your password.</p>
-        <% } %>
     </div>
 
     <% if (request.getAttribute("error") != null) { %>
     <div class="message error"><%= request.getAttribute("error") %></div>
     <% } %>
+    <% if (request.getAttribute("success") != null) { %>
+    <div class="message success"><%= request.getAttribute("success") %></div>
+    <% } %>
 
-    <form action="auth" method="post">
-        <% if (session.getAttribute("email") != null) { %>
-        <input type="hidden" name="action" value="changePassword">
-        <div class="form-group">
-            <label for="currentPassword">Current Password</label>
-            <input type="password" id="currentPassword" name="currentPassword" required placeholder="Enter your current password">
-        </div>
-        <% } else { %>
-        <input type="hidden" name="action" value="resetPassword">
+    <form id="changePasswordForm" action="${pageContext.request.contextPath}/resetpassword" method="post">
         <div class="form-group">
             <label for="email">Email</label>
             <input type="email" id="email" name="email" required placeholder="Enter your email">
         </div>
-        <% } %>
         <div class="form-group">
             <label for="newPassword">New Password</label>
             <input type="password" id="newPassword" name="newPassword" required placeholder="Enter your new password">
         </div>
         <div class="form-group">
-            <label for="confirmPassword">Confirm New Password</label>
-            <input type="password" id="confirmPassword" name="confirmPassword" required placeholder="Confirm your new password">
+            <label for="confirmNewPassword">Confirm New Password</label>
+            <input type="password" id="confirmNewPassword" name="confirmNewPassword" required placeholder="Confirm your new password">
         </div>
         <div class="button-group">
-            <a href="<%= session.getAttribute("email") != null ? "student-dashboard.jsp" : "logIn.jsp" %>" class="btn btn-primary">
+            <a href="logIn.jsp" class="btn btn-primary">
                 <i class="fas fa-arrow-left"></i> Cancel
             </a>
             <button type="submit" class="btn btn-success">
-                <i class="fas fa-lock"></i> <%= session.getAttribute("email") != null ? "Update Password" : "Reset Password" %>
+                <i class="fas fa-lock"></i> Reset Password
             </button>
         </div>
     </form>
 </div>
 
 <script>
-    document.querySelector('form').addEventListener('submit', function(e) {
+    document.getElementById('changePasswordForm').addEventListener('submit', function(e) {
         const newPassword = document.getElementById('newPassword').value;
-        const confirmPassword = document.getElementById('confirmPassword').value;
+        const confirmNewPassword = document.getElementById('confirmNewPassword').value;
 
-        if (newPassword !== confirmPassword) {
+        if (newPassword !== confirmNewPassword) {
             e.preventDefault();
             alert('New password and confirm password do not match!');
         }

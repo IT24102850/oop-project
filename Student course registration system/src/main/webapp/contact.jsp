@@ -1,5 +1,4 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ page import="java.util.ArrayList, java.util.List, java.io.*, java.time.LocalDateTime, java.time.format.DateTimeFormatter" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,35 +7,44 @@
   <title>Contact Us | NexoraSkill</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link rel="icon" type="image/png" href="./images/favicon.ico">
+  <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Orbitron:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
+    /* CSS Variables */
     :root {
       --primary-color: #00f2fe;
-      --secondary-color: #4facfe;
-      --accent-color: #ff4d7e;
-      --dark-color: #0a0f24;
-      --darker-color: #050916;
+      --secondary-color: #ff00ff;
+      --card-bg: rgba(10, 15, 36, 0.8);
+      --border-radius: 10px;
+      --box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+      --transition: all 0.3s ease;
+      --text-muted: #a0a8c3;
       --text-color: #ffffff;
-      --text-muted: rgba(255, 255, 255, 0.7);
-      --hover-color: #00c6fb;
-      --glow-color: rgba(0, 242, 254, 0.6);
-      --card-bg: rgba(15, 23, 42, 0.8);
-      --glass-bg: rgba(255, 255, 255, 0.08);
-      --border-radius: 16px;
-      --box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
-      --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      --dark-color: #0a0f24;
+      --bg-color: #1a1f3a;
+    }
+
+    /* Global Reset */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
     }
 
     body {
-      margin: 0;
-      background: radial-gradient(ellipse at bottom, var(--darker-color) 0%, var(--dark-color) 100%);
       font-family: 'Poppins', sans-serif;
+      background: var(--bg-color);
       color: var(--text-color);
-      overflow-x: hidden;
-      line-height: 1.7;
-      scroll-behavior: smooth;
     }
 
+    /* Container */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 15px;
+    }
+
+    /* Preloader */
     .preloader {
       position: fixed;
       top: 0;
@@ -45,11 +53,10 @@
       height: 100%;
       background: var(--dark-color);
       display: flex;
-      justify-content: center;
       align-items: center;
-      z-index: 1000;
-      opacity: 1;
-      transition: opacity 0.5s;
+      justify-content: center;
+      z-index: 9999;
+      transition: opacity 0.5s ease;
     }
 
     .preloader.fade-out {
@@ -57,28 +64,12 @@
     }
 
     .loader {
-      width: 80px;
-      height: 80px;
-      border: 5px solid transparent;
-      border-top-color: var(--primary-color);
-      border-bottom-color: var(--primary-color);
+      width: 50px;
+      height: 50px;
+      border: 5px solid var(--primary-color);
+      border-top: 5px solid transparent;
       border-radius: 50%;
-      animation: spin 1.5s linear infinite;
-      position: relative;
-    }
-
-    .loader:before {
-      content: '';
-      position: absolute;
-      top: 10px;
-      left: 10px;
-      right: 10px;
-      bottom: 10px;
-      border: 5px solid transparent;
-      border-top-color: var(--secondary-color);
-      border-bottom-color: var(--secondary-color);
-      border-radius: 50%;
-      animation: spin 1s linear infinite reverse;
+      animation: spin 1s linear infinite;
     }
 
     @keyframes spin {
@@ -86,196 +77,130 @@
       100% { transform: rotate(360deg); }
     }
 
-    /* Navigation Bar - Holographic Effect from index.jsp */
+    /* Header */
     .header {
+      background: rgba(10, 15, 36, 0.9);
+      backdrop-filter: blur(10px);
       position: fixed;
       top: 0;
+      left: 0;
       width: 100%;
+      padding: 15px 0;
       z-index: 1000;
-      background: var(--glass-bg);
-      backdrop-filter: blur(15px);
-      -webkit-backdrop-filter: blur(15px);
-      border-bottom: 1px solid rgba(0, 242, 254, 0.1);
-      box-shadow: 0 5px 30px rgba(0, 0, 0, 0.2);
       transition: var(--transition);
     }
 
     .header.scrolled {
-      padding: 10px 0;
-      background: rgba(10, 15, 36, 0.95);
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
     }
 
-    .container {
+    .header .container {
       display: flex;
-      justify-content: space-between;
       align-items: center;
-      padding: 20px 5%;
-      max-width: 1600px;
-      margin: 0 auto;
+      justify-content: space-between;
     }
 
     .logo {
       display: flex;
       align-items: center;
-      gap: 15px;
-      font-size: 2rem;
-      font-weight: 700;
-      color: var(--text-color);
+      gap: 10px;
       text-decoration: none;
-      transition: var(--transition);
-      position: relative;
-    }
-
-    .logo:hover {
-      color: var(--primary-color);
-      transform: scale(1.05);
+      color: var(--text-color);
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 600;
     }
 
     .logo img {
-      height: 45px;
+      width: 32px;
+    }
+
+    .navbar ul {
+      display: flex;
+      list-style: none;
+      gap: 30px;
+    }
+
+    .nav-link {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 1rem;
+      position: relative;
       transition: var(--transition);
-      filter: drop-shadow(0 0 5px var(--glow-color));
     }
 
-    .logo:hover img {
-      transform: rotate(15deg) scale(1.1);
-      filter: drop-shadow(0 0 10px var(--glow-color));
+    .nav-link:hover,
+    .nav-link.active {
+      color: var(--primary-color);
     }
 
-    .logo:after {
-      content: '';
+    .nav-icon {
+      font-size: 1.2rem;
+    }
+
+    .nav-underline {
       position: absolute;
       bottom: -5px;
       left: 0;
       width: 0;
       height: 2px;
-      background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+      background: var(--primary-color);
       transition: var(--transition);
     }
 
-    .logo:hover:after {
+    .nav-link:hover .nav-underline,
+    .nav-link.active .nav-underline {
       width: 100%;
-    }
-
-    .navbar ul {
-      list-style: none;
-      display: flex;
-      gap: 35px;
-    }
-
-    .navbar ul li a {
-      position: relative;
-      font-family: 'Poppins', sans-serif;
-      text-decoration: none;
-      color: var(--text-color);
-      font-weight: 500;
-      font-size: 1.1rem;
-      transition: var(--transition);
-      padding: 8px 0;
-      overflow: hidden;
-    }
-
-    .navbar ul li a.active {
-      color: var(--primary-color);
-      text-shadow: 0 0 10px var(--glow-color);
-    }
-
-    .navbar ul li a:before {
-      content: '';
-      position: absolute;
-      width: 100%;
-      height: 2px;
-      bottom: 0;
-      left: -100%;
-      background: linear-gradient(90deg, transparent, var(--primary-color));
-      transition: var(--transition);
-    }
-
-    .navbar ul li a:hover:before,
-    .navbar ul li a.active:before {
-      left: 100%;
-    }
-
-    .navbar ul li a:hover,
-    .navbar ul li a.active {
-      color: var(--primary-color);
-      text-shadow: 0 0 10px var(--glow-color);
     }
 
     .auth-buttons {
       display: flex;
-      gap: 20px;
+      gap: 15px;
     }
 
     .btn {
-      padding: 14px 32px;
-      border-radius: 50px;
-      text-decoration: none;
-      font-weight: 600;
-      transition: var(--transition);
-      font-size: 1rem;
-      display: inline-flex;
+      display: flex;
       align-items: center;
-      gap: 10px;
-      position: relative;
-      overflow: hidden;
-      z-index: 1;
-    }
-
-    .btn:before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 0;
-      height: 100%;
-      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      gap: 8px;
+      padding: 10px 20px;
+      border-radius: 5px;
+      text-decoration: none;
+      font-size: 1rem;
       transition: var(--transition);
-      z-index: -1;
-    }
-
-    .btn:hover:before {
-      width: 100%;
     }
 
     .btn-login {
       background: transparent;
-      border: 2px solid var(--primary-color);
-      color: var(--text-color);
+      border: 1px solid var(--primary-color);
+      color: var(--primary-color);
     }
 
     .btn-login:hover {
+      background: var(--primary-color);
       color: var(--dark-color);
-      border-color: transparent;
-      transform: translateY(-3px);
-      box-shadow: 0 10px 20px rgba(0, 242, 254, 0.3);
     }
 
     .btn-signup {
-      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      background: var(--primary-color);
       color: var(--dark-color);
-      border: 2px solid transparent;
     }
 
     .btn-signup:hover {
-      background: transparent;
-      color: var(--primary-color);
-      border-color: var(--primary-color);
-      transform: translateY(-3px);
-      box-shadow: 0 10px 20px rgba(0, 242, 254, 0.3);
+      background: var(--secondary-color);
+      color: var(--text-color);
     }
 
     .mobile-menu-toggle {
       display: none;
-      color: var(--text-color);
       font-size: 1.5rem;
+      color: var(--text-color);
       cursor: pointer;
     }
 
-    .mobile-menu-toggle.active i::before {
-      content: '\f00d';
-    }
-
+    /* Contact Page Specific Styles */
     .contact-hero {
       padding: 180px 5% 100px;
       text-align: center;
@@ -291,17 +216,10 @@
       width: 100%;
       height: 100%;
       background: radial-gradient(circle, rgba(0, 242, 254, 0.05) 0%, transparent 70%);
-      animation: rotate 60s linear infinite;
       z-index: -1;
     }
 
-    @keyframes rotate {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-
     .contact-title {
-      font-family: 'Orbitron', sans-serif;
       font-size: 4rem;
       margin-bottom: 30px;
       background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
@@ -349,11 +267,6 @@
       position: relative;
       overflow: hidden;
       z-index: 1;
-      transition: transform 0.3s;
-    }
-
-    .contact-info:hover {
-      transform: translateY(-5px);
     }
 
     .contact-info:before {
@@ -375,7 +288,7 @@
     }
 
     .info-icon {
-      width: 60px77
+      width: 60px;
       height: 60px;
       background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
       border-radius: 50%;
@@ -385,11 +298,6 @@
       color: var(--dark-color);
       font-size: 1.5rem;
       flex-shrink: 0;
-      transition: transform 0.3s;
-    }
-
-    .info-item:hover .info-icon {
-      transform: rotate(360deg);
     }
 
     .info-content h3 {
@@ -398,7 +306,8 @@
       color: var(--primary-color);
     }
 
-    .info-content p, .info-content a {
+    .info-content p,
+    .info-content a {
       color: var(--text-muted);
       transition: var(--transition);
       text-decoration: none;
@@ -406,7 +315,6 @@
 
     .info-content a:hover {
       color: var(--primary-color);
-      text-shadow: 0 0 10px rgba(0, 242, 254, 0.5);
     }
 
     .contact-form {
@@ -416,7 +324,6 @@
       padding: 50px 40px;
       border: 1px solid rgba(0, 242, 254, 0.2);
       box-shadow: var(--box-shadow);
-      position: relative;
     }
 
     .form-group {
@@ -499,12 +406,6 @@
       display: flex;
       align-items: center;
       gap: 15px;
-      animation: fadeIn 0.5s ease-in;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
     }
 
     .alert-success {
@@ -525,12 +426,7 @@
       overflow: hidden;
       margin-top: 50px;
       border: 1px solid rgba(0, 242, 254, 0.3);
-      box-shadow: var--box-shadow);
-      transition: transform 0.3s;
-    }
-
-    .map-container:hover {
-      transform: scale(1.02);
+      box-shadow: var(--box-shadow);
     }
 
     .map-container iframe {
@@ -545,66 +441,67 @@
       filter: grayscale(0%) hue-rotate(0deg);
     }
 
-    .particles {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      top: 0;
-      left: 0;
-      pointer-events: none;
-      z-index: -1;
+    /* Footer */
+    .footer {
+      background: var(--dark-color);
+      padding: 30px 0;
+      text-align: center;
     }
 
-    .particle {
-      position: absolute;
-      width: 3px;
-      height: 3px;
-      background: var(--primary-color);
-      border-radius: 50%;
-      opacity: 0.6;
-      animation: particleMove 15s linear infinite;
+    .footer .container {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
     }
 
-    @keyframes particleMove {
-      0% { transform: translateY(0) translateX(0); opacity: 0; }
-      10% { opacity: 0.6; }
-      90% { opacity: 0.6; }
-      100% { transform: translateY(-1000px) translateX(200px); opacity: 0; }
+    .footer p {
+      color: var(--text-muted);
     }
 
+    .footer ul {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      list-style: none;
+    }
+
+    .footer a {
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: var(--transition);
+    }
+
+    .footer a:hover {
+      color: var(--primary-color);
+    }
+
+    /* Scroll to Top */
     .scroll-top {
       position: fixed;
-      bottom: 30px;
-      right: 30px;
-      width: 60px;
-      height: 60px;
-      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      bottom: 20px;
+      right: 20px;
+      width: 50px;
+      height: 50px;
+      background: var(--primary-color);
       color: var(--dark-color);
       border-radius: 50%;
       display: flex;
-      justify-content: center;
       align-items: center;
-      font-size: 1.5rem;
+      justify-content: center;
       cursor: pointer;
-      transition: var(--transition);
-      box-shadow: 0 5px 20px rgba(0, 242, 254, 0.4);
-      z-index: 999;
       opacity: 0;
-      visibility: hidden;
-      transform: translateY(20px);
+      transition: var(--transition);
     }
 
     .scroll-top.active {
       opacity: 1;
-      visibility: visible;
-      transform: translateY(0);
     }
 
     .scroll-top:hover {
-      transform: translateY(-5px) scale(1.1);
-      box-shadow: 0 10px 25px rgba(0, 242, 254, 0.6);
+      transform: translateY(-5px);
     }
 
+    /* Responsive Styles */
     @media (max-width: 992px) {
       .navbar {
         display: none;
@@ -612,8 +509,8 @@
         top: 100%;
         left: 0;
         width: 100%;
-        background: rgba(10, 15, 36, 0.95);
-        padding: 20px 0;
+        background: rgba(10, 15, 36, 0.9);
+        padding: 20px;
       }
 
       .navbar.active {
@@ -622,82 +519,55 @@
 
       .navbar ul {
         flex-direction: column;
-        gap: 20px;
-        text-align: center;
+        gap: 15px;
       }
 
       .mobile-menu-toggle {
         display: block;
       }
-    }
 
-    @media (max-width: 768px) {
-      .contact-title { font-size: 2.8rem; }
-      .contact-subtext { font-size: 1.2rem; }
-    }
-
-    @media (max-width: 576px) {
       .auth-buttons {
         display: none;
       }
-      .contact-title { font-size: 2.2rem; }
-      .contact-subtext { font-size: 1.1rem; }
-      .info-item { flex-direction: column; gap: 15px; }
-      .info-icon { width: 50px; height: 50px; font-size: 1.2rem; }
+    }
+
+    @media (max-width: 768px) {
+      .contact-title {
+        font-size: 2.8rem;
+      }
+
+      .contact-subtext {
+        font-size: 1.2rem;
+      }
+    }
+
+    @media (max-width: 576px) {
+      .contact-title {
+        font-size: 2.2rem;
+      }
+
+      .contact-subtext {
+        font-size: 1.1rem;
+      }
+
+      .info-item {
+        flex-direction: column;
+        gap: 15px;
+      }
+
+      .info-icon {
+        width: 50px;
+        height: 50px;
+        font-size: 1.2rem;
+      }
     }
   </style>
 </head>
 <body>
-<%
-  String success = null;
-  String error = null;
-  if ("POST".equalsIgnoreCase(request.getMethod())) {
-    String name = request.getParameter("name");
-    String email = request.getParameter("email");
-    String subject = request.getParameter("subject");
-    String message = request.getParameter("message");
-
-    List<String> errors = new ArrayList<>();
-    if (name == null || name.trim().isEmpty()) errors.add("Name is required");
-    if (email == null || email.trim().isEmpty() || !email.contains("@")) errors.add("Valid email is required");
-    if (subject == null || subject.trim().isEmpty()) errors.add("Subject is required");
-    if (message == null || message.trim().isEmpty()) errors.add("Message is required");
-
-    if (errors.isEmpty()) {
-      String filePath = application.getRealPath("/") + "WEB-INF/data/sendmessage.txt";
-      File file = new File(filePath);
-      if (!file.exists()) {
-        try {
-          file.getParentFile().mkdirs();
-          file.createNewFile();
-        } catch (IOException e) {
-          errors.add("Failed to create file: " + e.getMessage());
-        }
-      }
-      if (errors.isEmpty()) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file, true))) {
-          String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-          writer.write(String.format("%s | %s | %s | %s | %s", timestamp, name, email, subject, message));
-          writer.newLine();
-          success = "true";
-        } catch (IOException e) {
-          errors.add("Failed to save message: " + e.getMessage());
-        }
-      }
-    }
-    if (!errors.isEmpty()) {
-      error = String.join(", ", errors);
-    }
-  }
-%>
-
 <!-- Preloader -->
 <div class="preloader">
   <div class="loader"></div>
 </div>
-
-<!-- Particles Background -->
-<div class="particles"></div>
 
 <!-- Header Section -->
 <header class="header">
@@ -706,103 +576,155 @@
       <img src="./images/favicon-32x32.png" alt="NexoraSkill Logo">
       <span>NexoraSkill</span>
     </a>
+
     <nav class="navbar">
       <ul>
-        <li><a href="index.jsp" class="nav-link"><i class="fas fa-home nav-icon"></i><span>Home</span><div class="nav-underline"></div></a></li>
-        <li><a href="courses.jsp" class="nav-link"><i class="fas fa-book nav-icon"></i><span>Courses</span><div class="nav-underline"></div></a></li>
-        <li><a href="Apply%20Course.jsp" class="nav-link"><i class="fas fa-rocket nav-icon"></i><span>Apply</span><div class="nav-underline"></div></a></li>
-        <li><a href="aboutus.jsp" class="nav-link"><i class="fas fa-info-circle nav-icon"></i><span>About</span><div class="nav-underline"></div></a></li>
-        <li><a href="contact.jsp" class="nav-link active"><i class="fas fa-envelope nav-icon"></i><span>Contact</span><div class="nav-underline"></div></a></li>
+        <li>
+          <a href="index.jsp" class="nav-link">
+            <i class="fas fa-home nav-icon"></i>
+            <span class="nav-text">Home</span>
+            <div class="nav-underline"></div>
+          </a>
+        </li>
+        <li>
+          <a href="courses.jsp" class="nav-link">
+            <i class="fas fa-book nav-icon"></i>
+            <span class="nav-text">Courses</span>
+            <div class="nav-underline"></div>
+          </a>
+        </li>
+        <li>
+
+          <a href="aboutus.jsp" class="nav-link">
+            <i class="fas fa-info-circle nav-icon"></i>
+            <span class="nav-text">About</span>
+            <div class="nav-underline"></div>
+          </a>
+        </li>
+        <li>
+          <a href="contact.jsp" class="nav-link active">
+            <i class="fas fa-envelope nav-icon"></i>
+            <span class="nav-text">Contact</span>
+            <div class="nav-underline"></div>
+          </a>
+        </li>
       </ul>
     </nav>
+
     <div class="auth-buttons">
-      <a href="logIn.jsp" class="btn btn-login"><i class="fas fa-sign-in-alt"></i><span>Login</span></a>
-      <a href="signUp.jsp" class="btn btn-signup"><i class="fas fa-user-plus"></i><span>Sign Up</span></a>
+      <a href="logIn.jsp" class="btn btn-login">
+        <i class="fas fa-sign-in-alt"></i>
+        <span class="btn-text">Login</span>
+      </a>
+      <a href="signUp.jsp" class="btn btn-signup">
+        <i class="fas fa-user-plus"></i>
+        <span class="btn-text">Sign Up</span>
+      </a>
     </div>
-    <div class="mobile-menu-toggle"><i class="fas fa-bars"></i></div>
+
+    <!-- Mobile Menu Toggle -->
+    <div class="mobile-menu-toggle">
+      <i class="fas fa-bars"></i>
+    </div>
   </div>
 </header>
 
 <!-- Hero Section -->
 <section class="contact-hero">
   <h1 class="contact-title">Contact Us</h1>
-  <p class="contact-subtext">Reach out to us for support, inquiries, or collaboration. We're here to help you navigate the cosmos of learning!</p>
+  <p class="contact-subtext">We'd love to hear from you! Reach out with any questions or feedback.</p>
 </section>
 
-<!-- Contact Information Section -->
-<section class="contact-container">
-  <div class="contact-info">
+<!-- Contact Information and Form Section -->
+<div class="contact-container">
+  <!-- Contact Information Section -->
+  <section class="contact-info">
     <div class="info-item">
-      <div class="info-icon"><i class="fas fa-map-marker-alt"></i></div>
+      <div class="info-icon">
+        <i class="fas fa-map-marker-alt"></i>
+      </div>
       <div class="info-content">
-        <h3>Location</h3>
-        <p>123 Cosmic Avenue, Nebula City, NC 45678</p>
+        <h3>Our Address</h3>
+        <p>123 NexoraSkill Street, Tech City, TX 12345</p>
       </div>
     </div>
     <div class="info-item">
-      <div class="info-icon"><i class="fas fa-phone"></i></div>
+      <div class="info-icon">
+        <i class="fas fa-phone-alt"></i>
+      </div>
       <div class="info-content">
-        <h3>Phone</h3>
+        <h3>Phone Number</h3>
         <a href="tel:+1234567890">+1 (234) 567-890</a>
       </div>
     </div>
     <div class="info-item">
-      <div class="info-icon"><i class="fas fa-envelope"></i></div>
+      <div class="info-icon">
+        <i class="fas fa-envelope"></i>
+      </div>
       <div class="info-content">
-        <h3>Email</h3>
+        <h3>Email Address</h3>
         <a href="mailto:support@nexoraskill.com">support@nexoraskill.com</a>
       </div>
     </div>
-  </div>
+    <!-- Map -->
+    <div class="map-container">
+      <iframe
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3153.019238673314!2d-122.41941568468122!3d37.77492977975966!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8085808f1a2a3b7b%3A0x9d2e6f2a3b4c5d67!2sSan%20Francisco%2C%20CA%2C%20USA!5e0!3m2!1sen!2sin!4v1634567890123!5m2!1sen!2sin"
+              loading="lazy"
+              allowfullscreen
+      ></iframe>
+    </div>
+  </section>
 
   <!-- Contact Form Section -->
-  <div class="contact-form">
+  <section class="contact-form">
     <h2>Send Us a Message</h2>
-    <% if ("true".equals(success)) { %>
-    <div class="alert alert-success" role="alert">
+    <%-- Success/Error Messages --%>
+    <% if (request.getAttribute("success") != null) { %>
+    <div class="alert alert-success">
       <i class="fas fa-check-circle"></i> Your message has been sent successfully!
     </div>
-    <% } else if (error != null) { %>
-    <div class="alert alert-error" role="alert">
-      <i class="fas fa-exclamation-circle"></i> <%= error %>
+    <% } %>
+    <% if (request.getAttribute("error") != null) { %>
+    <div class="alert alert-error">
+      <i class="fas fa-exclamation-circle"></i> <%= request.getAttribute("error") %>
     </div>
     <% } %>
 
-    <form action="contact.jsp" method="POST" id="contactForm" novalidate>
+    <form action="${pageContext.request.contextPath}/ContactServlet" method="POST">
       <div class="form-group">
-        <input type="text" name="name" id="name" placeholder=" " required aria-required="true">
+        <input type="text" name="name" id="name" placeholder=" " required>
         <label for="name">Your Name</label>
       </div>
       <div class="form-group">
-        <input type="email" name="email" id="email" placeholder=" " required aria-required="true">
+        <input type="email" name="email" id="email" placeholder=" " required>
         <label for="email">Your Email</label>
       </div>
       <div class="form-group">
-        <input type="text" name="subject" id="subject" placeholder=" " required aria-required="true">
+        <input type="text" name="subject" id="subject" placeholder=" " required>
         <label for="subject">Subject</label>
       </div>
       <div class="form-group">
-        <textarea name="message" id="message" placeholder=" " required aria-required="true"></textarea>
+        <textarea name="message" id="message" placeholder=" " required></textarea>
         <label for="message">Your Message</label>
       </div>
       <button type="submit" class="submit-btn">
         <i class="fas fa-paper-plane"></i> Send Message
       </button>
     </form>
-  </div>
-</section>
-
-<!-- Map Section -->
-<section class="contact-container">
-  <div class="map-container">
-    <iframe src="https://www.google.com/maps/embed?pb=..." frameborder="0" allowfullscreen></iframe>
-  </div>
-</section>
+  </section>
+</div>
 
 <!-- Footer -->
 <footer class="footer">
   <div class="container">
     <p>© 2025 NexoraSkill. All rights reserved.</p>
+    <ul>
+      <li><a href="index.jsp">Home</a></li>
+      <li><a href="courses.jsp">Courses</a></li>
+      <li><a href="aboutus.jsp">About</a></li>
+      <li><a href="contact.jsp">Contact</a></li>
+    </ul>
   </div>
 </footer>
 
@@ -811,34 +733,47 @@
   <i class="fas fa-arrow-up"></i>
 </div>
 
+<!-- Scripts -->
 <script>
   // Preloader
-  window.addEventListener('load', () => {
+  window.addEventListener('load', function() {
     const preloader = document.querySelector('.preloader');
     preloader.classList.add('fade-out');
-    setTimeout(() => preloader.style.display = 'none', 500);
+    setTimeout(() => {
+      preloader.style.display = 'none';
+    }, 500);
   });
 
   // Header scroll effect
-  window.addEventListener('scroll', () => {
+  window.addEventListener('scroll', function() {
     const header = document.querySelector('.header');
+    if (window.scrollY > 100) {
+      header.classList.add('scrolled');
+    } else {
+      header.classList.remove('scrolled');
+    }
+
+    // Scroll to top button
     const scrollTop = document.querySelector('.scroll-top');
-    if (window.scrollY > 100) header.classList.add('scrolled');
-    else header.classList.remove('scrolled');
-    if (window.scrollY > 300) scrollTop.classList.add('active');
-    else scrollTop.classList.remove('active');
+    if (window.scrollY > 300) {
+      scrollTop.classList.add('active');
+    } else {
+      scrollTop.classList.remove('active');
+    }
   });
 
   // Mobile Menu Toggle
   const mobileMenuToggle = document.querySelector('.mobile-menu-toggle');
   const navbar = document.querySelector('.navbar');
-  mobileMenuToggle.addEventListener('click', () => {
+
+  mobileMenuToggle.addEventListener('click', function() {
     navbar.classList.toggle('active');
     mobileMenuToggle.classList.toggle('active');
   });
 
+  // Close mobile menu when clicking on a link
   document.querySelectorAll('.nav-link').forEach(link => {
-    link.addEventListener('click', () => {
+    link.addEventListener('click', function() {
       if (window.innerWidth <= 992) {
         navbar.classList.remove('active');
         mobileMenuToggle.classList.remove('active');
@@ -846,40 +781,12 @@
     });
   });
 
-
-
-  document.querySelector('.scroll-top').addEventListener('click', () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  });
-
-  // Particle Animation
-  function createParticles(count) {
-    const particlesDiv = document.querySelector('.particles');
-    for (let i = 0; i < count; i++) {
-      const particle = document.createElement('div');
-      particle.className = 'particle';
-      particle.style.left = Math.random() * 100 + 'vw';
-      particle.style.top = Math.random() * 100 + 'vh';
-      particle.style.animationDuration = Math.random() * 20 + 10 + 's';
-      particle.style.animationDelay = Math.random() * 5 + 's';
-      particlesDiv.appendChild(particle);
-    }
-  }
-  createParticles(100);
-
-  // Form Validation
-  document.getElementById('contactForm').addEventListener('submit', (e) => {
-    const inputs = document.querySelectorAll('input[required], textarea[required]');
-    let isValid = true;
-    inputs.forEach(input => {
-      if (!input.value.trim()) {
-        isValid = false;
-        input.style.borderColor = '#ff0000';
-      } else {
-        input.style.borderColor = '';
-      }
+  // Scroll to top button
+  document.querySelector('.scroll-top').addEventListener('click', function() {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
     });
-    if (!isValid) e.preventDefault();
   });
 </script>
 </body>

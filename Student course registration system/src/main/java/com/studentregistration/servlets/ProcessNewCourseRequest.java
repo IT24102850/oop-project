@@ -1,137 +1,173 @@
 package com.studentregistration.servlets;
 
 import com.studentregistration.dao.CourseRequestDAO;
+import com.studentregistration.dao.CourseRequestQueue;
 import com.studentregistration.model.CourseRequest;
-import com.studentregistration.model.User;
-import com.studentregistration.util.ValidationUtils;
-
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.io.*;
-import java.util.logging.*;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Logger;
 
-@WebServlet("/ProcessNewCourseRequest")
 public class ProcessNewCourseRequest extends HttpServlet {
-    private static final long serialVersionUID = 1L;
-    private CourseRequestDAO courseRequestDAO;
     private static final Logger LOGGER = Logger.getLogger(ProcessNewCourseRequest.class.getName());
+    private CourseRequestDAO courseRequestDAO;
+    private CourseRequestQueue courseRequestQueue;
+    private static final DateTimeFormatter TIMESTAMP_FORMATTER = DateTimeFormatter.ofPattern("EEE MMM dd HH:mm:ss z yyyy");
 
     @Override
     public void init() throws ServletException {
-        try {
-            // Initialize CourseRequestDAO with the real path
-            String basePath = getServletContext().getRealPath("/");
-            courseRequestDAO = new CourseRequestDAO(basePath);
-
-            // Set up logging to WEB-INF/logs directory
-            String logPath = basePath + "WEB-INF/logs/";
-            new File(logPath).mkdirs(); // Ensure logs directory exists
-            FileHandler fileHandler = new FileHandler(logPath + "course_requests.log", true);
-            fileHandler.setFormatter(new SimpleFormatter());
-            LOGGER.addHandler(fileHandler);
-            LOGGER.setLevel(Level.ALL);
-
-            LOGGER.info("ProcessNewCourseRequest servlet initialized successfully");
-        } catch (IOException e) {
-            LOGGER.severe("Failed to initialize servlet: " + e.getMessage());
-            throw new ServletException("Failed to initialize servlet", e);
-        }
+        String basePath = getServletContext().getRealPath("/");
+        courseRequestDAO = new CourseRequestDAO(basePath);
+        courseRequestQueue = new CourseRequestQueue(basePath);
+        LOGGER.info("ProcessNewCourseRequest servlet initialized with base path: " + basePath);
     }
 
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        processRequest(request, response);
+    }
+
+    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        response.setContentType("text/plain");
-        response.setCharacterEncoding("UTF-8");
-        PrintWriter out = response.getWriter();
+        processRequest(request, response);
+    }
 
-        try {
-            // Check session and authentication
-            HttpSession session = request.getSession(false);
-            if (session == null || session.getAttribute("user") == null) {
-                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                out.write("Please log in to submit a course request");
-                LOGGER.warning("Unauthorized access attempt to course request");
-                return;
-            }
+    private void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String action = request.getParameter("action");
+        String requestId = request.getParameter("requestId");
+        String activeTab = request.getParameter("activeTab");
 
-            // Get user from session
-            User user = (User) session.getAttribute("user");
-            String email = user.getEmail();
+        if (action == null) {
+            LOGGER.warning("Action parameter is null. Redirecting to admin dashboard with error.");
+            response.sendRedirect("admin-dashboard.jsp?activeTab=course-requests&error=invalid_input");
+            return;
+        }
 
-            // Get and validate form parameters
+        String applyFilePath = getServletContext().getRealPath("/WEB-INF/data/apply.txt");
+
+        if ("submit".equals(action)) {
             String fullName = request.getParameter("fullName");
-            String courseId = request.getParameter("course");
+            String email = request.getParameter("email");
+            String courseCode = request.getParameter("course");
             String reason = request.getParameter("reason");
             String additionalNotes = request.getParameter("additionalNotes");
-            boolean termsAccepted = request.getParameter("terms") != null;
 
-            // Validate required fields
-            if (!ValidationUtils.isNotEmpty(fullName) ||
-                    !ValidationUtils.isNotEmpty(courseId) ||
-                    !ValidationUtils.isNotEmpty(reason)) {
-                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                out.write("Full name, course, and reason are required");
-                LOGGER.warning("Missing required fields in course request");
+            if (email == null || email.trim().isEmpty() || courseCode == null || courseCode.trim().isEmpty() ||
+                    fullName == null || fullName.trim().isEmpty() || reason == null || reason.trim().isEmpty()) {
+                LOGGER.warning("Invalid course request submission: Missing required fields. Email: " + email + ", Course: " + courseCode + ", FullName: " + fullName + ", Reason: " + reason);
+                response.sendRedirect("ApplyNewCourse.jsp?error=invalid_input");
                 return;
             }
 
-            // Validate email format (from session user)
-            if (!ValidationUtils.isValidEmail(email)) {
-                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                out.write("Invalid email format");
-                LOGGER.warning("Invalid email format: " + email);
+            if (containsInappropriateContent(reason) || (additionalNotes != null && containsInappropriateContent(additionalNotes))) {
+                LOGGER.warning("Inappropriate content detected in request from: " + email);
+                response.sendRedirect("ApplyNewCourse.jsp?error=inappropriate_content");
                 return;
             }
 
-            // Validate terms acceptance
-            if (!termsAccepted) {
-                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                out.write("You must accept the terms and conditions");
-                LOGGER.warning("Terms not accepted by user: " + email);
-                return;
-            }
+            ZonedDateTime submissionTime = ZonedDateTime.now();
 
-            // Create and save course request
             CourseRequest courseRequest = new CourseRequest(
                     fullName,
                     email,
-                    courseId,
+                    courseCode,
                     reason,
                     additionalNotes,
-                    termsAccepted
+                    submissionTime,
+                    "pending"
             );
 
-            // Save the request using CourseRequestDAO
             try {
                 courseRequestDAO.saveRequest(courseRequest);
+                courseRequestQueue.addRequest(courseRequest);
+                LOGGER.info("Course request submitted successfully for email: " + email + ", course: " + courseCode);
             } catch (IOException e) {
-                LOGGER.severe("Failed to save course request for user " + email + ": " + e.getMessage());
-                response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-                out.write("Failed to save request: " + e.getMessage());
+                LOGGER.severe("Error saving course request: " + e.getMessage());
+                response.sendRedirect("ApplyNewCourse.jsp?error=server_error");
                 return;
             }
 
-            LOGGER.info(String.format(
-                    "New course request saved: User=%s, Course=%s, Time=%s",
-                    email,
-                    courseId,
-                    courseRequest.getSubmissionTime()
-            ));
+            response.sendRedirect("ApplyNewCourse.jsp?message=request_submitted");
+            return;
+        }
 
-            // Success response
-            response.setStatus(HttpServletResponse.SC_OK);
-            out.write("Request submitted successfully!");
-        } catch (Exception e) {
-            LOGGER.severe("Error processing course request: " + e.getMessage());
-            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            out.write("Failed to process request: " + e.getMessage());
-        } finally {
-            if (out != null) {
-                out.close();
+        if (requestId == null) {
+            LOGGER.warning("Request ID is null for action: " + action);
+            response.sendRedirect("admin-dashboard.jsp?activeTab=course-requests&error=invalid_input");
+            return;
+        }
+
+        List<String> updatedLines = new ArrayList<>();
+        boolean requestFound = false;
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(applyFilePath))) {
+            String line;
+            int currentId = 1;
+            while ((line = reader.readLine()) != null) {
+                if (line.trim().isEmpty()) continue;
+                if (String.valueOf(currentId).equals(requestId)) {
+                    String[] parts = line.split(",", 7);
+                    if (parts.length >= 4 && "pending".equals(parts[3].trim())) {
+                        String newStatus = "approve".equals(action) ? "approved" : "rejected";
+                        parts[3] = newStatus;
+                        line = String.join(",", parts);
+                        requestFound = true;
+
+                        CourseRequest queuedRequest = courseRequestQueue.peek();
+                        if (queuedRequest != null && queuedRequest.getEmail().equals(parts[0].trim()) &&
+                                queuedRequest.getSubmissionTime().format(TIMESTAMP_FORMATTER).equals(parts[2].trim())) {
+                            ZonedDateTime queuedSubmissionTime = queuedRequest.getSubmissionTime();
+                            courseRequestQueue.updateRequestStatus(parts[0].trim(), queuedSubmissionTime, newStatus);
+                            LOGGER.info("Updated status in queue for email: " + parts[0] + " to " + newStatus);
+                        }
+                    }
+                }
+                updatedLines.add(line);
+                currentId++;
+            }
+        } catch (IOException e) {
+            LOGGER.severe("Error reading apply.txt: " + e.getMessage());
+            response.sendRedirect("admin-dashboard.jsp?activeTab=course-requests&error=server_error");
+            return;
+        }
+
+        if (!requestFound) {
+            LOGGER.warning("Request ID " + requestId + " not found or not pending.");
+            response.sendRedirect("admin-dashboard.jsp?activeTab=course-requests&error=request_not_found");
+            return;
+        }
+
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(applyFilePath))) {
+            for (String line : updatedLines) {
+                writer.write(line);
+                writer.newLine();
+            }
+        } catch (IOException e) {
+            LOGGER.severe("Error writing to apply.txt: " + e.getMessage());
+            response.sendRedirect("admin-dashboard.jsp?activeTab=course-requests&error=server_error");
+            return;
+        }
+
+        String message = "approve".equals(action) ? "request_approved" : "request_rejected";
+        LOGGER.info("Action " + action + " completed for request ID " + requestId);
+        response.sendRedirect("admin-dashboard.jsp?activeTab=course-requests&message=" + message);
+    }
+
+    private boolean containsInappropriateContent(String text) {
+        if (text == null) return false;
+        String[] bannedWords = {"inappropriate", "offensive", "spam", "hate"};
+        String lowerText = text.toLowerCase();
+        for (String word : bannedWords) {
+            if (lowerText.contains(word)) {
+                return true;
             }
         }
+        return false;
     }
 }

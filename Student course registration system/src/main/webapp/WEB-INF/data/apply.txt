@@ -1,30 +1,21 @@
-=== Course Application Details ===
-Submission Time: 2025-05-04 18:06:15
-Full Name: Vihanga nethmika
-Email: tesan@gmail.com
-Course ID: ME4302
-Reason: zxcv
-Additional Notes: asdfg
-Terms Accepted: Yes
-=== End of Application ===
-
-=== Course Application Details ===
-Submission Time: 2025-05-05 19:16:27
-Full Name: Bharatha Thennakon
-Email: bharatha2004@gmail.com
-Course ID: MA5692
-Reason: i like it
-Additional Notes: dgef
-Terms Accepted: Yes
-=== End of Application ===
-
-=== Course Application Details ===
-Submission Time: 2025-05-05 19:42:04
-Full Name: Bharatha Thennakon
-Email: bharatha2004@gmail.com
-Course ID: DM2168
-Reason: ssg
-Additional Notes: dfghg
-Terms Accepted: Yes
-=== End of Application ===
-
+nethmi204@gmail.com,MA5692,Wed May 14 12:44:00 IST 2025,pending,Nathmi Amaya,i like it,give it me
+hasiru2004@gmail.com,LG7409,Wed May 14 12:40:11 IST 2025,pending,Vihanga Nethmika,wertghj,serfgn
+sedrfg@wdfgh.jhgfd,OP580,Wed May 14 12:46:35 IST 2025,pending,Sdfgh,jkl;poi,asdfgh
+janedoe@email.com,CS101,Wed May 14 13:05:22 IST 2025,pending,Jane Doe,wants to learn coding,extra help
+johnsmith@yahoo.com,MT202,Wed May 14 13:12:48 IST 2025,pending,John Smith,interested in math,needs tutor
+alice123@hotmail.com,BI301,Wed May 14 13:20:15 IST 2025,pending,Alice Johnson,biology enthusiast,lab access
+bobwilson@gmail.com,PH405,Wed May 14 13:28:09 IST 2025,pending,Bob Wilson,physics lover,more experiments
+sarahlee@outlook.com,EN606,Wed May 14 13:35:40 IST 2025,pending,Sarah Lee,english major,writing support
+mikebrown@yahoo.com,CH707,Wed May 14 13:42:17 IST 2025,pending,Mike Brown,chemistry interest,lab equipment
+emilydavis@gmail.com,PS808,Wed May 14 13:50:03 IST 2025,pending,Emily Davis,psychology focus,research help
+davidkim@hotmail.com,HI909,Wed May 14 14:00:55 IST 2025,pending,David Kim,history buff,extra readings
+laurasmith@outlook.com,AR1010,Wed May 14 14:08:29 IST 2025,pending,Laura Smith,art enthusiast,studio time
+tomjones@yahoo.com,EC1111,Wed May 14 14:15:12 IST 2025,pending,Tom Jones,economics interest,case studies
+sophiawhite@gmail.com,SO1212,Wed May 14 14:22:45 IST 2025,pending,Sophia White,sociology focus,field work
+jameslee@hotmail.com,CO1313,Wed May 14 14:30:18 IST 2025,pending,James Lee,computer science,programming help
+oliviatan@outlook.com,ME1414,Wed May 14 14:38:50 IST 2025,pending,Olivia Tan,mechanical engineering,workshop
+ethanpark@yahoo.com,EL1515,Wed May 14 14:45:33 IST 2025,pending,Ethan Park,electrical engineering,circuit lab
+isabellakim@gmail.com,CH1616,Wed May 14 14:52:07 IST 2025,pending,Isabella Kim,chemical engineering,research
+noahlee@hotmail.com,CE1717,Wed May 14 15:00:00 IST 2025,pending,Noah Lee,civil engineering,project work
+emmaroy@outlook.com,IT1818,Wed May 14 15:07:25 IST 2025,pending,Emma Roy,information technology,software dev
+tesan@gmail.com,OP580,Sun May 18 15:15:01 IST 2025,pending,Vihanga nethmika,wfsefesges,segesgesg

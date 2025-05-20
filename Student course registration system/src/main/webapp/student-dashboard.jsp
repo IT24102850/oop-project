@@ -785,13 +785,7 @@
             color: var(--primary-color);
         }
 
-        .student-id-badge,
-        .verification-status,
-        .academic-level {
-            margin-top: 5px;
-            font-size: 1rem;
-            color: var(--text-muted);
-        }
+
 
         .student-id-badge i,
         .verification-status i {
@@ -946,10 +940,7 @@
                 <li><a href="contact.jsp">Contact</a></li>
             </ul>
         </nav>
-        <div class="auth-buttons">
-            <a href="logIn.jsp" class="btn btn-login"><i class="fas fa-sign-in-alt"></i> Login</a>
-            <a href="signUp.jsp" class="btn btn-signup"><i class="fas fa-user-plus"></i> Sign Up</a>
-        </div>
+
     </div>
 </header>
 
@@ -1120,22 +1111,20 @@
                 <i class="fas fa-book-open"></i> <span>My Courses</span>
             </a>
         </li>
+
+
+
         <li class="nav-item">
-            <a href="#" class="nav-link" data-section="enrollment">
-                <i class="fas fa-tasks"></i> <span>Enrollment</span>
+            <a href="#" class="nav-link" data-section="login-history">
+                <i class="fas fa-sign-in-alt"></i> <span>Login History</span>
             </a>
         </li>
+
         <li class="nav-item">
             <a href="#" class="nav-link" data-section="deadlines">
                 <i class="fas fa-calendar-alt"></i> <span>Deadlines</span>
             </a>
         </li>
-        <li class="nav-item">
-            <a href="#" class="nav-link" data-section="loginHistory">
-                <i class="fas fa-history"></i> <span>Login History</span>
-            </a>
-        </li>
-
         <li class="nav-item">
             <a href="#" class="nav-link" data-section="payment">
                 <i class="fas fa-credit-card"></i> <span>Payment</span>
@@ -1146,7 +1135,6 @@
                 <i class="fas fa-cog"></i> <span>Settings</span>
             </a>
         </li>
-
     </ul>
 </div>
 
@@ -1182,12 +1170,9 @@
                     <i class="fas fa-bell"></i>
                     <span class="notification-count">2</span>
                 </div>
-                <form action="auth" method="post">
-                    <input type="hidden" name="action" value="logout">
-                    <button type="submit" class="btn btn-logout">
-                        <i class="fas fa-sign-out-alt"></i> Logout
-                    </button>
-                </form>
+                <a href="${pageContext.request.contextPath}/logIn.jsp?logout=true" class="btn btn-logout">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </a>
             </div>
         </div>
 
@@ -1253,11 +1238,15 @@
     </section>
 
 
+
+
+
     <%@ page import="java.io.*, java.util.*" %>
+    <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
     <%!
         private String[] loadProfileData(String studentId, String filePath) {
-            String[] profileData = new String[13];
-            for (int i = 0; i < 13; i++) profileData[i] = "";
+            String[] profileData = new String[8];
+            for (int i = 0; i < 8; i++) profileData[i] = "";
 
             File file = new File(filePath);
             if (!file.exists()) return profileData;
@@ -1267,7 +1256,7 @@
                 while ((line = reader.readLine()) != null) {
                     if (!line.trim().isEmpty()) {
                         String[] parts = line.split(",", -1);
-                        if (parts.length == 13 && parts[0].equals(studentId)) {
+                        if (parts.length == 8 && parts[0].equals(studentId)) {
                             return parts;
                         }
                     }
@@ -1280,190 +1269,235 @@
     %>
 
     <%
+        // Assign userStudentId from request parameter with a default
+        String userStudentId = request.getParameter("studentId");
+        if (userStudentId == null || userStudentId.isEmpty()) {
+            userStudentId = "defaultStudentId";
+        }
+
         // Load profile data
-        String filePath = application.getRealPath("/WEB-INF/data/Profile/profiles.txt");
-        String[] profileData = loadProfileData(studentIdBadge, filePath);
+        String filePath = application.getRealPath("/WEB-INF/data/profiles.txt");
+        String[] profileData = loadProfileData(userStudentId, filePath);
 
-// Assign profile data to variables with defaults
-        String name = profileData[1].isEmpty() ? (displayName != null ? displayName : "Unknown User") : profileData[1];
-        String dob = profileData[2].isEmpty() ? "2001-03-15" : profileData[2];
-        String gender = profileData[3].isEmpty() ? "Male" : profileData[3];
+        // Assign profile data to variables with defaults
+        String name = profileData[1].isEmpty() ? "" : profileData[1];
+        String dob = profileData[2].isEmpty() ? "" : profileData[2];
+        String gender = profileData[3].isEmpty() ? "" : profileData[3];
+        String nemail = profileData[4].isEmpty() ? "" : profileData[4];
+        String phone = profileData[5].isEmpty() ? "" : profileData[5];
+        String address = profileData[6].isEmpty() ? "" : profileData[6];
+        String imagePath = profileData[7].isEmpty() ? "https://via.placeholder.com/150" : "ProfileServlet?action=getPicture&pic=" + profileData[7];
 
-        String phone = profileData[5].isEmpty() ? "+94 77 123 4567" : profileData[5];
-        String address = profileData[6].isEmpty() ? "123 University Dorm, Colombo" : profileData[6];
-        String degree = profileData[7].isEmpty() ? "BSc Computer Science" : profileData[7];
-        String enrolled = profileData[8].isEmpty() ? "2020-09" : profileData[8];
-        String gpa = profileData[9].isEmpty() ? "3.72/4.00" : profileData[9];
-        String password = profileData[10];
-        String twoFA = profileData[11].isEmpty() ? "Not Enabled" : profileData[11];
-        String profilePic = profileData[12];
+        // Handle success/error message from redirect
+        String message = request.getParameter("message");
     %>
 
+
+    <head>
+        <title>Student Profile</title>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+        <style>
+            :root {
+                --primary-color: #00f2fe;
+                --accent-color: #ff007a;
+                --text-muted: #888;
+                --card-bg: #f0f0f0;
+                --glass-bg: rgba(255, 255, 255, 0.1);
+                --border-radius: 10px;
+                --glow-effect: 0 0 10px rgba(0, 242, 254, 0.5);
+                --text-color: #333;
+                --secondary-color: #ff4d4d;
+                --transition: all 0.3s ease;
+            }
+
+            .profile-container {
+                background: var(--card-bg);
+                border-radius: var(--border-radius);
+                padding: 20px;
+                margin: 20px auto;
+                max-width: 800px;
+                box-shadow: var(--glow-effect);
+            }
+
+            .profile-header {
+                display: flex;
+                align-items: center;
+                gap: 20px;
+                margin-bottom: 20px;
+            }
+
+            .avatar-image {
+                width: 100px;
+                height: 100px;
+                border-radius: 50%;
+                object-fit: cover;
+                border: 2px solid var(--primary-color);
+            }
+
+            .profile-info h2 {
+                font-size: 20px;
+                color: var(--primary-color);
+                margin: 0 0 5px;
+            }
+
+            .student-id-badge {
+                font-size: 14px;
+                color: var(--text-muted);
+            }
+
+            .student-id-badge i {
+                margin-right: 5px;
+                color: var(--primary-color);
+            }
+
+            .detail-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+                gap: 15px;
+            }
+
+            .detail-item {
+                margin-bottom: 10px;
+            }
+
+            .detail-item label {
+                display: block;
+                font-size: 14px;
+                color: var(--text-muted);
+                margin-bottom: 5px;
+            }
+
+            .detail-item input, .detail-item select {
+                width: 100%;
+                padding: 8px;
+                border: 1px solid var(--primary-color);
+                border-radius: 5px;
+                background: #fff;
+                color: var(--text-color);
+            }
+
+            .detail-item input:focus, .detail-item select:focus {
+                border-color: var(--accent-color);
+                outline: none;
+                box-shadow: var(--glow-effect);
+            }
+
+            .error-text {
+                color: var(--secondary-color);
+                font-size: 12px;
+                margin-top: 3px;
+            }
+
+            .profile-actions {
+                grid-column: 1 / -1;
+                text-align: right;
+                margin-top: 10px;
+            }
+
+            .btn {
+                padding: 8px 15px;
+                border: none;
+                border-radius: 5px;
+                background: var(--primary-color);
+                color: #fff;
+                cursor: pointer;
+                transition: var(--transition);
+            }
+
+            .btn:hover {
+                background: var(--accent-color);
+            }
+
+            .message {
+                padding: 10px;
+                background: rgba(0, 255, 0, 0.1);
+                color: #00ff00;
+                border: 1px solid rgba(0, 255, 0, 0.3);
+                border-radius: var(--border-radius);
+                margin: 10px 0;
+                text-align: center;
+            }
+
+            @media (max-width: 768px) {
+                .profile-header {
+                    flex-direction: column;
+                    text-align: center;
+                }
+
+                .detail-grid {
+                    grid-template-columns: 1fr;
+                }
+            }
+        </style>
+    </head>
+
     <section id="profile" class="content-section">
-        <div class="dashboard-header">
-            <div class="greeting">
-                <h1>Your Profile</h1>
-                <p>Personalize your academic identity</p>
-            </div>
-            <div class="user-actions">
-                <button class="btn btn-primary" onclick="location.reload()">
-                    <i class="fas fa-sync-alt"></i> Refresh
-                </button>
-            </div>
-        </div>
-
         <div class="profile-container">
-            <div class="profile-card">
-                <div class="profile-header">
-                    <div class="user-avatar-holographic">
-                        <img src="<%= profilePic != null && !profilePic.isEmpty() ? "ProfileServlet?action=getPicture&studentId=" + studentIdBadge + "&pic=" + profilePic : "https://via.placeholder.com/150" %>" alt="Profile Picture" class="avatar-image" id="profileImage">
-                        <div class="avatar-actions">
-                            <form action="ProfileServlet" method="post" enctype="multipart/form-data" class="avatar-upload-form" id="uploadForm">
-                                <input type="hidden" name="action" value="uploadPicture">
-                                <input type="hidden" name="studentId" value="<%= studentIdBadge %>">
-                                <input type="file" id="avatarUpload" name="avatar" accept="image/*" onchange="previewImage(event)" required>
-                                <button type="submit" class="btn btn-outline avatar-upload" title="Upload new avatar">
-                                    <i class="fas fa-camera"></i> Upload
-                                </button>
-                            </form>
-                            <button class="btn btn-outline avatar-edit" onclick="alert('Customize avatar feature not implemented yet')">
-                                <i class="fas fa-magic"></i> Customize
-                            </button>
-                        </div>
-                    </div>
-                    <div class="profile-info">
-                        <h2><%= name %></h2>
-                        <div class="student-id-badge">
-                            <i class="fas fa-id-card"></i> <%= studentIdBadge != null ? studentIdBadge : "N/A" %>
-                        </div>
-                        <div class="verification-status">
-                            <i class="fas fa-shield-check verified"></i> Verified Student
-                        </div>
-                        <div class="academic-level">
-                            <div class="level-progress">
-                                <div class="progress-fill" style="width: 78%"></div>
-                            </div>
-                            <span>Level 3 (78%)</span>
-                        </div>
-                    </div>
+            <div class="profile-header">
+                <div class="user-avatar-holographic">
+                    <img src="<%= imagePath %>" alt="Profile Picture" class="avatar-image" id="profileImage">
                 </div>
-
-                <div class="profile-tabs">
-                    <div class="tab active" data-tab="personal">Personal</div>
-                    <div class="tab" data-tab="academic">Academic</div>
-                    <div class="tab" data-tab="security">Security</div>
-                </div>
-
-                <div class="tab-content">
-                    <div class="tab-pane active" id="personal-tab">
-                        <form action="ProfileServlet" method="post" class="detail-grid" onsubmit="return validatePersonalForm()">
-                            <input type="hidden" name="action" value="updatePersonal">
-                            <input type="hidden" name="studentId" value="<%= studentIdBadge %>">
-                            <div class="detail-card">
-                                <h3><i class="fas fa-user-tag"></i> Basic Info</h3>
-                                <div class="detail-item">
-                                    <label for="name">Name:</label>
-                                    <input type="text" id="name" name="name" value="<%= name %>" required>
-                                    <div class="error-text" id="nameError"></div>
-                                </div>
-                                <div class="detail-item">
-                                    <label for="dob">DOB:</label>
-                                    <input type="date" id="dob" name="dob" value="<%= dob %>" required>
-                                </div>
-                                <div class="detail-item">
-                                    <label for="gender">Gender:</label>
-                                    <select id="gender" name="gender" required>
-                                        <option value="Male" <%= "Male".equals(gender) ? "selected" : "" %>>Male</option>
-                                        <option value="Female" <%= "Female".equals(gender) ? "selected" : "" %>>Female</option>
-                                        <option value="Other" <%= "Other".equals(gender) ? "selected" : "" %>>Other</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="detail-card">
-                                <h3><i class="fas fa-address-book"></i> Contact</h3>
-                                <div class="detail-item">
-                                    <label for="email">Email:</label>
-                                    <input type="email" id="email" name="email" value="<%= email %>" required>
-                                    <div class="error-text" id="emailError"></div>
-                                </div>
-                                <div class="detail-item">
-                                    <label for="phone">Phone:</label>
-                                    <input type="tel" id="phone" name="phone" value="<%= phone %>" required>
-                                </div>
-                                <div class="detail-item">
-                                    <label for="address">Address:</label>
-                                    <input type="text" id="address" name="address" value="<%= address %>" required>
-                                </div>
-                            </div>
-                            <div class="profile-actions">
-                                <button type="submit" class="btn btn-primary">
-                                    <i class="fas fa-save"></i> Save Changes
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-                    <div class="tab-pane" id="academic-tab">
-                        <form action="ProfileServlet" method="post" class="detail-grid" onsubmit="return validateAcademicForm()">
-                            <input type="hidden" name="action" value="updateAcademic">
-                            <input type="hidden" name="studentId" value="<%= studentIdBadge %>">
-                            <div class="detail-card">
-                                <h3><i class="fas fa-graduation-cap"></i> Program</h3>
-                                <div class="detail-item">
-                                    <label for="degree">Degree:</label>
-                                    <input type="text" id="degree" name="degree" value="<%= degree %>" required>
-                                </div>
-                                <div class="detail-item">
-                                    <label for="enrolled">Enrolled:</label>
-                                    <input type="month" id="enrolled" name="enrolled" value="<%= enrolled %>" required>
-                                </div>
-                                <div class="detail-item">
-                                    <label for="gpa">GPA:</label>
-                                    <input type="text" id="gpa" name="gpa" value="<%= gpa %>" required pattern="[0-4]\.\d{2}/4\.00">
-                                    <div class="error-text" id="gpaError"></div>
-                                </div>
-                            </div>
-                            <div class="profile-actions">
-                                <button type="submit" class="btn btn-primary">
-                                    <i class="fas fa-save"></i> Save Changes
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-                    <div class="tab-pane" id="security-tab">
-                        <form action="ProfileServlet" method="post" class="detail-grid" onsubmit="return validateSecurityForm()">
-                            <input type="hidden" name="action" value="updateSecurity">
-                            <input type="hidden" name="studentId" value="<%= studentIdBadge %>">
-                            <div class="detail-card">
-                                <h3><i class="fas fa-lock"></i> Security</h3>
-                                <div class="detail-item">
-                                    <label for="password">Password:</label>
-                                    <input type="password" id="password" name="password" placeholder="Enter new password">
-                                    <div class="error-text" id="passwordError"></div>
-                                </div>
-                                <div class="detail-item">
-                                    <label for="confirmPassword">Confirm Password:</label>
-                                    <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm new password">
-                                    <div class="error-text" id="confirmPasswordError"></div>
-                                </div>
-                                <div class="detail-item">
-                                    <label>2FA:</label>
-                                    <input type="checkbox" id="twoFA" name="twoFA" <%= "Enabled".equals(twoFA) ? "checked" : "" %>>
-                                    <label for="twoFA" class="checkbox-label">Enable 2FA</label>
-                                </div>
-                            </div>
-                            <div class="profile-actions">
-                                <button type="submit" class="btn btn-primary">
-                                    <i class="fas fa-save"></i> Save Changes
-                                </button>
-                            </div>
-                        </form>
+                <div class="profile-info">
+                    <h2><%= name.isEmpty() ? "Update Profile" : name %></h2>
+                    <div class="student-id-badge">
+                        <i class="fas fa-id-card"></i> <%= userStudentId %>
                     </div>
                 </div>
             </div>
+
+            <form action="ProfileServlet" method="post" enctype="multipart/form-data" class="detail-grid" onsubmit="return validateProfileForm()">
+                <input type="hidden" name="studentId" value="<%= userStudentId %>">
+                <div class="detail-item">
+                    <label for="name">Name:</label>
+                    <input type="text" id="name" name="name" value="<%= name %>" required>
+                    <div class="error-text" id="nameError"></div>
+                </div>
+                <div class="detail-item">
+                    <label for="dob">Date of Birth:</label>
+                    <input type="date" id="dob" name="dob" value="<%= dob %>" required>
+                </div>
+                <div class="detail-item">
+                    <label for="gender">Gender:</label>
+                    <select id="gender" name="gender" required>
+                        <option value="" <%= gender.isEmpty() ? "selected" : "" %>>Select</option>
+                        <option value="Male" <%= "Male".equals(gender) ? "selected" : "" %>>Male</option>
+                        <option value="Female" <%= "Female".equals(gender) ? "selected" : "" %>>Female</option>
+                        <option value="Other" <%= "Other".equals(gender) ? "selected" : "" %>>Other</option>
+                    </select>
+                </div>
+                <div class="detail-item">
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" name="email" value="<%= email %>" required>
+                    <div class="error-text" id="emailError"></div>
+                </div>
+                <div class="detail-item">
+                    <label for="phone">Phone:</label>
+                    <input type="tel" id="phone" name="phone" value="<%= phone %>" placeholder="+94XXXXXXXXX" required>
+                    <div class="error-text" id="phoneError"></div>
+                </div>
+                <div class="detail-item">
+                    <label for="address">Address:</label>
+                    <input type="text" id="address" name="address" value="<%= address %>" required>
+                </div>
+                <div class="detail-item">
+                    <label for="avatar">Profile Picture:</label>
+                    <input type="file" id="avatar" name="avatar" accept="image/*" onchange="previewImage(event)" required>
+                </div>
+                <div class="profile-actions">
+                    <button type="submit" class="btn">
+                        <i class="fas fa-save"></i> Save Profile
+                    </button>
+                </div>
+            </form>
+
+            <% if (message != null && !message.isEmpty()) { %>
+            <div class="message"><%= message %></div>
+            <% } %>
         </div>
     </section>
 
     <script>
+        // Preview Image
         function previewImage(event) {
             const file = event.target.files[0];
             if (file) {
@@ -1475,63 +1509,36 @@
             }
         }
 
-        function validatePersonalForm() {
+        // Form Validation
+        function validateProfileForm() {
             let isValid = true;
-            let name = document.getElementById("name").value.trim();
-            let email = document.getElementById("email").value.trim();
-            let nameError = document.getElementById("nameError");
-            let emailError = document.getElementById("emailError");
+            const name = document.getElementById("name").value.trim();
+            const email = document.getElementById("email").value.trim();
+            const phone = document.getElementById("phone").value.trim().replace(/[\s-]/g, "");
+            const nameError = document.getElementById("nameError");
+            const emailError = document.getElementById("emailError");
+            const phoneError = document.getElementById("phoneError");
 
             nameError.textContent = "";
             emailError.textContent = "";
+            phoneError.textContent = "";
 
             if (name === "") {
                 nameError.textContent = "Name is required.";
                 isValid = false;
             }
-            let emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+            const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             if (!emailPattern.test(email)) {
                 emailError.textContent = "Please enter a valid email address.";
                 isValid = false;
             }
-            return isValid;
-        }
 
-        function validateAcademicForm() {
-            let isValid = true;
-            let gpa = document.getElementById("gpa").value.trim();
-            let gpaError = document.getElementById("gpaError");
-
-            gpaError.textContent = "";
-            if (!gpa.match(/[0-4]\.\d{2}\/4\.00/)) {
-                gpaError.textContent = "GPA must be in format X.XX/4.00 (e.g., 3.72/4.00).";
+            if (!/^\+94\d{9}$/.test(phone)) {
+                phoneError.textContent = "Phone must be in +94XXXXXXXXX format.";
                 isValid = false;
             }
-            return isValid;
-        }
 
-        function validateSecurityForm() {
-            let isValid = true;
-            let password = document.getElementById("password").value;
-            let confirmPassword = document.getElementById("confirmPassword").value;
-            let passwordError = document.getElementById("passwordError");
-            let confirmPasswordError = document.getElementById("confirmPasswordError");
-
-            passwordError.textContent = "";
-            confirmPasswordError.textContent = "";
-
-            if (password && password.length < 8) {
-                passwordError.textContent = "Password must be at least 8 characters.";
-                isValid = false;
-            }
-            if (password && password !== confirmPassword) {
-                confirmPasswordError.textContent = "Passwords do not match.";
-                isValid = false;
-            }
-            if (confirmPassword && !password) {
-                passwordError.textContent = "Please enter a password.";
-                isValid = false;
-            }
             return isValid;
         }
     </script>
@@ -1591,53 +1598,108 @@
         </div>
     </section>
 
-    <section id="enrollment" class="content-section">
+    <section id="login-history" class="content-section">
         <div class="dashboard-header">
             <div class="greeting">
-                <h1>Course Enrollment</h1>
-                <p>Manage your course registrations</p>
+                <h1>Login History</h1>
+                <p>View your recent login activity</p>
             </div>
-            <a href="enrollment?action=viewEnrollments" class="btn btn-primary">
-                <i class="fas fa-list"></i> View My Enrollments
-            </a>
         </div>
 
-        <div class="enrollment-section">
-            <h2><i class="fas fa-exchange-alt"></i> Change Course Section</h2>
-            <form action="enrollment" method="post" class="enrollment-form">
-                <input type="hidden" name="action" value="changeSection">
-                <div class="form-group">
-                    <label for="oldCourseId">Current Course ID:</label>
-                    <input type="text" id="oldCourseId" name="oldCourseId" required>
+        <div class="login-history-container">
+            <div class="login-history-header">
+                <h2><i class="fas fa-sign-in-alt"></i> Login Activity</h2>
+            </div>
+
+            <!-- Login History Table -->
+            <table class="login-history-table" id="loginHistoryTable">
+                <thead>
+                <tr>
+                    <th onclick="sortTable(0)">Timestamp <i class="fas fa-sort"></i></th>
+                    <th onclick="sortTable(1)">Username <i class="fas fa-sort"></i></th>
+                    <th onclick="sortTable(2)">Role <i class="fas fa-sort"></i></th>
+                    <th onclick="sortTable(3)">Status <i class="fas fa-sort"></i></th>
+                    <th>Details</th>
+                </tr>
+                </thead>
+                <tbody>
+                <c:forEach var="login" items="${loginHistory}">
+                    <c:set var="statusClass" value="${login[3] == 'Success' ? 'success' : 'failed'}"/>
+                    <tr>
+                        <td><fmt:parseDate value="${login[0]}" pattern="yyyy-MM-dd HH:mm:ss" var="loginDate"/>
+                            <fmt:formatDate value="${loginDate}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
+                        <td>${login[1]}</td>
+                        <td>${login[2]}</td>
+                        <td class="status-cell ${statusClass}">${login[3]}</td>
+                        <td>${empty login[4] ? 'N/A' : login[4]}</td>
+                    </tr>
+                </c:forEach>
+                </tbody>
+            </table>
+
+            <c:if test="${empty loginHistory}">
+                <div class="no-data-message">
+                    <p>No login history available.</p>
                 </div>
-                <div class="form-group">
-                    <label for="newCourseId">New Course ID:</label>
-                    <input type="text" id="newCourseId" name="newCourseId" required>
-                </div>
-                <div class="form-group">
-                    <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-exchange-alt"></i> Change Section
-                    </button>
-                </div>
-            </form>
+            </c:if>
         </div>
 
-        <div class="enrollment-section">
-            <h2><i class="fas fa-minus-circle"></i> Drop Course</h2>
-            <form action="enrollment" method="post" class="enrollment-form">
-                <input type="hidden" name="action" value="dropCourse">
-                <div class="form-group">
-                    <label for="courseId">Course ID:</label>
-                    <input type="text" id="courseId" name="courseId" required>
-                </div>
-                <div class="form-group">
-                    <button type="submit" class="btn btn-danger">
-                        <i class="fas fa-minus-circle"></i> Drop Course
-                    </button>
-                </div>
-            </form>
-        </div>
+        <style>
+            :root {
+                --card-bg: #1a1a2e;
+                --background-color: #0f0f1a;
+                --text-color: #fff;
+                --primary-color: #00d4ff;
+                --secondary-color: #ff2e63;
+                --text-muted: #a0a0a0;
+                --glass-bg: rgba(255, 255, 255, 0.05);
+                --glow-effect: 0 0 10px rgba(0, 212, 255, 0.3);
+                --transition: all 0.3s ease;
+            }
+
+            .content-section { padding: 20px; max-width: 1200px; margin: 0 auto; background-color: var(--background-color); color: var(--text-color); }
+            .dashboard-header h1 { font-size: 2rem; margin-bottom: 10px; color: var(--primary-color); }
+            .dashboard-header p { font-size: 1rem; color: var(--text-muted); }
+            .login-history-container { background: var(--card-bg); padding: 20px; border-radius: 10px; box-shadow: var(--glow-effect); }
+            .login-history-header h2 { font-size: 1.5rem; display: flex; align-items: center; gap: 10px; color: var(--primary-color); }
+            .login-history-table { width: 100%; border-collapse: collapse; margin-top: 10px; color: var(--text-color); }
+            .login-history-table th, .login-history-table td { padding: 12px; border-bottom: 1px solid var(--glass-bg); text-align: left; }
+            .login-history-table th { background: var(--background-color); color: var(--primary-color); cursor: pointer; }
+            .login-history-table th:hover { background: var(--primary-color); color: var(--background-color); }
+            .status-cell.success { color: #28a745; }
+            .status-cell.failed { color: #ff2e63; }
+            .no-data-message { text-align: center; padding: 20px; color: var(--text-muted); }
+        </style>
+
+        <script>
+            function sortTable(columnIndex) {
+                const table = document.getElementById('loginHistoryTable');
+                const rows = Array.from(table.rows).slice(1);
+                const isAscending = table.getAttribute('data-sort-order') !== 'asc';
+                table.setAttribute('data-sort-order', isAscending ? 'asc' : 'desc');
+
+                rows.sort((rowA, rowB) => {
+                    let valueA = rowA.cells[columnIndex].innerText.trim();
+                    let valueB = rowB.cells[columnIndex].innerText.trim();
+
+                    if (columnIndex === 0) {
+                        valueA = new Date(valueA).getTime();
+                        valueB = new Date(valueB).getTime();
+                    }
+
+                    return isAscending ? (valueA > valueB ? 1 : -1) : (valueA < valueB ? 1 : -1);
+                });
+
+                const tbody = table.querySelector('tbody');
+                tbody.innerHTML = '';
+                rows.forEach(row => tbody.appendChild(row));
+            }
+        </script>
     </section>
+
+
+
+
 
     <section id="deadlines" class="content-section">
         <div class="dashboard-header">
@@ -1682,44 +1744,325 @@
 
 
 
+
+    <%@ page import="java.io.*" %>
+    <%@ page import="java.time.LocalDate" %>
+    <%@ page import="java.time.LocalDateTime" %>
+    <%@ page import="java.time.format.DateTimeFormatter" %>
+    <%@ page import="java.util.ArrayList" %>
+    <%@ page import="java.util.List" %>
+    <%@ page import="java.util.HashSet" %>
+    <%@ page import="java.util.Set" %>
+    <%@ page import="com.studentregistration.dao.PaymentDAO" %>
+    <%@ page import="com.studentregistration.model.Payment" %>
+
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Student Dashboard - Payment Section</title>
+        <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <style>
+            :root {
+                --primary-color: #00f2fe;
+                --secondary-color: #ff69b4;
+                --accent-color: #4facfe;
+                --background-color: #0a0f24;
+                --card-bg: rgba(15, 23, 42, 0.9);
+                --glass-bg: rgba(255, 255, 255, 0.05);
+                --text-color: #ffffff;
+                --text-muted: rgba(255, 255, 255, 0.7);
+                --border-radius: 15px;
+                --box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+                --glow-effect: 0 0 15px rgba(0, 242, 254, 0.3);
+                --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            }
+
+            body {
+                background: linear-gradient(135deg, var(--background-color), #050916);
+                color: var(--text-color);
+                font-family: 'Poppins', sans-serif;
+            }
+
+            .spinner {
+                border: 4px solid rgba(255, 255, 255, 0.1);
+                border-left: 4px solid var(--primary-color);
+                border-radius: 50%;
+                width: 20px;
+                height: 20px;
+                animation: spin 1s linear infinite;
+                display: inline-block;
+                vertical-align: middle;
+                margin-right: 8px;
+            }
+
+            @keyframes spin {
+                0% { transform: rotate(0deg); }
+                100% { transform: rotate(360deg); }
+            }
+
+            .fade-out {
+                opacity: 0;
+                transition: opacity 0.5s ease-out;
+            }
+
+            .payment-table {
+                width: 100%;
+                border-collapse: collapse;
+                background: var(--card-bg);
+                border-radius: var(--border-radius);
+                overflow: hidden;
+            }
+
+            .payment-table th,
+            .payment-table td {
+                padding: 15px;
+                text-align: left;
+                border-bottom: 1px solid rgba(0, 242, 254, 0.1);
+            }
+
+            .payment-table th {
+                background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+                color: var(--background-color);
+                font-weight: 600;
+                cursor: pointer;
+                transition: var(--transition);
+            }
+
+            .payment-table th:hover {
+                background: var(--accent-color);
+            }
+
+            .payment-table tr {
+                transition: var(--transition);
+            }
+
+            .payment-table tr:hover {
+                background: var(--glass-bg);
+                transform: translateY(-2px);
+            }
+
+            .status-cell {
+                font-weight: 600;
+            }
+
+            .status-cell.paid { color: #00ff00; }
+            .status-cell.pending { color: var(--primary-color); }
+            .status-cell.overdue { color: #ff4500; }
+            .status-cell.error { color: var(--text-muted); }
+
+            .btn-futuristic {
+                padding: 8px 15px;
+                border-radius: 25px;
+                text-decoration: none;
+                font-weight: 600;
+                font-size: 0.9rem;
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+                transition: var(--transition);
+                cursor: pointer;
+                border: none;
+                position: relative;
+                overflow: hidden;
+                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            }
+
+            .btn-futuristic:hover {
+                transform: translateY(-2px);
+                box-shadow: var(--glow-effect);
+            }
+
+            .btn-futuristic:disabled {
+                background: var(--text-muted);
+                cursor: not-allowed;
+                transform: none;
+                box-shadow: none;
+            }
+
+            .btn-futuristic.bg-red-500 {
+                background: #ff4500;
+                color: var(--text-color);
+            }
+
+            .btn-futuristic.bg-red-500:hover {
+                background: transparent;
+                border: 2px solid #ff4500;
+                color: #ff4500;
+            }
+
+            .btn-futuristic.bg-yellow-500 {
+                background: #ffa500;
+                color: var(--background-color);
+            }
+
+            .btn-futuristic.bg-yellow-500:hover {
+                background: transparent;
+                border: 2px solid #ffa500;
+                color: #ffa500;
+            }
+
+            .btn-futuristic.bg-gray-500 {
+                background: var(--text-muted);
+                color: var(--background-color);
+            }
+
+            .btn-futuristic.bg-gray-500:hover {
+                background: transparent;
+                border: 2px solid var(--text-muted);
+                color: var(--text-muted);
+            }
+
+            .btn-futuristic.bg-green-500 {
+                background: #00ff00;
+                color: var(--background-color);
+            }
+
+            .btn-futuristic.bg-green-500:hover {
+                background: transparent;
+                border: 2px solid #00ff00;
+                color: #00ff00;
+            }
+
+            .btn-primary {
+                background: var(--primary-color);
+                color: var(--background-color);
+                border: 2px solid transparent;
+                padding: 10px 20px;
+                border-radius: 25px;
+                transition: var(--transition);
+            }
+
+            .btn-primary:hover {
+                background: transparent;
+                color: var(--primary-color);
+                border-color: var(--primary-color);
+                box-shadow: var(--glow-effect);
+            }
+
+            .form-group input,
+            .form-group select {
+                padding: 10px;
+                border-radius: 8px;
+                border: 1px solid var(--primary-color);
+                background: var(--glass-bg);
+                color: var(--text-color);
+                transition: var(--transition);
+                width: 100%;
+            }
+
+            .form-group input:focus,
+            .form-group select:focus {
+                outline: none;
+                border-color: var(--accent-color);
+                box-shadow: var(--glow-effect);
+            }
+
+            .form-group label {
+                color: var(--text-muted);
+                font-size: 0.95rem;
+                margin-bottom: 8px;
+                display: block;
+            }
+
+            .pagination button {
+                background: var(--primary-color);
+                color: var(--background-color);
+                padding: 8px 15px;
+                border-radius: 8px;
+                transition: var(--transition);
+            }
+
+            .pagination button:hover:not(:disabled) {
+                background: var(--accent-color);
+                box-shadow: var(--glow-effect);
+            }
+
+            .pagination button:disabled {
+                background: var(--text-muted);
+                cursor: not-allowed;
+            }
+
+            .pagination span {
+                color: var(--text-muted);
+            }
+
+            .payment-container, .dashboard-header {
+                background: var(--card-bg);
+            }
+        </style>
+    </head>
+    <body>
     <section id="payment" class="content-section">
-        <div class="dashboard-header">
+        <div class="dashboard-header shadow-md rounded-lg p-6 mb-6">
             <div class="greeting">
-                <h1>Payment Management</h1>
-                <p>Manage your site subscription to access all courses</p>
+                <h1 class="text-3xl font-bold" style="background: linear-gradient(45deg, var(--primary-color), var(--secondary-color)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Payment Management</h1>
+                <p class="text-gray-600">Manage your site subscription to access all courses</p>
             </div>
         </div>
 
-        <div class="payment-container">
-            <div class="payment-header">
-                <h2><i class="fas fa-credit-card"></i> Payment Options</h2>
+        <div class="payment-container shadow-md rounded-lg p-6">
+            <div class="payment-header mb-6">
+                <h2 class="text-2xl font-semibold text-gray-800 flex items-center">
+                    <i class="fas fa-credit-card mr-2" style="color: var(--primary-color);"></i> Payment Options
+                </h2>
             </div>
 
             <div class="payment-section active" id="make-payment-section">
-                <h3>Make a Payment</h3>
-                <form id="paymentForm" action="student-dashboard.jsp" method="post" class="payment-form">
+                <h3 class="text-xl font-semibold mb-4" style="color: var(--accent-color);">Make a Payment</h3>
+                <%
+                    // Check for payments with null or invalid subscription plans
+                    List<Payment> nullPlanPayments = new ArrayList<>();
+                    String paymentsFilePath = application.getRealPath("/WEB-INF/data/payments.txt");
+                    PaymentDAO paymentDAO = new PaymentDAO(paymentsFilePath);
+                    try {
+                        List<Payment> allPayments = paymentDAO.getAllPayments();
+                        for (Payment payment : allPayments) {
+                            String plan = payment.getSubscriptionPlan();
+                            if (plan == null || plan.trim().isEmpty() || !plan.matches("^(monthly|quarterly|yearly)$")) {
+                                nullPlanPayments.add(payment);
+                            }
+                        }
+                    } catch (IOException e) {
+                %>
+                <div class="message error mt-4">Error loading payments: <%= e.getMessage() %></div>
+                <%
+                    }
+                %>
+
+
+                <form id="paymentForm" action="${pageContext.request.contextPath}/ProcessPayment" method="post" class="payment-form space-y-4">
                     <input type="hidden" name="action" value="makePayment">
-                    <input type="hidden" name="studentId" value="<%= studentId %>">
+                    <input type="hidden" name="studentId" value="<%= session.getAttribute("userId") %>">
                     <div class="form-group">
                         <label for="subscriptionPlan">Subscription Plan:</label>
                         <select id="subscriptionPlan" name="subscriptionPlan" class="invoice-select" required onchange="updateSubscriptionAmount()">
                             <option value="">-- Select a Plan --</option>
-                            <option value="monthly" data-amount="49.99">Monthly Access - $49.99</option>
-                            <option value="quarterly" data-amount="129.99">Quarterly Access - $129.99</option>
-                            <option value="yearly" data-amount="499.99">Yearly Access - $499.99</option>
+                            <option value="monthly" data-amount="49.99">Monthly - $49.99</option>
+                            <option value="quarterly" data-amount="129.99">Quarterly - $129.99</option>
+                            <option value="yearly" data-amount="499.99">Yearly - $499.99</option>
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="subscriptionAmount">Amount:</label>
-                        <input type="text" id="subscriptionAmount" name="amount" readonly required>
+                        <label for="subscriptionAmount">Total Amount:</label>
+                        <input type="text" id="subscriptionAmount" name="totalAmount" readonly required>
+                    </div>
+                    <div class="form-group">
+                        <label for="partialAmount">Partial Payment Amount:</label>
+                        <input type="number" id="partialAmount" name="partialAmount" step="0.01" min="0" placeholder="Enter partial amount" required oninput="updateRemainingAmount()">
+                    </div>
+                    <div class="form-group">
+                        <label for="remainingAmount">Remaining Amount:</label>
+                        <input type="text" id="remainingAmount" name="remainingAmount" readonly value="0.00">
                     </div>
                     <div class="form-group">
                         <label for="startDate">Start Date:</label>
-                        <input type="date" id="startDate" name="startDate" required min="2025-05-02">
+                        <input type="date" id="startDate" name="startDate" required min="2025-05-17">
                     </div>
                     <div class="form-group">
                         <label for="paymentMethod">Payment Method:</label>
-                        <select id="paymentMethod" name="paymentMethod" class="invoice-select" required onchange="togglePaymentDetails()">
+                        <select id="paymentMethod" name="paymentMethod" class="invoice-select" required>
                             <option value="">-- Select Payment Method --</option>
                             <option value="creditCard">Credit Card</option>
                             <option value="debitCard">Debit Card</option>
@@ -1729,138 +2072,339 @@
                         </select>
                     </div>
 
-                    <div id="paymentDetails" style="display: none;">
-                        <div class="form-grid">
-                            <div class="form-group" id="cardNumberGroup">
-                                <label for="cardNumber">Card Number:</label>
-                                <input type="text" id="cardNumber" name="cardNumber" placeholder="1234 5678 9012 3456">
-                            </div>
-                            <div class="form-group" id="expiryDateGroup">
-                                <label for="expiryDate">Expiry Date:</label>
-                                <input type="text" id="expiryDate" name="expiryDate" placeholder="MM/YY">
-                            </div>
-                            <div class="form-group" id="cvvGroup">
-                                <label for="cvv">CVV:</label>
-                                <input type="text" id="cvv" name="cvv" placeholder="123">
-                            </div>
-                            <div class="form-group" id="accountNumberGroup" style="display: none;">
-                                <label for="accountNumber">Account Number:</label>
-                                <input type="text" id="accountNumber" name="accountNumber" placeholder="Enter account number">
-                            </div>
-                            <div class="form-group" id="routingNumberGroup" style="display: none;">
-                                <label for="routingNumber">Routing Number:</label>
-                                <input type="text" id="routingNumber" name="routingNumber" placeholder="Enter routing number">
-                            </div>
-                            <div class="form-group" id="paypalEmailGroup" style="display: none;">
-                                <label for="paypalEmail">PayPal Email:</label>
-                                <input type="text" id="paypalEmail" name="paypalEmail" placeholder="Enter PayPal email">
-                            </div>
-                            <div class="form-group" id="cryptoWalletGroup" style="display: none;">
-                                <label for="cryptoWallet">Crypto Wallet Address:</label>
-                                <input type="text" id="cryptoWallet" name="cryptoWallet" placeholder="Enter wallet address">
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="payment-actions">
-                        <button type="submit" class="btn btn-primary" id="makePaymentBtn">
-                            <i class="fas fa-check-circle"></i> Subscribe Now
+                    <div class="payment-actions mt-6">
+                        <button type="submit" class="btn-primary" id="makePaymentBtn">
+                            <i class="fas fa-check-circle mr-2"></i> Submit Payment
                         </button>
                     </div>
                 </form>
+                <%
+                    String paymentStatus = request.getParameter("paymentStatus");
+                    if ("success".equals(paymentStatus)) {
+                %>
+                <div class="message success mt-4">Payment submitted successfully! Remaining balance can be waived.</div>
+                <%
+                } else if ("partialWaiverApplied".equals(paymentStatus)) {
+                %>
+                <div class="message success mt-4">Waiver applied to remaining balance. Payment is now fully settled.</div>
+                <%
+                } else if (paymentStatus != null && !paymentStatus.isEmpty()) {
+                %>
+                <div class="message error mt-4">Error processing payment: <%= paymentStatus %></div>
+                <%
+                    }
+                    String userId = (String) session.getAttribute("userId");
+                    if (userId == null) {
+
+                    }
+                %>
             </div>
 
-            <h3 style="margin-top: 40px;">Payment History</h3>
+            <h3 class="text-xl font-semibold mt-8 mb-4" style="color: var(--accent-color);">Payment History</h3>
+            <div class="filter-container flex flex-wrap gap-4 mb-6">
+                <button class="btn-futuristic bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600 flex items-center" id="refreshBtn" onclick="refreshPage()">
+                    <i class="fas fa-sync-alt mr-2"></i> Refresh
+                </button>
+                <button class="btn-futuristic bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 flex items-center" onclick="exportToCSV()">
+                    <i class="fas fa-file-export mr-2"></i> Export to CSV
+                </button>
+            </div>
+
+            <div id="loadingMessage" class="text-center text-blue-600" style="display: none;">
+                <span class="spinner"></span> Loading payment history...
+            </div>
+
+            <%
+                // Load waivers to check existing ones
+                Set<String> waivedInvoices = new HashSet<>();
+                String waiverFilePath = application.getRealPath("/WEB-INF/data/waiver.txt");
+                File waiverFile = new File(waiverFilePath);
+                if (waiverFile.exists()) {
+                    try (BufferedReader reader = new BufferedReader(new FileReader(waiverFile))) {
+                        String line;
+                        while ((line = reader.readLine()) != null) {
+                            if (line.trim().isEmpty()) continue;
+                            String[] waiverEntry = line.split(",");
+                            if (waiverEntry.length >= 4) {
+                                waivedInvoices.add(waiverEntry[0]);
+                            }
+                        }
+                    } catch (IOException e) {
+            %>
+            <div class="message error mt-4">Error reading waiver file: <%= e.getMessage() %></div>
+            <%
+                    }
+                }
+
+                // Handle Apply Waiver action for remaining amount
+                String applyWaiverInvoiceId = request.getParameter("applyWaiverInvoiceId");
+                if (applyWaiverInvoiceId != null && userId != null) {
+                    if (!applyWaiverInvoiceId.matches("^[A-Za-z0-9-]+$")) {
+            %>
+            <div class="message error mt-4">Invalid invoice ID format.</div>
+            <%
+                    return;
+                }
+
+                if (waivedInvoices.contains(applyWaiverInvoiceId)) {
+            %>
+            <div class="message error mt-4">Waiver already applied for Invoice ID: <%= applyWaiverInvoiceId %></div>
+            <%
+            } else {
+                if (!waiverFile.exists()) {
+                    waiverFile.getParentFile().mkdirs();
+                    waiverFile.createNewFile();
+                }
+                try (PrintWriter writer = new PrintWriter(new FileWriter(waiverFile, true))) {
+                    String waiverEntry = String.format("%s,%s,true,%s",
+                            applyWaiverInvoiceId,
+                            userId,
+                            LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
+                    writer.println(waiverEntry);
+                    waivedInvoices.add(applyWaiverInvoiceId);
+
+                    // Update payments.txt to reflect the waiver covering the remaining amount
+                    List<Payment> payments = paymentDAO.getAllPayments();
+                    List<Payment> updatedPayments = new ArrayList<>();
+                    boolean found = false;
+                    for (Payment payment : payments) {
+                        if (payment.getInvoiceId().equals(applyWaiverInvoiceId)) {
+                            found = true;
+                            double originalAmount = payment.getAmount();
+                            double totalAmount = 0.0;
+                            String plan = payment.getSubscriptionPlan();
+                            if (plan != null) {
+                                switch (plan) {
+                                    case "monthly": totalAmount = 49.99; break;
+                                    case "quarterly": totalAmount = 129.99; break;
+                                    case "yearly": totalAmount = 499.99; break;
+                                }
+                            }
+                            double remainingAmount = totalAmount - originalAmount;
+                            payment.setAmount(totalAmount); // Update to the full amount
+                            payment.setStatus("paid");
+                            payment.setPaymentDate(LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
+                            payment.setWaiverApplied(true);
+                        }
+                        updatedPayments.add(payment);
+                    }
+
+                    if (found) {
+                        try (PrintWriter paymentWriter = new PrintWriter(new FileWriter(paymentsFilePath))) {
+                            for (Payment payment : updatedPayments) {
+                                paymentWriter.println(payment.toString());
+                            }
+                        } catch (IOException e) {
+            %>
+            <div class="message error mt-4">Error updating payments file: <%= e.getMessage() %></div>
+            <%
+                    return;
+                }
+            } else {
+            %>
+            <div class="message error mt-4">Payment record not found for Invoice ID: <%= applyWaiverInvoiceId %></div>
+            <%
+                    return;
+                }
+            %>
+            <div class="message success mt-4">Waiver applied successfully for Invoice ID: <%= applyWaiverInvoiceId %></div>
+            <%
+            } catch (IOException e) {
+            %>
+            <div class="message error mt-4">Error saving waiver: <%= e.getMessage() %></div>
+            <%
+                        }
+                    }
+                    response.sendRedirect("student-dashboard.jsp?paymentStatus=partialWaiverApplied#payment");
+                    return;
+                }
+
+                // Handle Void Payment action
+                String voidInvoiceId = request.getParameter("voidInvoiceId");
+                if (voidInvoiceId != null) {
+                    if (!voidInvoiceId.matches("^[A-Za-z0-9-]+$")) {
+            %>
+            <div class="message error mt-4">Invalid invoice ID format.</div>
+            <%
+                    return;
+                }
+
+                paymentsFilePath = application.getRealPath("/WEB-INF/data/payments.txt");
+                File paymentsFile = new File(paymentsFilePath);
+                paymentDAO = new PaymentDAO(paymentsFilePath);
+                List<Payment> payments = paymentDAO.getAllPayments();
+                List<Payment> updatedPayments = new ArrayList<>();
+                boolean found = false;
+
+                for (Payment payment : payments) {
+                    if (payment.getInvoiceId().equals(voidInvoiceId)) {
+                        found = true;
+                        continue;
+                    }
+                    updatedPayments.add(payment);
+                }
+
+                if (found) {
+                    try (PrintWriter writer = new PrintWriter(new FileWriter(paymentsFile))) {
+                        for (Payment payment : updatedPayments) {
+                            writer.println(payment.toString());
+                        }
+            %>
+            <div class="message success mt-4">Payment voided successfully for Invoice ID: <%= voidInvoiceId %></div>
+            <%
+            } catch (IOException e) {
+            %>
+            <div class="message error mt-4">Error updating payments file: <%= e.getMessage() %></div>
+            <%
+                    return;
+                }
+            } else {
+            %>
+            <div class="message error mt-4">Payment record not found for Invoice ID: <%= voidInvoiceId %></div>
+            <%
+                    }
+                    response.sendRedirect("student-dashboard.jsp#payment");
+                    return;
+                }
+
+                // Handle Mark as Paid action
+                String markAsPaidInvoiceId = request.getParameter("markAsPaidInvoiceId");
+                if (markAsPaidInvoiceId != null) {
+                    if (!markAsPaidInvoiceId.matches("^[A-Za-z0-9-]+$")) {
+            %>
+            <div class="message error mt-4">Invalid invoice ID format.</div>
+            <%
+                    return;
+                }
+
+                paymentDAO = new PaymentDAO(paymentsFilePath);
+                boolean updated = paymentDAO.updatePaymentStatus(markAsPaidInvoiceId, "paid", LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
+
+                if (updated) {
+            %>
+            <div class="message success mt-4">Payment marked as paid for Invoice ID: <%= markAsPaidInvoiceId %></div>
+            <%
+            } else {
+            %>
+            <div class="message error mt-4">Payment record not found or already paid for Invoice ID: <%= markAsPaidInvoiceId %></div>
+            <%
+                    }
+                    response.sendRedirect("student-dashboard.jsp#payment");
+                    return;
+                }
+
+                // Load payment records using PaymentDAO
+                List<Payment> paymentRecords = new ArrayList<>();
+                paymentDAO = new PaymentDAO(paymentsFilePath);
+                try {
+                    paymentRecords = paymentDAO.getAllPayments();
+                    for (Payment payment : paymentRecords) {
+                        // Calculate due date if not present (already set in the new format)
+                        if ("pending".equals(payment.getStatus())) {
+                            LocalDate dueDate = LocalDate.parse(payment.getDueDate(), DateTimeFormatter.ISO_LOCAL_DATE);
+                            LocalDate today = LocalDate.now();
+                            if (dueDate.isBefore(today)) {
+                                payment.setStatus("overdue");
+                                double lateFee = payment.getAmount() * 0.05;
+                                payment.setLateFee(lateFee);
+                            }
+                        }
+                    }
+                } catch (IOException e) {
+            %>
+            <div class="message error mt-4">Error loading payment history: <%= e.getMessage() %></div>
+            <%
+                    return;
+                }
+            %>
+
             <table class="payment-table">
                 <thead>
                 <tr>
-                    <th>Invoice ID</th>
-                    <th>Plan</th>
-                    <th>Amount</th>
-                    <th>Start Date</th>
-                    <th>Due Date</th>
-                    <th>Status</th>
-                    <th>Payment Date</th>
-                    <th>Waiver Applied</th>
-                    <th>Late Fee</th>
-                    <th>Payment Method</th>
+                    <th onclick="sortTable(0)">Invoice ID <i class="fas fa-sort ml-1"></i></th>
+                    <th onclick="sortTable(1)">Student ID <i class="fas fa-sort ml-1"></i></th>
+                    <th onclick="sortTable(2)">Amount <i class="fas fa-sort ml-1"></i></th>
+                    <th onclick="sortTable(3)">Due Date <i class="fas fa-sort ml-1"></i></th>
+                    <th onclick="sortTable(4)">Status <i class="fas fa-sort ml-1"></i></th>
+                    <th onclick="sortTable(5)">Payment Date <i class="fas fa-sort ml-1"></i></th>
+                    <th onclick="sortTable(6)">Waiver Applied <i class="fas fa-sort ml-1"></i></th>
+                    <th onclick="sortTable(7)">Late Fee <i class="fas fa-sort ml-1"></i></th>
+                    <th onclick="sortTable(8)">Payment Method <i class="fas fa-sort ml-1"></i></th>
+                    <th onclick="sortTable(9)">Subscription Plan <i class="fas fa-sort ml-1"></i></th>
+                    <th onclick="sortTable(10)">Start Date <i class="fas fa-sort ml-1"></i></th>
                     <th>Actions</th>
                 </tr>
                 </thead>
-                <tbody>
-                <% for (String[] fee : paymentHistory) {
-                    boolean isOverdue = false;
-                    try {
-                        Date dueDate = dateFormat.parse(fee[3]);
-                        isOverdue = dueDate.before(currentDate);
-                    } catch (Exception e) {}
-                    String paymentStatus = !fee[5].isEmpty() ? "paid" : ("pending".equals(fee[4]) ? (isOverdue ? "overdue" : "pending") : fee[4]);
-                    String plan = fee.length > 9 ? fee[9] : "N/A";
+                <tbody id="paymentTableBody">
+                <%
+                    if (paymentRecords.isEmpty()) {
                 %>
                 <tr>
-                    <td><%= fee[0] %></td>
-                    <td><%= plan %></td>
-                    <td><%= fee[2] %></td>
-                    <td><%= fee.length > 10 ? fee[10] : "N/A" %></td>
-                    <td><%= fee[3] %></td>
-                    <td class="status-cell <%= paymentStatus %>"><%= paymentStatus.substring(0, 1).toUpperCase() + paymentStatus.substring(1) %></td>
-                    <td><%= fee[5].isEmpty() ? "N/A" : fee[5] %></td>
-                    <td><%= "true".equals(fee[6]) ? "Yes" : "No" %></td>
-                    <td><%= fee[7] %></td>
-                    <td><%= fee[8].isEmpty() ? "N/A" : fee[8] %></td>
-                    <td class="payment-actions">
-                        <% if ("pending".equals(fee[4]) && !"true".equals(fee[6]) && isOverdue) { %>
-                        <form action="fee" method="post" class="payment-action-form" id="waiverForm-<%= fee[0] %>" style="display: inline-block; margin-right: 5px;">
-                            <input type="hidden" name="action" value="applyWaiver">
-                            <input type="hidden" name="invoiceId" value="<%= fee[0] %>">
-                            <input type="hidden" name="amount" value="<%= fee[2] %>">
-                            <input type="hidden" name="studentId" value="<%= studentId %>">
-                            <input type="text" name="waiverAmount" placeholder="Waiver Amount" style="width: 80px; padding: 5px;" required>
-                            <button type="submit" class="btn btn-primary btn-sm" title="Apply Late Fee Waiver">
-                                <i class="fas fa-hand-holding-usd"></i> Apply Waiver
-                            </button>
-                        </form>
-                        <% } %>
-                        <% if ("pending".equals(fee[4]) && isOverdue && !"true".equals(fee[6])) { %>
-                        <form action="fee" method="post" class="payment-action-form">
-                            <input type="hidden" name="action" value="applyLateFee">
-                            <input type="hidden" name="invoiceId" value="<%= fee[0] %>">
-                            <input type="hidden" name="amount" value="<%= fee[2] %>">
-                            <input type="hidden" name="studentId" value="<%= studentId %>">
-                            <div style="display:inline-block; margin-right: 5px;">
-                                <input type="text" name="lateFeeAmount" placeholder="Fee" style="width: 80px; padding: 5px;" required>
-                            </div>
-                            <button type="submit" class="btn btn-warning btn-sm" title="Apply Late Fee">
-                                <i class="fas fa-exclamation-triangle"></i>
-                            </button>
-                        </form>
-                        <% } %>
-                        <% if ("pending".equals(fee[4])) { %>
-                        <form action="fee" method="post" class="payment-action-form">
-                            <input type="hidden" name="action" value="void">
-                            <input type="hidden" name="invoiceId" value="<%= fee[0] %>">
-                            <input type="hidden" name="amount" value="<%= fee[2] %>">
-                            <input type="hidden" name="studentId" value="<%= studentId %>">
-                            <button type="submit" class="btn btn-danger btn-sm" title="Void Invoice">
-                                <i class="fas fa-trash-alt"></i>
-                            </button>
-                        </form>
-                        <% } %>
-                        <% if ("paid".equals(paymentStatus)) { %>
-                        <button type="button" class="btn btn-outline btn-sm" title="Cancel Payment" onclick="confirmCancelPayment('<%= fee[0] %>', '<%= fee[2] %>', '<%= studentId %>')">
-                            <i class="fas fa-undo"></i> Cancel
+                    <td colspan="12" class="text-center py-4">No payment history available.</td>
+                </tr>
+                <%
+                } else {
+                    int pageSize = 10;
+                    int currentPage = 1;
+                    String pageParam = request.getParameter("page");
+                    if (pageParam != null) {
+                        try {
+                            currentPage = Integer.parseInt(pageParam);
+                        } catch (NumberFormatException e) {
+                            currentPage = 1;
+                        }
+                    }
+                    int start = (currentPage - 1) * pageSize;
+                    int end = Math.min(start + pageSize, paymentRecords.size());
+
+                    for (int i = start; i < end; i++) {
+                        Payment payment = paymentRecords.get(i);
+                        String status = payment.getStatus();
+                        boolean isWaived = payment.isWaiverApplied() || waivedInvoices.contains(payment.getInvoiceId());
+                %>
+                <tr class="payment-row">
+                    <td><%= payment.getInvoiceId() %></td>
+                    <td><%= payment.getStudentId() != null ? payment.getStudentId() : "null" %></td>
+                    <td><%= String.format("%.2f", payment.getAmount()) %></td>
+                    <td><%= payment.getDueDate() %></td>
+                    <td class="status-cell <%= status %>"><%= status.substring(0, 1).toUpperCase() + status.substring(1) %></td>
+                    <td><%= payment.getPaymentDate() == null || payment.getPaymentDate().isEmpty() ? "N/A" : payment.getPaymentDate() %></td>
+                    <td><%= isWaived ? "Yes" : "No" %></td>
+                    <td><%= String.format("%.2f", payment.getLateFee()) %></td>
+                    <td><%= payment.getPaymentMethod() %></td>
+                    <td><%= payment.getSubscriptionPlan() %></td>
+                    <td><%= payment.getStartDate() %></td>
+                    <td class="space-x-2">
+
+                        <button class="btn-futuristic bg-yellow-500 text-white" data-tooltip="Apply waiver for this payment" onclick="applyWaiver('<%= payment.getInvoiceId() %>')" <%= isWaived || !status.equals("pending") ? "disabled" : "" %>>
+                            <i class="fas fa-hand-holding-usd mr-1"></i> Waiver
                         </button>
-                        <form action="fee" method="post" class="payment-action-form" id="cancelForm-<%= fee[0] %>" style="display: none;">
-                            <input type="hidden" name="action" value="cancelPayment">
-                            <input type="hidden" name="invoiceId" value="<%= fee[0] %>">
-                            <input type="hidden" name="amount" value="<%= fee[2] %>">
-                            <input type="hidden" name="studentId" value="<%= studentId %>">
-                            <button type="submit" class="btn btn-outline btn-sm" style="display: none;">Confirm Cancel</button>
-                        </form>
-                        <% } %>
+
+
                     </td>
                 </tr>
-                <% } %>
+                <%
+                    }
+                    int totalPages = (int) Math.ceil((double) paymentRecords.size() / pageSize);
+                    if (totalPages > 1) {
+                %>
+                <tr>
+                    <td colspan="12">
+                        <div class="pagination flex justify-center items-center space-x-4 mt-4">
+                            <button onclick="window.location.href='student-dashboard.jsp?page=<%= currentPage - 1 %>#payment'" <%= currentPage == 1 ? "disabled" : "" %>>
+                                <i class="fas fa-chevron-left mr-1"></i> Previous
+                            </button>
+                            <span>Page <%= currentPage %> of <%= totalPages %></span>
+                            <button onclick="window.location.href='student-dashboard.jsp?page=<%= currentPage + 1 %>#payment'" <%= currentPage == totalPages ? "disabled" : "" %>>
+                                Next <i class="fas fa-chevron-right ml-1"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+                <%
+                        }
+                    }
+                %>
                 </tbody>
             </table>
         </div>
@@ -1870,8 +2414,24 @@
         function updateSubscriptionAmount() {
             let select = document.getElementById("subscriptionPlan");
             let amountInput = document.getElementById("subscriptionAmount");
+            let partialInput = document.getElementById("partialAmount");
+            let remainingInput = document.getElementById("remainingAmount");
             let selectedOption = select.options[select.selectedIndex];
-            amountInput.value = selectedOption.getAttribute("data-amount") || "";
+            let totalAmount = parseFloat(selectedOption.getAttribute("data-amount")) || 0;
+            amountInput.value = totalAmount.toFixed(2);
+            partialInput.value = ''; // Reset partial amount
+            remainingInput.value = totalAmount.toFixed(2); // Initially, remaining amount is the total amount
+            updateRemainingAmount(); // Ensure initial calculation
+        }
+
+        function updateRemainingAmount() {
+            let totalInput = document.getElementById("subscriptionAmount");
+            let partialInput = document.getElementById("partialAmount");
+            let remainingInput = document.getElementById("remainingAmount");
+            let totalAmount = parseFloat(totalInput.value) || 0;
+            let partialAmount = parseFloat(partialInput.value) || 0;
+            let remaining = Math.max(0, totalAmount - partialAmount);
+            remainingInput.value = remaining.toFixed(2);
         }
 
         function togglePaymentDetails() {
@@ -1895,13 +2455,115 @@
             }
         }
 
-        function confirmCancelPayment(invoiceId, amount, studentId) {
-            if (confirm(`Are you sure you want to cancel the payment for Invoice ID ${invoiceId}?`)) {
-                let form = document.getElementById(`cancelForm-${invoiceId}`);
-                form.submit();
+        function applyWaiver(invoiceId) {
+            if (confirm(`Are you sure you want to apply a waiver for Invoice ID ${invoiceId} to cover the remaining amount?`)) {
+                window.location.href = `student-dashboard.jsp?applyWaiverInvoiceId=${invoiceId}#payment`;
             }
         }
+
+        function voidPayment(invoiceId) {
+            if (confirm(`Are you sure you want to void the payment for Invoice ID ${invoiceId}? This action cannot be undone.`)) {
+                window.location.href = `student-dashboard.jsp?voidInvoiceId=${invoiceId}#payment`;
+            }
+        }
+
+        function markAsPaid(invoiceId) {
+            if (confirm(`Are you sure you want to mark Invoice ID ${invoiceId} as paid?`)) {
+                window.location.href = `student-dashboard.jsp?markAsPaidInvoiceId=${invoiceId}#payment`;
+            }
+        }
+
+        function sortTable(columnIndex) {
+            const table = document.querySelector('.payment-table');
+            const rows = Array.from(table.querySelectorAll('.payment-row'));
+            const isAscending = table.getAttribute('data-sort-order') !== 'asc';
+            table.setAttribute('data-sort-order', isAscending ? 'asc' : 'desc');
+
+            rows.sort((rowA, rowB) => {
+                let valueA = rowA.cells[columnIndex].innerText.trim();
+                let valueB = rowB.cells[columnIndex].innerText.trim();
+
+                if (columnIndex === 2 || columnIndex === 7) {
+                    valueA = parseFloat(valueA) || 0;
+                    valueB = parseFloat(valueB) || 0;
+                } else if (columnIndex === 3 || columnIndex === 5 || columnIndex === 10) {
+                    valueA = valueA === 'N/A' ? 0 : new Date(valueA).getTime();
+                    valueB = valueB === 'N/A' ? 0 : new Date(valueB).getTime();
+                } else if (columnIndex === 6) {
+                    valueA = valueA === 'Yes' ? 1 : 0;
+                    valueB = valueB === 'Yes' ? 1 : 0;
+                }
+
+                return isAscending ? (valueA > valueB ? 1 : -1) : (valueA < valueB ? 1 : -1);
+            });
+
+            const tbody = document.getElementById('paymentTableBody');
+            tbody.innerHTML = '';
+            rows.forEach(row => tbody.appendChild(row));
+        }
+
+        function refreshPage() {
+            const refreshBtn = document.getElementById('refreshBtn');
+            const spinner = document.createElement('span');
+            spinner.className = 'spinner';
+            refreshBtn.innerHTML = '';
+            refreshBtn.appendChild(spinner);
+            refreshBtn.appendChild(document.createTextNode(' Refreshing...'));
+            refreshBtn.disabled = true;
+            setTimeout(() => {
+                window.location.href = 'student-dashboard.jsp#payment';
+            }, 1000);
+        }
+
+        function exportToCSV() {
+            if (confirm('Are you sure you want to export payment history to CSV?')) {
+                let csv = 'Invoice ID,Student ID,Amount,Due Date,Status,Payment Date,Waiver Applied,Late Fee,Payment Method,Subscription Plan,Start Date\n';
+                Array.from(document.querySelectorAll('.payment-row')).forEach(row => {
+                    let rowData = [];
+                    for (let i = 0; i < 11; i++) {
+                        let cell = row.cells[i].innerText.trim();
+                        rowData.push(cell.includes(',') ? `"${cell}"` : cell);
+                    }
+                    csv += rowData.join(',') + '\n';
+                });
+
+                let blob = new Blob([csv], { type: 'text/csv' });
+                let url = window.URL.createObjectURL(blob);
+                let a = document.createElement('a');
+                a.href = url;
+                a.download = 'payment_history.csv';
+                a.click();
+                window.URL.revokeObjectURL(url);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const loadingMessage = document.getElementById('loadingMessage');
+            if (loadingMessage) {
+                loadingMessage.style.display = 'block';
+                setTimeout(() => {
+                    loadingMessage.classList.add('fade-out');
+                    setTimeout(() => {
+                        loadingMessage.style.display = 'none';
+                    }, 500);
+                }, 500);
+            }
+        });
     </script>
+    </body>
+    </html>
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1936,74 +2598,6 @@
                             <i class="fas fa-trash-alt"></i> Delete Account
                         </button>
                     </form>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <%@ page import="java.io.*, java.util.*" %>
-    <%!
-        private List<String[]> loadLoginHistory(String studentId, String filePath) {
-            List<String[]> loginHistory = new ArrayList<>();
-            File file = new File(filePath);
-            if (!file.exists()) return loginHistory;
-
-            try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    if (!line.trim().isEmpty()) {
-                        String[] parts = line.split(",");
-                        if (parts.length >= 4 && parts[0].equals(studentId)) {
-                            loginHistory.add(parts);
-                        }
-                    }
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return loginHistory;
-        }
-    %>
-
-    <%
-        // Load login history
-        String loginHistoryFilePath = application.getRealPath("/WEB-INF/data/login_history.txt");
-        List<String[]> loginHistory = loadLoginHistory(studentId, loginHistoryFilePath);
-    %>
-
-    <section id="loginHistory" class="content-section">
-        <div class="dashboard-header">
-            <div class="greeting">
-                <h1>Login History</h1>
-                <p>View your recent login activity</p>
-            </div>
-        </div>
-
-        <div class="settings-container">
-            <div class="settings-form">
-                <% if (loginHistory.isEmpty()) { %>
-                <div class="form-group">
-                    <p>No login history available.</p>
-                </div>
-                <% } else { %>
-                <% for (String[] login : loginHistory) {
-                    String date = login[1];
-                    String time = login[2];
-                    String ip = login[3];
-                    String status = login.length > 4 ? login[4] : "Success";
-                %>
-                <div class="form-group">
-                    <label>Date: <%= date %></label>
-                    <p>Time: <%= time %></p>
-                    <p>IP Address: <%= ip %></p>
-                    <p>Status: <span class="<%= "Failed".equals(status) ? "status-cell overdue" : "status-cell" %>"><%= status %></span></p>
-                </div>
-                <% } %>
-                <% } %>
-                <div class="form-group">
-                    <button class="btn btn-primary" onclick="alert('Login history refreshed!'); location.reload();">
-                        <i class="fas fa-sync-alt"></i> Refresh
-                    </button>
                 </div>
             </div>
         </div>
@@ -2178,4 +2772,8 @@
     }
 </script>
 </body>
+
+
+
+
 </html>

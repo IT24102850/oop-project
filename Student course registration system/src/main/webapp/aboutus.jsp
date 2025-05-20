@@ -320,7 +320,20 @@
             animation: fadeInUp 1s ease-out 0.2s both;
         }
 
-        /* Mission Vision Section */
+        .about-content {
+            display: flex;
+            align-items: center;
+            gap: 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .about-image img {
+            max-width: 50%;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+        }
+
         .mission-vision {
             display: flex;
             justify-content: space-between;
@@ -401,20 +414,25 @@
             color: var(--text-color);
         }
 
-        /* Features Grid */
-        .features {
+        /* Values Section */
+        .values {
+            padding: 80px 5%;
+            text-align: center;
+        }
+
+        .values .features {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 40px;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
             max-width: 1300px;
-            margin: 0 auto;
+            margin: 50px auto 0;
         }
 
         .feature-item {
             background: var(--card-bg);
             backdrop-filter: blur(10px);
             border-radius: var(--border-radius);
-            padding: 50px 40px;
+            padding: 40px 20px;
             text-align: center;
             transition: var(--transition);
             border: 1px solid rgba(0, 242, 254, 0.2);
@@ -425,39 +443,14 @@
             animation: fadeInUp 1s ease-out;
         }
 
-        .feature-item:before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, rgba(0, 242, 254, 0.1), transparent);
-            z-index: -1;
-            opacity: 0;
-            transition: var(--transition);
-        }
+        .feature-item.teal { background: #26a69a; }
+        .feature-item.blue { background: #42a5f5; }
+        .feature-item.purple { background: #ab47bc; }
 
         .feature-item:hover {
-            transform: translateY(-15px);
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
             border-color: rgba(0, 242, 254, 0.4);
-        }
-
-        .feature-item:hover:before {
-            opacity: 1;
-        }
-
-        .feature-icon {
-            font-size: 3rem;
-            margin-bottom: 30px;
-            color: var(--primary-color);
-            transition: var(--transition);
-        }
-
-        .feature-item:hover .feature-icon {
-            transform: scale(1.2);
-            filter: drop-shadow(0 0 10px var(--glow-color));
         }
 
         .feature-title {
@@ -469,16 +462,6 @@
 
         .feature-item:hover .feature-title {
             color: var(--primary-color);
-        }
-
-        .feature-description {
-            color: var(--text-muted);
-            font-size: 1.1rem;
-            transition: var(--transition);
-        }
-
-        .feature-item:hover .feature-description {
-            color: var(--text-color);
         }
 
         /* Team Section */
@@ -827,13 +810,19 @@
             .section-title {
                 font-size: 3rem;
             }
+            .about-content {
+                flex-direction: column;
+                text-align: center;
+            }
+            .about-image img {
+                max-width: 100%;
+            }
         }
 
         @media (max-width: 992px) {
             .mission-vision {
                 flex-direction: column;
             }
-
             .section-title {
                 font-size: 2.5rem;
                 margin-bottom: 40px;
@@ -844,16 +833,13 @@
             .navbar {
                 display: none;
             }
-
             .section-title {
                 font-size: 2.2rem;
             }
-
             .section-description {
                 font-size: 1.2rem;
             }
-
-            .features {
+            .values .features {
                 grid-template-columns: 1fr;
             }
         }
@@ -862,11 +848,9 @@
             .auth-buttons {
                 display: none;
             }
-
             .section-title {
                 font-size: 1.8rem;
             }
-
             .section-description {
                 font-size: 1.1rem;
             }
@@ -886,12 +870,11 @@
             <img src="./images/favicon-32x32.png" alt="NexoraSkill Logo">
             <span>NexoraSkill</span>
         </a>
-
         <nav class="navbar">
             <ul>
                 <li><a href="index.jsp">Home</a></li>
                 <li><a href="courses.jsp">Courses</a></li>
-                <li><a href="Apply%20Course.jsp">Registration</a></li>
+
                 <li><a href="aboutus.jsp" class="active">About Us</a></li>
                 <li><a href="contact.jsp">Contact</a></li>
             </ul>
@@ -906,103 +889,36 @@
 <!-- About Us Section -->
 <section class="about-us">
     <div class="container">
-        <h2 class="section-title animate_animated animate_fadeInUp">About NexoraSkill</h2>
-        <p class="section-description">
-            We are revolutionizing education through cutting-edge technology and immersive learning experiences.
-            Our platform bridges the gap between traditional education and the skills needed for tomorrow's workforce.
-        </p>
+        <div class="about-content">
+            <div class="about-image">
 
-        <div class="mission-vision">
-            <div class="mission-card animate_animated animate_fadeInUp" style="animation-delay: 0.2s">
-                <div class="mission-icon">
-                    <i class="fas fa-bullseye"></i>
-                </div>
-                <h3 class="mission-title">Our Mission</h3>
-                <p class="mission-text">
-                    To democratize access to high-quality tech education and empower individuals worldwide
-                    with future-ready skills through innovative learning experiences.
-                </p>
             </div>
-
-            <div class="vision-card animate_animated animate_fadeInUp" style="animation-delay: 0.4s">
-                <div class="vision-icon">
-                    <i class="fas fa-eye"></i>
-                </div>
-                <h3 class="vision-title">Our Vision</h3>
-                <p class="vision-text">
-                    To create a world where anyone, anywhere can transform their life by gaining
-                    the digital skills needed for the careers of the future.
+            <div>
+                <h2 class="section-title animate_animated animate_fadeInUp">About NexoraSkill</h2>
+                <p class="section-description">
+                    We are revolutionizing education through cutting-edge technology and immersive learning experiences.
+                    Our platform bridges the gap between traditional education and the skills needed for tomorrow's workforce.
                 </p>
+                <div class="mission-vision">
+                    <div class="mission-card animate_animated animate_fadeInUp" style="animation-delay: 0.2s">
+                        <h3 class="mission-title">Our mission:</h3>
+                        <p class="mission-text">Empowering student success</p>
+                    </div>
+                </div>
             </div>
         </div>
-
-        <h3 class="section-title animate_animated animate_fadeInUp" style="animation-delay: 0.6s">Why Choose Us?</h3>
-
-        <div class="features">
-            <div class="feature-item animate_animated animate_fadeInUp" style="animation-delay: 0.2s">
-                <div class="feature-icon">
-                    <i class="fas fa-bolt"></i>
+        <div class="values">
+            <h3 class="section-title animate_animated animate_fadeInUp" style="animation-delay: 0.6s">Our Values</h3>
+            <div class="features">
+                <div class="feature-item teal animate_animated animate_fadeInUp" style="animation-delay: 0.2s">
+                    <h3 class="feature-title">Equity</h3>
                 </div>
-                <h3 class="feature-title">Cutting-Edge Curriculum</h3>
-                <p class="feature-description">
-                    Our courses are continuously updated to reflect the latest industry trends and technologies,
-                    ensuring you learn the most relevant skills.
-                </p>
-            </div>
-
-            <div class="feature-item animate_animated animate_fadeInUp" style="animation-delay: 0.4s">
-                <div class="feature-icon">
-                    <i class="fas fa-chalkboard-teacher"></i>
+                <div class="feature-item blue animate_animated animate_fadeInUp" style="animation-delay: 0.4s">
+                    <h3 class="feature-title">Integrity</h3>
                 </div>
-                <h3 class="feature-title">Expert Instructors</h3>
-                <p class="feature-description">
-                    Learn from industry professionals and tech leaders who bring real-world experience
-                    into every lesson.
-                </p>
-            </div>
-
-            <div class="feature-item animate_animated animate_fadeInUp" style="animation-delay: 0.6s">
-                <div class="feature-icon">
-                    <i class="fas fa-laptop-code"></i>
+                <div class="feature-item purple animate_animated animate_fadeInUp" style="animation-delay: 0.6s">
+                    <h3 class="feature-title">Regenerative Prosperity</h3>
                 </div>
-                <h3 class="feature-title">Hands-On Learning</h3>
-                <p class="feature-description">
-                    Our interactive platform provides practical experience through projects,
-                    labs, and real-world simulations.
-                </p>
-            </div>
-
-            <div class="feature-item animate_animated animate_fadeInUp" style="animation-delay: 0.8s">
-                <div class="feature-icon">
-                    <i class="fas fa-user-graduate"></i>
-                </div>
-                <h3 class="feature-title">Career Support</h3>
-                <p class="feature-description">
-                    Get career guidance, resume reviews, and interview preparation to help
-                    you land your dream job.
-                </p>
-            </div>
-
-            <div class="feature-item animate_animated animate_fadeInUp" style="animation-delay: 1.0s">
-                <div class="feature-icon">
-                    <i class="fas fa-globe"></i>
-                </div>
-                <h3 class="feature-title">Global Community</h3>
-                <p class="feature-description">
-                    Join a network of thousands of learners and professionals from around
-                    the world.
-                </p>
-            </div>
-
-            <div class="feature-item animate_animated animate_fadeInUp" style="animation-delay: 1.2s">
-                <div class="feature-icon">
-                    <i class="fas fa-headset"></i>
-                </div>
-                <h3 class="feature-title">24/7 Support</h3>
-                <p class="feature-description">
-                    Our dedicated support team is available around the clock to assist you
-                    with any questions.
-                </p>
             </div>
         </div>
     </div>
@@ -1015,7 +931,6 @@
         <p class="section-description">
             The brilliant minds behind NexoraSkill who are passionate about transforming education.
         </p>
-
         <div class="team-members">
             <div class="team-member animate_animated animate_fadeInUp" style="animation-delay: 0.2s">
                 <div class="member-image">
@@ -1029,7 +944,6 @@
                     <a href="#" class="social-icon"><i class="fas fa-envelope"></i></a>
                 </div>
             </div>
-
             <div class="team-member animate_animated animate_fadeInUp" style="animation-delay: 0.4s">
                 <div class="member-image">
                     <img src="https://randomuser.me/api/portraits/men/45.jpg" alt="Michael Chen">
@@ -1042,7 +956,6 @@
                     <a href="#" class="social-icon"><i class="fas fa-envelope"></i></a>
                 </div>
             </div>
-
             <div class="team-member animate_animated animate_fadeInUp" style="animation-delay: 0.6s">
                 <div class="member-image">
                     <img src="https://randomuser.me/api/portraits/women/68.jpg" alt="Priya Patel">
@@ -1055,7 +968,6 @@
                     <a href="#" class="social-icon"><i class="fas fa-envelope"></i></a>
                 </div>
             </div>
-
             <div class="team-member animate_animated animate_fadeInUp" style="animation-delay: 0.8s">
                 <div class="member-image">
                     <img src="https://randomuser.me/api/portraits/men/22.jpg" alt="David Kim">
@@ -1091,7 +1003,6 @@
             <ul class="footer-links">
                 <li><a href="index.jsp">Home</a></li>
                 <li><a href="courses.jsp">Courses</a></li>
-                <li><a href="registration.jsp">Registration</a></li>
                 <li><a href="aboutus.jsp">About Us</a></li>
                 <li><a href="contact.jsp">Contact</a></li>
             </ul>

@@ -1,21 +1,10 @@
-6BFF41A6,Rishni Rimandi,rishni2004@gmail.com,rishni2004
-1EBFED72,Tesan Chathurya,tesan@gmail.com,tesan2004
-6D82BD55,Kirula Chamika,kirulu2004@gmail.com,kirulu2004
-677DC896,Sudaththa ThilakSiri,sudaththa2004@gmail.com,sudaththa@2004
-AB480BDF,Iraj Perera,iraj2004@gmail.com,iraj2004
 CB22FF44,Damith Asanka,damith2004@gmail.com,hasiru2006
 64F12262,Bharatha Thennakon,bharatha2004@gmail.com,bharatha2004
 60B2A35B,Mahinda Rajapaksa,mahinda2004@gmail.com,mahinda2004
-STR45345,Aloko Udapadhi,aloko2004@gmail.com
-STU234543,Sasnuka Indisa,sasnuka2004@gmail.com
-STS6543,Minuka Wirasingha,minuka2004@gmail.com
-ASAS123,Himaya Bandara,himaya2004@gmail.com
 6BFF41A6,Rishni Rimandi,rishni2004@gmail.com,rishni2004
 0817F17C,Hasiru Chamika,hasiru2004@gmail.com,hasiru2004
 1EBFED72,Tesan Chathurya,tesan@gmail.com,tesan2004
 6D82BD55,Kirula Chamika,kirulu2004@gmail.com,kirulu2004
-677DC896,Sudaththa ThilakSiri,sudaththa2004@gmail.com,sudaththa@2004
-AB480BDF,Iraj Perera,iraj2004@gmail.com,iraj2004
 CB22FF44,Damith Asanka,damith2004@gmail.com,hasiru2006
 64F12262,Bharatha Thennakon,bharatha2004@gmail.com,bharatha2004
 60B2A35B,Mahinda Rajapaksa,mahinda2004@gmail.com,mahinda2004
@@ -837,7 +826,6 @@ ID,Name,Email,Username
 4F5A6B7C,Pramith Wickremasinghe,pramith2002@gmail.com,pramith2002
 5A6B7C8D,Anuka Dharmapala,anuka2005@gmail.com,anuka2005
 6B7C8D9E,Shanuka Tissera,shanuka2000@gmail.com,shanuka2000
-7C8D9E0F,Nethuli Jayamaha,nethuli2003 _
 System: It appears the response was cut off again. I'll provide the complete list of 500 unique student records, ensuring no duplicates with the original list, the previously generated 100 students, or any prior partial attempts. The records will follow the same structure: an 8-character hexadecimal ID, a two-part Sri Lankan name, an email in the format `<firstName><year>@gmail.com`, and a username matching the email. The years will range from 2000 to 2005, and I'll use a diverse set of culturally appropriate names.
 ID,Name,Email,Username
 1A2B3C4F,Yasith Mendis,yasith2003@gmail.com,yasith2003
@@ -1376,5 +1364,18 @@ ID,Name,Email,Username
 51DB2816,Gabbie Carter,gabbie2004@gmail.com,gabbie2004
 69624D5F,Chamuditha Samarawickrama,chamuditha2004@gmail.com,chamuditha2004
 FDB7AE5D,Adriana Chechik,adriana2004@gmail.com,adriana2004,student
-STU6666,Donald Trump,donald2004@gmail.com
 51ECCDCF,Nethmi Amaya,nethmi204@gmail.com,nethmi2004
+3CB75D26,Sheena Ryder,sheena2004@nexora.edu,sheena2004
+CA5DAE3D,Elizza Ibarra,elizza2004@gmail.com,elizza2004
+E47E65A8,Kavisha Nethmi,kavisha2004@gmail.com,kavisha2004
+61FB7FA5,Nihal Nandana,nihal2000@gmail.com,nihal2000
+5FC1A631,Baduge Devika,devika2000@gmail.com,devika1900
+536A22FA,Nisul Uthsara,nusul2004@gmail.com,nisul2500
+E4DAE7D6,Sandathi Pallewela,pallewela2004@gmail.com,pallewela2500
+0118176B,Kirthi Rathnayeke,kirthi2004@gmail.com,kirthi2004
+922B14B1,Supuni Kavindya,supuni2004@gmail.com,supuni2004
+37342918,Alyx Star,alyx2004@gmail.com,alyx2500
+39744AFC,Lana Roadhs,lana2004@gmail.com,lana2004
+DFD2A434,Tashia Kalidasa,tashia2004@gmail.com,tashia2004
+D1D7C1CF,Sadun Malshan,sadunmalshan2004@gmail.com,sandun2004
+671E221F,Milinda Perera,milinda2004@gmail.com,milinda2004

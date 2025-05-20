@@ -1,14 +1,5 @@
-JS001,JS Learning,4,Computer Science,Dr.Ravi,Key Concepts of javascripts learning,true
-QQ455,introduction to programming,1,Computer Science,Dr.Suriyaa,Basic programming concepts,true
-AI1121,AI and Machine Learning,4,Computer Science,Dr.Bhagyani,Advanced AI concepts,true
-DM654,Discreate Mathematics,4,Mathematics,Dr.Dulani,Maths concepts,true
-ST5377,Linear Algebra,3,Mathematics,Prof. Ishara,Discrete Maths,true
-CA7397,Statistics for Engineers,2,Mathematics,Prof. Ishara,Statistics,true
-ML7396,Quantum Computing,4,Computer Science,Prof. Lakmal,AI Principles,true
-CN5821,Software Engineering,3,Computer Science,Dr. Suriyaa,JavaScript Basics,true
 OP4678,Electronic Circuits,1,Physics,Prof. Chathura,Mechanics,true
 CA4521,Statistics for Engineers,2,Mathematics,Dr. Dulani,Discrete Maths,true
-CS2503,AI Fundamentals,3,Computer Science,Dr. Suriyaa,Web Development,true
 LG6937,Abstract Algebra,2,Mathematics,Dr. Kanishka,Calculus,true
 QQ3485,Software Engineering,4,Computer Science,Dr. Ruchira,Machine Learning,true
 ME786,Applied Physics,1,Physics,Dr. Hansani,Thermodynamics,true
@@ -101,4 +92,4 @@ SE4230,Software Engineering,2,Computer Science,Dr. Suriyaa,Web Development,true
 ML5687,Advanced Programming,2,Computer Science,Prof. Lakmal,Machine Learning,true
 LG7490,Abstract Algebra,4,Mathematics,Dr. Rajapaksha,Discrete Maths,true
 CS110,Introduction to AstroPhysics,4,Physics,Dr.Kandula,Key concepts of AstroPhysics,true
-CS432,WordPress Management,4,Computer Science,Dr.Sriyani,Basic concepts,true
+CS432,WordPress Managemet,4,Physics,Dr.Sriyani,Basic concepts,true

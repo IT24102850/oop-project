@@ -1,9 +1,7 @@
 Hasiru,Hasiru Chamika,Hasiru2004@nexora.edu
-Nimal,Nimal Perera,Nimal1995@nexora.edu
 Sunil,Sunil Fernando,Sunil1988@nexora.edu
 Kamal,Kamal Silva,Kamal2000@nexora.edu
 Ravi,Ravi Wijesinghe,Ravi1990@nexora.edu
-Vladmir,Vladmir Putin,vladmir2004@gmail.com
-Mahinda,mahinda rajapaksa,mahinda2004@gmail.com,mahinda2004
-Sasnuka,Sasnuka Indisa,sasnuka2004@gmail.com
-Dougles ,D Murphy,murphy2004@gmail.com
+Nalaka,Nalaka Nilantha,nalaka2004@gmail.com
+Sadaru,Sandaru Wijesingha,sandaru2004@gmail.com
+Nihal,Nihal Nandana,nihal2020@gmail.com

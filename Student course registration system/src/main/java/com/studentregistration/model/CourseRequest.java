@@ -1,29 +1,26 @@
 package com.studentregistration.model;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.ZonedDateTime;
 
 public class CourseRequest {
     private String fullName;
     private String email;
-    private String courseId;
+    private String courseCode;
     private String reason;
     private String additionalNotes;
-    private boolean termsAccepted;
-    private String submissionTime;
+    private ZonedDateTime submissionTime;
+    private String status;
 
-    public CourseRequest(String fullName, String email, String courseId,
-                         String reason, String additionalNotes, boolean termsAccepted) {
+    public CourseRequest(String fullName, String email, String courseCode, String reason, String additionalNotes, ZonedDateTime submissionTime, String status) {
         this.fullName = fullName;
         this.email = email;
-        this.courseId = courseId;
+        this.courseCode = courseCode;
         this.reason = reason;
         this.additionalNotes = additionalNotes;
-        this.termsAccepted = termsAccepted;
-        this.submissionTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+        this.submissionTime = submissionTime;
+        this.status = status;
     }
 
-    // Getters
     public String getFullName() {
         return fullName;
     }
@@ -32,8 +29,8 @@ public class CourseRequest {
         return email;
     }
 
-    public String getCourseId() {
-        return courseId;
+    public String getCourseCode() {
+        return courseCode;
     }
 
     public String getReason() {
@@ -44,11 +41,15 @@ public class CourseRequest {
         return additionalNotes;
     }
 
-    public boolean isTermsAccepted() {
-        return termsAccepted;
+    public ZonedDateTime getSubmissionTime() {
+        return submissionTime;
     }
 
-    public String getSubmissionTime() {
-        return submissionTime;
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

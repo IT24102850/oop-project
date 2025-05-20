@@ -1,4 +1,3 @@
-
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
@@ -235,15 +234,24 @@
             transform: translateX(0);
         }
 
-        .error {
-            color: #ff4d4d;
+        .error, .success {
             margin-bottom: 15px;
             text-align: center;
             padding: 10px;
-            background: rgba(255, 77, 77, 0.1);
             border-radius: 5px;
-            border-left: 3px solid #ff4d4d;
             animation: shake 0.5s ease;
+        }
+
+        .error {
+            color: #ff4d4d;
+            background: rgba(255, 77, 77, 0.1);
+            border-left: 3px solid #ff4d4d;
+        }
+
+        .success {
+            color: #28a745;
+            background: rgba(40, 167, 69, 0.1);
+            border-left: 3px solid #28a745;
         }
 
         @keyframes shake {
@@ -281,9 +289,12 @@
 <div class="login-container">
     <h2>ACCESS PORTAL</h2>
 
-    <%-- Display error message if login fails --%>
+    <%-- Display error or success message --%>
     <% if (request.getAttribute("error") != null) { %>
     <div class="error"><%= request.getAttribute("error") %></div>
+    <% } %>
+    <% if (request.getAttribute("success") != null) { %>
+    <div class="success"><%= request.getAttribute("success") %></div>
     <% } %>
 
     <form id="loginForm" action="${pageContext.request.contextPath}/auth" method="post">

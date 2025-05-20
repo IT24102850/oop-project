@@ -12,9 +12,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class RegistrationDAO {
-    private final String userFilePath; // For non-admin users (e.g., students in users.txt)
-    private final String studentFilePath; // For student-specific data (students.txt)
-    private final String enrollmentFilePath; // For enrollments (enrollments.txt)
+    private final String userFilePath;
+    private final String studentFilePath;
+    private final String enrollmentFilePath;
     private static final Logger logger = Logger.getLogger(RegistrationDAO.class.getName());
 
     public RegistrationDAO(String userFilePath, String studentFilePath, String enrollmentFilePath) {
@@ -44,7 +44,7 @@ public class RegistrationDAO {
         }
     }
 
-    public void registerUser(User user) throws IOException {
+    public void registerUser(User user, boolean isAdmin) throws IOException {
         if (!isEmailAvailable(user.getEmail())) {
             logger.warning("Email already exists: " + user.getEmail());
             throw new IllegalArgumentException("Email already exists");
@@ -54,24 +54,23 @@ public class RegistrationDAO {
         user.setActive(false);
         user.setLastLogin(LocalDateTime.now());
 
-        // Register student in users.txt
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(userFilePath, true))) {
             writer.write(user.toFileString());
             writer.newLine();
             logger.info("User registered (pending verification): " + user.getEmail());
         }
 
-        // Add student-specific data to students.txt
-        Student student = new Student(String.valueOf(user.getId()), user.getName(), user.getEmail(), user.getPassword());
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(studentFilePath, true))) {
-            writer.write(student.getStudentId() + "," + student.getFullName() + "," + student.getEmail() + "," + student.getPassword());
-            writer.newLine();
-            logger.info("Student record added: " + student.getEmail());
+        if (!isAdmin) {
+            Student student = new Student(String.valueOf(user.getId()), user.getFullName(), user.getEmail(), user.getPassword());
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(studentFilePath, true))) {
+                writer.write(student.getStudentId() + "," + student.getFullName() + "," + student.getEmail() + "," + student.getPassword());
+                writer.newLine();
+                logger.info("Student record added: " + student.getEmail());
+            }
         }
     }
 
     public boolean isEmailAvailable(String email) {
-        // Check users.txt
         try (BufferedReader reader = new BufferedReader(new FileReader(userFilePath))) {
             String line;
             while ((line = reader.readLine()) != null) {
@@ -81,10 +80,9 @@ public class RegistrationDAO {
                 }
             }
         } catch (IOException e) {
-            logger.log(Level.SEVERE, "Failed to check email availability in users.txt", e);
-            throw new RuntimeException("Failed to check email availability in users.txt", e);
+            logger.log(Level.SEVERE, "Failed to check email availability", e);
+            throw new RuntimeException("Failed to check email availability", e);
         }
-
         return true;
     }
 
@@ -92,7 +90,6 @@ public class RegistrationDAO {
         List<User> users = new ArrayList<>();
         boolean found = false;
 
-        // Check users.txt for non-admins
         try (BufferedReader reader = new BufferedReader(new FileReader(userFilePath))) {
             String line;
             while ((line = reader.readLine()) != null) {

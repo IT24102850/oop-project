@@ -1390,6 +1390,19 @@
                 <i class="fas fa-user-shield"></i> Admin Management
             </a>
         </li>
+
+        <li class="nav-item">
+            <a href="?activeTab=reviews" class="nav-link <%= "reviews".equals(activeTab) ? "active" : "" %>" data-section="reviews" aria-label="Review Management">
+                <i class="fas fa-star"></i> Review Management
+            </a>
+        </li>
+
+        <li class="nav-item">
+            <a href="?activeTab=course-requests" class="nav-link <%= "course-requests".equals(activeTab) ? "active" : "" %>" data-section="course-requests" aria-label="Course Requests">
+                <i class="fas fa-file-alt"></i> Course Requests
+            </a>
+        </li>
+
     </ul>
 </div>
 
@@ -1401,7 +1414,9 @@
             <form action="auth" method="post" style="display: inline;">
                 <input type="hidden" name="action" value="logout">
                 <button type="submit" class="btn btn-danger" aria-label="Logout">
-                    <i class="fas fa-sign-out-alt"></i> Logout
+                    <a href="${pageContext.request.contextPath}/logIn.jsp?logout=true" class="btn btn-logout">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </a>
                 </button>
             </form>
         </div>
@@ -1429,6 +1444,15 @@
                 <p class="stat-value">12</p>
             </div>
         </div>
+
+
+
+
+
+
+
+
+
     </section>
 
 
@@ -1710,8 +1734,8 @@
                             <td><%= parts[3] %></td>
                             <td><%= parts[4] %></td>
                             <td><%= parts[5] %></td>
-                            <td><%= "true".equals(parts[6]) ? "Active" : "Archived" %></td>
-                            <td>
+                            <td><span class="status <%= "true".equals(parts[6]) ? "active" : "inactive" %>"><%= "true".equals(parts[6]) ? "Active" : "Archived" %></span></td>
+                            <td class="action-buttons">
                                 <button class="btn-futuristic btn-futuristic-update" data-tooltip="Edit this course" onclick="openUpdateModal('<%= parts[0] %>', '<%= parts[1] %>', '<%= parts[2] %>', '<%= parts[3] %>', '<%= parts[4] %>', '<%= parts[5] %>')" aria-label="Update Course">
                                     <i class="fas fa-pen-nib"></i> Update
                                 </button>
@@ -1737,6 +1761,201 @@
                 </div>
             </div>
         </div>
+
+        <!-- Modal for Updating Course -->
+        <div id="updateCourseModal" class="modal">
+            <div class="modal-content">
+                <button class="modal-close" onclick="closeModal('updateCourseModal')" aria-label="Close Modal"><i class="fas fa-times"></i></button>
+                <h2>Update Course</h2>
+                <form action="admin-dashboard.jsp" method="post" class="update-course-form" onsubmit="return validateUpdateCourseForm()">
+                    <input type="hidden" name="action" value="update">
+                    <input type="hidden" name="activeTab" value="courses">
+                    <input type="hidden" name="originalCourseCode" id="updateOriginalCourseCode">
+                    <div class="form-group">
+                        <label for="updateCourseCode" class="required">Course Code</label>
+                        <input type="text" id="updateCourseCode" name="courseCode" required placeholder="e.g., CS101">
+                        <div class="error-text" id="updateCourseCodeError"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="updateTitle" class="required">Title</label>
+                        <input type="text" id="updateTitle" name="title" required placeholder="e.g., Introduction to Programming">
+                        <div class="error-text" id="updateTitleError"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="updateCredits" class="required">Credits</label>
+                        <input type="number" id="updateCredits" name="credits" required placeholder="e.g., 3" min="1">
+                        <div class="error-text" id="updateCreditsError"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="updateDepartment" class="required">Department</label>
+                        <select id="updateDepartment" name="department" required>
+                            <option value="">Select Department</option>
+                            <option value="Computer Science">Computer Science</option>
+                            <option value="Mathematics">Mathematics</option>
+                            <option value="Physics">Physics</option>
+                        </select>
+                        <div class="error-text" id="updateDepartmentError"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="updateProfessor">Professor</label>
+                        <input type="text" id="updateProfessor" name="professor" placeholder="e.g., Dr. Smith">
+                    </div>
+                    <div class="form-group syllabus-group">
+                        <label for="updateSyllabus">Syllabus</label>
+                        <textarea id="updateSyllabus" name="syllabus" placeholder="e.g., Basic programming concepts" rows="4"></textarea>
+                    </div>
+                    <div class="button-group">
+                        <button type="submit" class="btn-futuristic btn-futuristic-update" data-tooltip="Update this course" aria-label="Update Course">
+                            <i class="fas fa-pen-nib"></i> Update Course
+                        </button>
+                        <button type="button" class="btn-futuristic btn-futuristic-cancel" data-tooltip="Cancel" onclick="closeModal('updateCourseModal')" aria-label="Cancel Update">
+                            <i class="fas fa-times"></i> Cancel
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <script>
+            function toggleCourseSection(sectionId) {
+                const section = document.getElementById(sectionId);
+                section.classList.toggle('active');
+            }
+
+            function openUpdateModal(courseCode, title, credits, department, professor, syllabus) {
+                // Populate the form fields with the course data
+                document.getElementById('updateOriginalCourseCode').value = courseCode;
+                document.getElementById('updateCourseCode').value = courseCode;
+                document.getElementById('updateTitle').value = title;
+                document.getElementById('updateCredits').value = credits;
+                document.getElementById('updateDepartment').value = department;
+                document.getElementById('updateProfessor').value = professor;
+                document.getElementById('updateSyllabus').value = syllabus;
+
+                // Open the modal
+                openModal('updateCourseModal');
+            }
+
+            function validateCreateCourseForm(form) {
+                let isValid = true;
+                const courseCode = form.querySelector('#courseCode').value.trim();
+                const title = form.querySelector('#title').value.trim();
+                const credits = form.querySelector('#credits').value.trim();
+                const department = form.querySelector('#department').value.trim();
+
+                // Reset error messages
+                form.querySelector('#courseCodeError').textContent = '';
+                form.querySelector('#titleError').textContent = '';
+                form.querySelector('#creditsError').textContent = '';
+                form.querySelector('#departmentError').textContent = '';
+
+                // Validate Course Code (e.g., CS101 format: two letters followed by three digits)
+                const courseCodeRegex = /^[A-Z]{2}\d{3}$/;
+                if (!courseCodeRegex.test(courseCode)) {
+                    form.querySelector('#courseCodeError').textContent = 'Course code must be in format XX999 (e.g., CS101).';
+                    isValid = false;
+                }
+
+                // Validate Title (not empty)
+                if (title === '') {
+                    form.querySelector('#titleError').textContent = 'Title is required.';
+                    isValid = false;
+                }
+
+                // Validate Credits (positive number)
+                if (!credits.match(/^\d+$/) || parseInt(credits) <= 0) {
+                    form.querySelector('#creditsError').textContent = 'Credits must be a positive number.';
+                    isValid = false;
+                }
+
+                // Validate Department (not empty)
+                if (department === '') {
+                    form.querySelector('#departmentError').textContent = 'Department is required.';
+                    isValid = false;
+                }
+
+                if (isValid) {
+                    document.getElementById('loadingOverlay').style.display = 'flex';
+                }
+
+                return isValid;
+            }
+
+            function validateUpdateCourseForm() {
+                let isValid = true;
+                const courseCode = document.getElementById('updateCourseCode').value.trim();
+                const title = document.getElementById('updateTitle').value.trim();
+                const credits = document.getElementById('updateCredits').value.trim();
+                const department = document.getElementById('updateDepartment').value.trim();
+
+                // Reset error messages
+                document.getElementById('updateCourseCodeError').textContent = '';
+                document.getElementById('updateTitleError').textContent = '';
+                document.getElementById('updateCreditsError').textContent = '';
+                document.getElementById('updateDepartmentError').textContent = '';
+
+                // Validate Course Code (e.g., CS101 format: two letters followed by three digits)
+                const courseCodeRegex = /^[A-Z]{2}\d{3}$/;
+                if (!courseCodeRegex.test(courseCode)) {
+                    document.getElementById('updateCourseCodeError').textContent = 'Course code must be in format XX999 (e.g., CS101).';
+                    isValid = false;
+                }
+
+                // Validate Title (not empty)
+                if (title === '') {
+                    document.getElementById('updateTitleError').textContent = 'Title is required.';
+                    isValid = false;
+                }
+
+                // Validate Credits (positive number)
+                if (!credits.match(/^\d+$/) || parseInt(credits) <= 0) {
+                    document.getElementById('updateCreditsError').textContent = 'Credits must be a positive number.';
+                    isValid = false;
+                }
+
+                // Validate Department (not empty)
+                if (department === '') {
+                    document.getElementById('updateDepartmentError').textContent = 'Department is required.';
+                    isValid = false;
+                }
+
+                if (isValid) {
+                    document.getElementById('loadingOverlay').style.display = 'flex';
+                    return confirm(`Are you sure you want to update the course ${courseCode}?`);
+                }
+
+                return false;
+            }
+
+            function confirmDelete(courseCode) {
+                return confirm(`Are you sure you want to delete the course ${courseCode}? This action cannot be undone.`);
+            }
+        </script>
+
+        <style>
+            .action-buttons {
+                display: flex;
+                gap: 8px;
+                align-items: center;
+            }
+
+            .course-table-container table tr:hover {
+                background: rgba(0, 242, 254, 0.1);
+                transition: background 0.3s ease;
+            }
+
+            .btn-futuristic-cancel {
+                border: 2px solid transparent;
+                background: linear-gradient(var(--dark-color), var(--dark-color)) padding-box,
+                linear-gradient(45deg, #ff4d7e, #d81b60) border-box;
+                box-shadow: 0 0 10px rgba(255, 77, 126, 0.5);
+            }
+
+            .btn-futuristic-cancel:hover {
+                transform: scale(1.05);
+                box-shadow: 0 0 20px rgba(255, 77, 126, 0.8);
+            }
+        </style>
     </section>
 
 
@@ -1805,9 +2024,9 @@
                 <td><%= payment[9] %></td>
                 <td><%= payment[10] %></td>
                 <td>
-                    <button class="btn-futuristic btn-futuristic-update" data-tooltip="Update payment status" onclick="openUpdatePaymentModal('<%= payment[0] %>', '<%= payment[4] %>')" aria-label="Update Payment">
-                        <i class="fas fa-pen-nib"></i> Update
-                    </button>
+                    <a href="admin-dashboard.jsp?action=returnPayment&invoiceId=<%= payment[0] %>&activeTab=payment" class="btn-futuristic btn-futuristic-update" data-tooltip="Return this payment" onclick="return confirmReturnPayment('<%= payment[0] %>')" aria-label="Return Payment">
+                        <i class="fas fa-undo"></i> Return Payment
+                    </a>
                 </td>
             </tr>
             <%
@@ -1837,7 +2056,52 @@
                 }
             }
         }
+
+        function confirmReturnPayment(invoiceId) {
+            return confirm(`Are you sure you want to return the payment with Invoice ID ${invoiceId}? This will delete the payment record.`);
+        }
     </script>
+
+    <%-- JSP logic to handle payment return (deletion) --%>
+        <%
+        if ("returnPayment".equals(action)) {
+            String invoiceId = request.getParameter("invoiceId");
+            boolean paymentFound = false;
+
+            for (int i = 0; i < paymentHistory.size(); i++) {
+                String[] payment = paymentHistory.get(i);
+                if (payment[0].equals(invoiceId)) {
+                    paymentHistory.remove(i);
+                    paymentFound = true;
+                    break;
+                }
+            }
+
+            if (paymentFound) {
+                // Rewrite the updated payment history to payments.txt
+                try (BufferedWriter writer = new BufferedWriter(new FileWriter(paymentsFile))) {
+                    for (String[] payment : paymentHistory) {
+                        writer.write(String.join(",", payment));
+                        writer.newLine();
+                    }
+                } catch (IOException e) {
+                    System.out.println("Error writing to payments.txt: " + e.getMessage());
+                    request.setAttribute("error", "Server error while deleting payment.");
+                }
+                response.sendRedirect("admin-dashboard.jsp?activeTab=payment&message=payment_returned");
+                return;
+            } else {
+                request.setAttribute("error", "Payment not found.");
+            }
+        }
+    %>
+
+
+
+
+
+
+
 
     <section id="admin-management" class="content-section <%= "admin-management".equals(activeTab) ? "active" : "" %>">
         <div class="section-header">
@@ -2158,5 +2422,457 @@
 
         .search-bar button {
             margin-left: 10px;
+        }
+    </style>
+
+
+    <section id="reviews" class="content-section <%= "reviews".equals(activeTab) ? "active" : "" %>">
+        <div class="section-header">
+            <h2><i class="fas fa-star"></i> Review Management</h2>
+        </div>
+
+        <div class="search-bar">
+            <input type="text" id="reviewSearch" placeholder="Search reviews by author..." onkeyup="searchReviews()" aria-label="Search reviews">
+            <i class="fas fa-search"></i>
+            <button class="btn btn-primary" onclick="clearReviewSearch()" aria-label="Clear Search">
+                <i class="fas fa-times"></i> Clear
+            </button>
+        </div>
+
+        <div class="admin-reviews-section">
+            <div class="reviews-table-container">
+                <table class="reviews-table" id="reviewTable">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Author</th>
+                        <th>Review Text</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <%
+                        List<String[]> adminReviews = new ArrayList<>();
+                        String filePath = application.getRealPath("/WEB-INF/data/reviews.txt");
+                        File adminFile = new File(filePath);
+                        boolean fileExists = adminFile.exists();
+
+                        if (fileExists) {
+                            try (BufferedReader reader = new BufferedReader(new FileReader(adminFile))) {
+                                String line;
+                                int id = 1;
+                                while ((line = reader.readLine()) != null) {
+                                    String[] parts = line.split("\\|", 2);
+                                    if (parts.length == 2) {
+                                        adminReviews.add(new String[]{String.valueOf(id), parts[0], parts[1]});
+                                        id++;
+                                    }
+                                }
+                            } catch (IOException e) {
+                                request.setAttribute("errorMessage", "Error reading reviews: " + e.getMessage());
+                            }
+                        }
+
+                        if (adminReviews.isEmpty()) {
+                            request.setAttribute("noReviewsMessage", "No reviews found.");
+                        }
+
+                        if (request.getAttribute("errorMessage") != null) {
+                    %>
+                    <div class="error-message">
+                        <%= request.getAttribute("errorMessage") %>
+                    </div>
+                    <%
+                        }
+
+                        if (request.getAttribute("noReviewsMessage") != null) {
+                    %>
+                    <div class="no-reviews-message">
+                        <%= request.getAttribute("noReviewsMessage") %>
+                    </div>
+                    <%
+                        }
+
+                        for (String[] review : adminReviews) {
+                            String id = review[0];
+                            String author = review[1];
+                            String adminReviewText = review[2];
+                    %>
+                    <tr class="review-row" data-review-author="<%= author %>">
+                        <td><%= id %></td>
+                        <td class="review-author"><%= author %></td>
+                        <td><%= adminReviewText %></td>
+                        <td>
+                            <button class="btn-futuristic btn-futuristic-update" data-tooltip="Edit this review" onclick="openUpdateReviewModal('<%= id %>', '<%= author %>', '<%= adminReviewText %>')" aria-label="Update Review">
+                                <i class="fas fa-pen-nib"></i> Update
+                            </button>
+                            <a href="${pageContext.request.contextPath}/ReviewServlet?action=delete&id=<%= id %>&activeTab=reviews" class="btn-futuristic btn-futuristic-delete" data-tooltip="Delete this review" onclick="return confirmReviewDelete('<%= id %>')" aria-label="Delete Review">
+                                <i class="fas fa-trash-can"></i> Delete
+                            </a>
+                        </td>
+                    </tr>
+                    <%
+                        }
+                    %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Modal for Updating Review -->
+        <div id="updateReviewModal" class="modal">
+            <div class="modal-content">
+                <button class="modal-close" onclick="closeModal('updateReviewModal')" aria-label="Close Modal"><i class="fas fa-times"></i></button>
+                <h2>Update Review</h2>
+                <form action="${pageContext.request.contextPath}/ReviewServlet" method="POST" class="update-review-form" onsubmit="return validateUpdateReviewForm()">
+                    <input type="hidden" name="action" value="update">
+                    <input type="hidden" name="activeTab" value="reviews">
+                    <input type="hidden" name="id" id="updateReviewId">
+                    <div class="form-group">
+                        <label for="updateReviewAuthor" class="required">Author</label>
+                        <input type="text" id="updateReviewAuthor" name="currentAuthor" required placeholder="e.g., John Doe">
+                        <div class="error-text" id="updateReviewAuthorError"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="updateReviewText" class="required">Review Text</label>
+                        <textarea id="updateReviewText" name="currentReviewText" required placeholder="e.g., Great platform!" rows="4"></textarea>
+                        <div class="error-text" id="updateReviewTextError"></div>
+                    </div>
+                    <div class="button-group">
+                        <button type="submit" class="btn-futuristic btn-futuristic-update" data-tooltip="Update this review" aria-label="Update Review">
+                            <i class="fas fa-pen-nib"></i> Update Review
+                        </button>
+                        <button type="button" class="btn-futuristic btn-futuristic-cancel" data-tooltip="Cancel" onclick="closeModal('updateReviewModal')" aria-label="Cancel Update">
+                            <i class="fas fa-times"></i> Cancel
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <script>
+            function searchReviews() {
+                let input = document.getElementById("reviewSearch").value.toLowerCase();
+                let table = document.getElementById("reviewTable");
+                let tr = table.getElementsByClassName("review-row");
+
+                for (let i = 0; i < tr.length; i++) {
+                    let reviewAuthor = tr[i].getAttribute("data-review-author").toLowerCase();
+                    if (reviewAuthor.includes(input)) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
+
+            function clearReviewSearch() {
+                const searchInput = document.getElementById("reviewSearch");
+                searchInput.value = "";
+                searchReviews();
+            }
+
+            function openUpdateReviewModal(id, author, reviewText) {
+                document.getElementById('updateReviewId').value = id;
+                document.getElementById('updateReviewAuthor').value = author;
+                document.getElementById('updateReviewText').value = reviewText;
+                openModal('updateReviewModal');
+            }
+
+            function confirmReviewDelete(reviewId) {
+                return confirm(`Are you sure you want to delete review with ID ${reviewId}?`);
+            }
+
+            function validateUpdateReviewForm() {
+                let isValid = true;
+                const author = document.getElementById('updateReviewAuthor').value.trim();
+                const reviewText = document.getElementById('updateReviewText').value.trim();
+
+                document.getElementById('updateReviewAuthorError').textContent = '';
+                document.getElementById('updateReviewTextError').textContent = '';
+
+                const nameRegex = /^[a-zA-Z\s]{2,50}$/;
+                if (!nameRegex.test(author)) {
+                    document.getElementById('updateReviewAuthorError').textContent = 'Author name must be 2-50 characters, letters and spaces only.';
+                    isValid = false;
+                }
+
+                if (reviewText === '') {
+                    document.getElementById('updateReviewTextError').textContent = 'Review text is required.';
+                    isValid = false;
+                } else if (reviewText.length > 500) {
+                    document.getElementById('updateReviewTextError').textContent = 'Review text must be 500 characters or less.';
+                    isValid = false;
+                }
+
+                if (isValid) {
+                    document.getElementById('loadingOverlay').style.display = 'flex';
+                    return confirm('Are you sure you want to update this review?');
+                }
+
+                return false;
+            }
+        </script>
+
+        <style>
+            .admin-reviews-section {
+                padding: 0;
+                margin-top: 20px;
+            }
+
+            .reviews-table-container {
+                max-width: 1400px;
+                margin: 0 auto;
+                overflow-x: auto;
+            }
+
+            .reviews-table {
+                width: 100%;
+                border-collapse: collapse;
+                background: var(--card-bg);
+                backdrop-filter: blur(10px);
+                border-radius: var(--border-radius);
+                box-shadow: var(--box-shadow);
+            }
+
+            .reviews-table th,
+            .reviews-table td {
+                padding: 20px;
+                text-align: left;
+                border-bottom: 1px solid rgba(0, 242, 254, 0.2);
+            }
+
+            .reviews-table th {
+                background: linear-gradient(135deg, var(--darker-color), var(--dark-color));
+                font-weight: 600;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+                color: var(--text-color);
+            }
+
+            .reviews-table td {
+                color: var(--text-color);
+                transition: var(--transition);
+            }
+
+            .reviews-table tr:hover td {
+                background: rgba(0, 242, 254, 0.05);
+                transform: translateY(-2px);
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            }
+
+            .error-message,
+            .no-reviews-message {
+                text-align: center;
+                color: var(--secondary-color);
+                font-size: 1.2rem;
+                padding: 20px;
+            }
+
+            .update-review-form {
+                display: grid;
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .update-review-form .form-group {
+                margin-bottom: 15px;
+            }
+
+            .update-review-form textarea {
+                height: 80px;
+                resize: none;
+            }
+
+            .update-review-form .button-group {
+                text-align: right;
+                margin-top: 10px;
+            }
+
+            @media (max-width: 768px) {
+                .reviews-table th,
+                .reviews-table td {
+                    padding: 15px;
+                    font-size: 0.9rem;
+                }
+            }
+
+            @media (max-width: 576px) {
+                .reviews-table {
+                    display: block;
+                    overflow-x: auto;
+                }
+
+                .reviews-table th,
+                .reviews-table td {
+                    display: block;
+                    width: 100%;
+                    text-align: left;
+                }
+
+                .reviews-table th {
+                    display: none;
+                }
+
+                .reviews-table td {
+                    position: relative;
+                    padding-left: 50%;
+                }
+
+                .reviews-table td:before {
+                    content: attr(data-label);
+                    position: absolute;
+                    left: 10px;
+                    font-weight: 600;
+                    color: var(--text-muted);
+                }
+
+                .reviews-table td[data-label="ID"]:before { content: "ID"; }
+                .reviews-table td[data-label="Author"]:before { content: "Author"; }
+                .reviews-table td[data-label="Review Text"]:before { content: "Review"; }
+                .reviews-table td[data-label="Actions"]:before { content: "Actions"; }
+            }
+        </style>
+    </section>
+
+
+
+
+
+    <%@ page import="com.studentregistration.dao.StudentDAO" %>
+    <%@ page import="com.studentregistration.model.Student" %>
+
+    <section id="course-requests" class="content-section <%= "course-requests".equals(activeTab) ? "active" : "" %>">
+        <div class="section-header">
+            <h2><i class="fas fa-file-alt"></i> Course Requests</h2>
+        </div>
+
+        <%
+            // Initialize StudentDAO
+            StudentDAO studentDAO = (StudentDAO) application.getAttribute("studentDAO");
+            if (studentDAO == null) {
+                String studentsPath = application.getRealPath("/WEB-INF/data/students.txt");
+                studentDAO = new StudentDAO(studentsPath);
+                application.setAttribute("studentDAO", studentDAO);
+            }
+        %>
+
+        <div class="search-bar">
+            <input type="text" id="requestSearch" placeholder="Search requests by student ID or name..." onkeyup="searchRequests()" aria-label="Search course requests">
+            <i class="fas fa-search"></i>
+            <button class="btn btn-primary" onclick="clearRequestSearch()" aria-label="Clear Search">
+                <i class="fas fa-times"></i> Clear
+            </button>
+        </div>
+
+        <table class="data-table" id="requestTable">
+            <thead>
+            <tr>
+                <th>Request ID</th>
+                <th>Student ID</th>
+                <th>Student Name</th>
+                <th>Student Email</th>
+                <th>Course Code</th>
+                <th>Request Date</th>
+                <th>Status</th>
+
+            </tr>
+            </thead>
+            <tbody>
+            <%
+                List<String[]> courseRequests = new ArrayList<>();
+                String applyFilePath = application.getRealPath("/WEB-INF/data/apply.txt");
+                File applyFile = new File(applyFilePath);
+                if (applyFile.exists()) {
+                    try (BufferedReader reader = new BufferedReader(new FileReader(applyFile))) {
+                        String line;
+                        int requestId = 1;
+                        while ((line = reader.readLine()) != null) {
+                            if (line.trim().isEmpty()) continue;
+                            String[] parts = line.split(",");
+                            if (parts.length >= 4) {
+                                courseRequests.add(new String[]{
+                                        String.valueOf(requestId),
+                                        parts[0].trim(), // Student ID
+                                        parts[1].trim(), // Course Code
+                                        parts[2].trim(), // Request Date
+                                        parts[3].trim()  // Status
+                                });
+                                requestId++;
+                            }
+                        }
+                    } catch (IOException e) {
+                        System.out.println("Error reading apply.txt: " + e.getMessage());
+                        request.setAttribute("error", "Error reading course requests: " + e.getMessage());
+                    }
+                }
+
+                if (courseRequests.isEmpty()) {
+            %>
+            <tr>
+                <td colspan="8" style="text-align: center;">No course requests available.</td>
+            </tr>
+            <%
+            } else {
+                for (String[] rrequest : courseRequests) {
+                    String status = rrequest[4];
+                    String statusClass = "pending".equals(status) ? "status active" : "status inactive";
+                    String statusDisplay = "pending".equals(status) ? "Pending" : status.substring(0, 1).toUpperCase() + status.substring(1);
+
+                    // Fetch student details using StudentDAO
+                    Student student = studentDAO.getStudentByEmail(rrequest[1]); // Assuming studentId is used as email in your system
+                    String studentName = student != null ? student.getFullName() : "Unknown";
+                    String studentEmail = student != null ? student.getEmail() : "Unknown";
+            %>
+            <tr class="request-row" data-student-id="<%= rrequest[1] %>" data-student-name="<%= studentName.toLowerCase() %>">
+                <td><%= rrequest[0] %></td>
+                <td><%= rrequest[1] %></td>
+                <td><%= studentName %></td>
+                <td><%= studentEmail %></td>
+                <td><%= rrequest[2] %></td>
+                <td><%= rrequest[3] %></td>
+                <td><span class="<%= statusClass %>"><%= statusDisplay %></span></td>
+
+            </tr>
+            <%
+                    }
+                }
+            %>
+            </tbody>
+        </table>
+    </section>
+
+    <script>
+        function searchRequests() {
+            let input = document.getElementById("requestSearch").value.toLowerCase();
+            let table = document.getElementById("requestTable");
+            let tr = table.getElementsByClassName("request-row");
+
+            for (let i = 0; i < tr.length; i++) {
+                let studentId = tr[i].getAttribute("data-student-id").toLowerCase();
+                let studentName = tr[i].getAttribute("data-student-name").toLowerCase();
+                if (studentId.includes(input) || studentName.includes(input)) {
+                    tr[i].style.display = "";
+                } else {
+                    tr[i].style.display = "none";
+                }
+            }
+        }
+
+        function clearRequestSearch() {
+            const searchInput = document.getElementById("requestSearch");
+            searchInput.value = "";
+            searchRequests();
+        }
+
+        function confirmRequestAction(action, requestId) {
+            return confirm(`Are you sure you want to ${action} request with ID ${requestId}?`);
+        }
+    </script>
+
+    <style>
+        .data-table .request-row:hover {
+            background: rgba(0, 242, 254, 0.1);
+            transition: background 0.3s ease;
         }
     </style>

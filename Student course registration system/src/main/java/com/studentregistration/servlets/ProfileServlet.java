@@ -16,97 +16,118 @@ import java.util.List;
 @WebServlet("/ProfileServlet")
 @MultipartConfig(maxFileSize = 10485760) // 10MB max file size
 public class ProfileServlet extends HttpServlet {
-    private static final String DATA_PATH = "/WEB-INF/data/Profile/profiles.txt";
-    private static final String IMAGE_PATH = "/WEB-INF/data/Profile/";
-
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String action = request.getParameter("action");
-        if ("getPicture".equals(action)) {
-            String studentId = request.getParameter("studentId");
-            String pic = request.getParameter("pic");
-            String imageDir = getServletContext().getRealPath(IMAGE_PATH);
-            File imageFile = new File(imageDir, pic);
-
-            if (imageFile.exists()) {
-                response.setContentType("image/jpeg");
-                Files.copy(imageFile.toPath(), response.getOutputStream());
-            } else {
-                response.sendError(HttpServletResponse.SC_NOT_FOUND, "Image not found");
-            }
-        }
-    }
+    private static final String DATA_PATH = "/WEB-INF/data/profiles.txt";
+    private static final String IMAGE_PATH = "/WEB-INF/data/profile";
+    private static final String FALLBACK_BASE_DIR = System.getProperty("java.io.tmpdir") + File.separator + "student-app-data";
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String action = request.getParameter("action");
-        String studentId = request.getParameter("studentId");
+        // Retrieve studentId from session (security check)
+        String studentId = (String) request.getSession().getAttribute("studentId");
+        if (studentId == null) {
+            response.sendRedirect("login.jsp?message=Please log in to update your profile");
+            return;
+        }
+
+        // Retrieve and sanitize form parameters
+        String name = request.getParameter("name") != null ? request.getParameter("name").replaceAll(",", " ") : "";
+        String dob = request.getParameter("dob") != null ? request.getParameter("dob") : "";
+        String gender = request.getParameter("gender") != null ? request.getParameter("gender") : "";
+        String email = request.getParameter("email") != null ? request.getParameter("email") : "";
+        String phone = request.getParameter("phone") != null ? request.getParameter("phone").replaceAll("[\\s-]", "") : "";
+        String address = request.getParameter("address") != null ? request.getParameter("address").replaceAll(",", " ") : "";
+
+        // Get file paths with fallback
         String filePath = getServletContext().getRealPath(DATA_PATH);
         String imageDir = getServletContext().getRealPath(IMAGE_PATH);
 
+        if (filePath == null) {
+            filePath = FALLBACK_BASE_DIR + File.separator + "profiles.txt";
+            System.out.println("Using fallback filePath: " + filePath);
+        }
+        if (imageDir == null) {
+            imageDir = FALLBACK_BASE_DIR + File.separator + "profile";
+            System.out.println("Using fallback imageDir: " + imageDir);
+        }
+
+        // Ensure image directory exists
         File dir = new File(imageDir);
         if (!dir.exists()) {
             if (!dir.mkdirs()) {
-                throw new ServletException("Failed to create directory: " + imageDir);
+                System.out.println("Failed to create directory: " + imageDir);
+                response.sendRedirect("student-dashboard.jsp?message=Failed to create directory for image storage");
+                return;
             }
         }
 
+        // Ensure profiles.txt exists
         File profileFile = new File(filePath);
         if (!profileFile.exists()) {
             if (!profileFile.getParentFile().exists()) {
-                profileFile.getParentFile().mkdirs();
+                if (!profileFile.getParentFile().mkdirs()) {
+                    System.out.println("Failed to create parent directory for profiles.txt: " + profileFile.getParent());
+                    response.sendRedirect("student-dashboard.jsp?message=Failed to create profile data file");
+                    return;
+                }
             }
-            profileFile.createNewFile();
-        }
-
-        List<String[]> profiles = readProfiles(filePath);
-
-        if ("updatePersonal".equals(action)) {
-            String name = request.getParameter("name");
-            String dob = request.getParameter("dob");
-            String gender = request.getParameter("gender");
-            String email = request.getParameter("email");
-            String phone = request.getParameter("phone");
-            String address = request.getParameter("address");
-
-            updateProfile(profiles, studentId, name, dob, gender, email, phone, address, null, null, null, null, null, null);
-            writeProfiles(filePath, profiles);
-            response.sendRedirect("student-dashboard.jsp?tab=profile&message=Personal info updated successfully");
-        } else if ("updateAcademic".equals(action)) {
-            String degree = request.getParameter("degree");
-            String enrolled = request.getParameter("enrolled");
-            String gpa = request.getParameter("gpa");
-
-            updateProfile(profiles, studentId, null, null, null, null, null, null, degree, enrolled, gpa, null, null, null);
-            writeProfiles(filePath, profiles);
-            response.sendRedirect("student-dashboard.jsp?tab=profile&message=Academic info updated successfully");
-        } else if ("updateSecurity".equals(action)) {
-            String password = request.getParameter("password");
-            String twoFA = request.getParameter("twoFA") != null ? "Enabled" : "Not Enabled";
-
-            updateProfile(profiles, studentId, null, null, null, null, null, null, null, null, null, password, twoFA, null);
-            writeProfiles(filePath, profiles);
-            response.sendRedirect("student-dashboard.jsp?tab=profile&message=Security info updated successfully");
-        } else if ("uploadPicture".equals(action)) {
-            Part filePart = request.getPart("avatar");
-            if (filePart == null || filePart.getSize() == 0) {
-                response.sendRedirect("student-dashboard.jsp?tab=profile&message=Please select an image to upload");
+            try {
+                profileFile.createNewFile();
+            } catch (IOException e) {
+                System.out.println("Failed to create profiles.txt: " + e.getMessage());
+                response.sendRedirect("student-dashboard.jsp?message=Failed to create profile data file");
                 return;
             }
+        }
 
-            String fileName = studentId + "_" + filePart.getSubmittedFileName();
+        // Handle file upload
+        Part filePart = request.getPart("avatar");
+        String fileName = "";
+        if (filePart != null && filePart.getSize() > 0) {
+            // Validate file type
+            String contentType = filePart.getContentType();
+            if (!contentType.matches("image/(jpeg|jpg|png|gif)")) {
+                response.sendRedirect("student-dashboard.jsp?message=Only JPEG, PNG, or GIF images are allowed");
+                return;
+            }
+            fileName = studentId + "_" + filePart.getSubmittedFileName().replaceAll("[^a-zA-Z0-9.-]", "_");
             String filePathName = imageDir + File.separator + fileName;
+
+            // Clean up old profile picture
+            String oldPic = readProfiles(filePath).stream()
+                    .filter(p -> p[0].equals(studentId))
+                    .map(p -> p[7])
+                    .findFirst()
+                    .orElse("");
+            if (!oldPic.isEmpty()) {
+                File oldImage = new File(imageDir, oldPic);
+                if (oldImage.exists()) {
+                    oldImage.delete();
+                }
+            }
 
             try (InputStream input = filePart.getInputStream()) {
                 Files.copy(input, Paths.get(filePathName), java.nio.file.StandardCopyOption.REPLACE_EXISTING);
-                updateProfile(profiles, studentId, null, null, null, null, null, null, null, null, null, null, null, fileName);
-                writeProfiles(filePath, profiles);
-                response.sendRedirect("student-dashboard.jsp?tab=profile&message=Profile picture updated successfully");
             } catch (IOException e) {
-                e.printStackTrace();
-                response.sendRedirect("student-dashboard.jsp?tab=profile&message=Error uploading picture");
+                System.out.println("Error uploading image: " + e.getMessage());
+                response.sendRedirect("student-dashboard.jsp?message=Error uploading picture");
+                return;
             }
+        } else {
+            response.sendRedirect("student-dashboard.jsp?message=Please select an image to upload");
+            return;
         }
+
+        // Read existing profiles
+        List<String[]> profiles = readProfiles(filePath);
+
+        // Update or add profile
+        updateProfile(profiles, studentId, name, dob, gender, email, phone, address, fileName);
+
+        // Write profiles back to file
+        writeProfiles(filePath, profiles);
+
+        // Redirect with success message
+        response.sendRedirect("student-dashboard.jsp?message=Profile updated successfully");
     }
 
     private List<String[]> readProfiles(String filePath) {
@@ -118,11 +139,11 @@ public class ProfileServlet extends HttpServlet {
                 while ((line = reader.readLine()) != null) {
                     if (!line.trim().isEmpty()) {
                         String[] parts = line.split(",", -1);
-                        if (parts.length == 13) {
+                        if (parts.length == 8) {
                             profiles.add(parts);
                         } else {
-                            String[] corrected = new String[13];
-                            for (int i = 0; i < 13; i++) {
+                            String[] corrected = new String[8];
+                            for (int i = 0; i < 8; i++) {
                                 corrected[i] = i < parts.length ? parts[i] : "";
                             }
                             profiles.add(corrected);
@@ -130,45 +151,28 @@ public class ProfileServlet extends HttpServlet {
                     }
                 }
             } catch (IOException e) {
-                e.printStackTrace();
+                System.out.println("Error reading profiles: " + e.getMessage());
             }
         }
         return profiles;
     }
 
-    private void updateProfile(List<String[]> profiles, String studentId, String name, String dob, String gender, String email, String phone, String address, String degree, String enrolled, String gpa, String password, String twoFA, String pic) {
+    private void updateProfile(List<String[]> profiles, String studentId, String name, String dob, String gender, String email, String phone, String address, String pic) {
         for (int i = 0; i < profiles.size(); i++) {
             if (profiles.get(i)[0].equals(studentId)) {
                 String[] profile = profiles.get(i);
-                if (name != null) profile[1] = name;
-                if (dob != null) profile[2] = dob;
-                if (gender != null) profile[3] = gender;
-                if (email != null) profile[4] = email;
-                if (phone != null) profile[5] = phone;
-                if (address != null) profile[6] = address;
-                if (degree != null) profile[7] = degree;
-                if (enrolled != null) profile[8] = enrolled;
-                if (gpa != null) profile[9] = gpa;
-                if (password != null) profile[10] = password;
-                if (twoFA != null) profile[11] = twoFA;
-                if (pic != null) profile[12] = pic;
+                profile[1] = name;
+                profile[2] = dob;
+                profile[3] = gender;
+                profile[4] = email;
+                profile[5] = phone;
+                profile[6] = address;
+                profile[7] = pic;
                 return;
             }
         }
-        String[] newProfile = new String[13];
-        newProfile[0] = studentId;
-        newProfile[1] = name != null ? name : "";
-        newProfile[2] = dob != null ? dob : "";
-        newProfile[3] = gender != null ? gender : "";
-        newProfile[4] = email != null ? email : "";
-        newProfile[5] = phone != null ? phone : "";
-        newProfile[6] = address != null ? address : "";
-        newProfile[7] = degree != null ? degree : "";
-        newProfile[8] = enrolled != null ? enrolled : "";
-        newProfile[9] = gpa != null ? gpa : "";
-        newProfile[10] = password != null ? password : "";
-        newProfile[11] = twoFA != null ? twoFA : "";
-        newProfile[12] = pic != null ? pic : "";
+        // Add new profile if studentId not found
+        String[] newProfile = {studentId, name, dob, gender, email, phone, address, pic};
         profiles.add(newProfile);
     }
 
@@ -178,7 +182,30 @@ public class ProfileServlet extends HttpServlet {
                 writer.write(String.join(",", profile) + "\n");
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("Error writing profiles: " + e.getMessage());
+        }
+    }
+
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String action = request.getParameter("action");
+        if ("getPicture".equals(action)) {
+            String pic = request.getParameter("pic");
+            String imageDir = getServletContext().getRealPath(IMAGE_PATH);
+            if (imageDir == null) {
+                imageDir = FALLBACK_BASE_DIR + File.separator + "profile";
+            }
+            File imageFile = new File(imageDir, pic);
+
+            if (imageFile.exists()) {
+                // Set content type based on file extension (basic detection)
+                String contentType = Files.probeContentType(imageFile.toPath());
+                if (contentType == null) contentType = "image/jpeg"; // Default to JPEG
+                response.setContentType(contentType);
+                Files.copy(imageFile.toPath(), response.getOutputStream());
+            } else {
+                response.sendError(HttpServletResponse.SC_NOT_FOUND, "Image not found");
+            }
         }
     }
 }

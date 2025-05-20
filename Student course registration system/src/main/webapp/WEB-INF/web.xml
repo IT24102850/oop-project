@@ -1,9 +1,8 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         version="4.0"
          xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee
-         http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
-         version="3.1">
+                             http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd">
 
   <display-name>Student Registration Application</display-name>
 
@@ -11,22 +10,44 @@
   <servlet>
     <servlet-name>AuthServlet</servlet-name>
     <servlet-class>com.studentregistration.servlets.AuthServlet</servlet-class>
+    <load-on-startup>1</load-on-startup>
   </servlet>
 
   <servlet>
     <servlet-name>StudentServlet</servlet-name>
     <servlet-class>com.studentregistration.servlets.StudentServlet</servlet-class>
+    <load-on-startup>2</load-on-startup>
   </servlet>
 
   <servlet>
     <servlet-name>RegistrationServlet</servlet-name>
     <servlet-class>com.studentregistration.servlets.RegistrationServlet</servlet-class>
+    <load-on-startup>3</load-on-startup>
   </servlet>
 
+  <servlet>
+    <servlet-name>SignUpServlet</servlet-name>
+    <servlet-class>com.studentregistration.servlets.SignUpServlet</servlet-class>
+    <load-on-startup>4</load-on-startup>
+  </servlet>
 
+  <servlet>
+    <servlet-name>ProcessNewCourseRequest</servlet-name>
+    <servlet-class>com.studentregistration.servlets.ProcessNewCourseRequest</servlet-class>
+    <load-on-startup>5</load-on-startup>
+  </servlet>
 
+  <servlet>
+    <servlet-name>ProcessPaymentServlet</servlet-name>
+    <servlet-class>com.studentregistration.servlets.ProcessPaymentServlet</servlet-class>
+    <load-on-startup>6</load-on-startup>
+  </servlet>
 
   <!-- Servlet Mappings -->
+  <servlet-mapping>
+    <servlet-name>AuthServlet</servlet-name>
+    <url-pattern>/auth</url-pattern>
+  </servlet-mapping>
 
   <servlet-mapping>
     <servlet-name>StudentServlet</servlet-name>
@@ -38,32 +59,24 @@
     <url-pattern>/registrations/*</url-pattern>
   </servlet-mapping>
 
-  <servlet>
-    <servlet-name>SignUpServlet</servlet-name>
-    <servlet-class>com.studentregistration.servlets.SignUpServlet</servlet-class>
-  </servlet>
-
   <servlet-mapping>
     <servlet-name>SignUpServlet</servlet-name>
     <url-pattern>/signup</url-pattern>
   </servlet-mapping>
 
-  <servlet>
-    <servlet-name>LogoutServlet</servlet-name>
-    <servlet-class>LogoutServlet</servlet-class>
-  </servlet>
   <servlet-mapping>
-    <servlet-name>LogoutServlet</servlet-name>
-    <url-pattern>/logout</url-pattern>
+    <servlet-name>ProcessNewCourseRequest</servlet-name>
+    <url-pattern>/processNewCourseRequest</url-pattern>
   </servlet-mapping>
 
+  <servlet-mapping>
+    <servlet-name>ProcessPaymentServlet</servlet-name>
+    <url-pattern>/ProcessPayment</url-pattern>
+  </servlet-mapping>
 
   <!-- Welcome File List -->
   <welcome-file-list>
     <welcome-file>index.jsp</welcome-file>
-  </welcome-file-list>
-
-  <welcome-file-list>
     <welcome-file>logIn.jsp</welcome-file>
   </welcome-file-list>
 

@@ -1,6 +1,13 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ page import="com.studentregistration.model.Review" %>
+<%@ page import="java.io.BufferedReader" %>
+<%@ page import="java.io.FileReader" %>
+<%@ page import="java.io.BufferedWriter" %>
+<%@ page import="java.io.FileWriter" %>
+<%@ page import="java.io.File" %>
+<%@ page import="java.util.ArrayList" %>
 <%@ page import="java.util.List" %>
+<%@ page import="java.io.IOException" %> <!-- Added this line -->
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,7 +16,9 @@
     <title>NexoraSkill | Future-Ready Education Platform</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="icon" type="image/png" href="./images/favicon.ico">
+    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Orbitron:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Animate.css -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
 
     <style>
@@ -363,7 +372,6 @@
             overflow: hidden;
             z-index: 1;
         }
-
 
         .cta-button:before {
             content: '';
@@ -755,179 +763,6 @@
             color: var(--text-color);
         }
 
-        /* Reviews Section - Slideshow and Form */
-        .reviews {
-            padding: 120px 5%;
-            background: linear-gradient(to bottom, transparent, var(--dark-color));
-            position: relative;
-            z-index: 2;
-        }
-
-        .reviews:before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: url('./images/grid-pattern.png') center/cover;
-            opacity: 0.05;
-            z-index: -1;
-        }
-
-        .reviews-container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .reviews-slideshow {
-            position: relative;
-            width: 100%;
-            height: 400px;
-            overflow: hidden;
-            margin-bottom: 60px;
-            border-radius: var(--border-radius);
-            border: 1px solid rgba(0, 242, 254, 0.2);
-            box-shadow: var(--box-shadow);
-        }
-
-        .review-slide {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            background: var(--card-bg);
-            backdrop-filter: blur(10px);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding: 40px;
-            opacity: 0;
-            transition: opacity 1s ease-in-out;
-        }
-
-        .review-slide.active {
-            opacity: 1;
-        }
-
-        .review-text {
-            font-size: 1.5rem;
-            color: var(--text-color);
-            margin-bottom: 20px;
-            text-align: center;
-            font-style: italic;
-        }
-
-        .review-author {
-            font-size: 1.2rem;
-            color: var(--primary-color);
-            font-weight: 600;
-        }
-
-        .review-form-container {
-            max-width: 600px;
-            margin: 0 auto;
-            background: var(--card-bg);
-            backdrop-filter: blur(10px);
-            border-radius: var(--border-radius);
-            padding: 40px;
-            border: 1px solid rgba(0, 242, 254, 0.2);
-            box-shadow: var(--box-shadow);
-        }
-
-        .review-form-container h3 {
-            font-size: 2rem;
-            margin-bottom: 30px;
-            text-align: center;
-            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .review-form {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        .review-form select,
-        .review-form input,
-        .review-form textarea {
-            padding: 15px;
-            border-radius: 8px;
-            border: 1px solid rgba(0, 242, 254, 0.3);
-            background: var(--glass-bg);
-            color: var(--text-color);
-            font-size: 1rem;
-            outline: none;
-            transition: var(--transition);
-        }
-
-        .review-form select:focus,
-        .review-form input:focus,
-        .review-form textarea:focus {
-            border-color: var(--primary-color);
-            box-shadow: 0 0 10px var(--glow-color);
-        }
-
-        .review-form textarea {
-            resize: vertical;
-            min-height: 120px;
-        }
-
-        .review-form button {
-            padding: 15px;
-            border-radius: 50px;
-            border: none;
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            color: var(--dark-color);
-            font-size: 1.1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-
-        .review-form button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 20px rgba(0, 242, 254, 0.3);
-        }
-
-        .review-actions {
-            display: flex;
-            gap: 15px;
-            justify-content: center;
-        }
-
-        .edit-btn, .delete-btn {
-            padding: 10px 20px;
-            border-radius: 25px;
-            border: none;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-
-        .edit-btn {
-            background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
-            color: var(--dark-color);
-        }
-
-        .edit-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-        }
-
-        .delete-btn {
-            background: linear-gradient(135deg, #ff6b6b, #ee5253);
-            color: var(--text-color);
-        }
-
-        .delete-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 20px rgba(255, 107, 107, 0.3);
-        }
-
         /* CTA Section - Parallax Effect */
         .cta-section {
             padding: 180px 5%;
@@ -1234,51 +1069,190 @@
             box-shadow: 0 10px 25px rgba(0, 242, 254, 0.6);
         }
 
-        /* Animations */
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        /* Review Form Section */
+        .review-form-section {
+            padding: 120px 5%;
+            background: linear-gradient(to bottom, transparent, var(--darker-color));
+            position: relative;
+            z-index: 2;
         }
 
-        @keyframes fadeInRight {
-            from {
-                opacity: 0;
-                transform: translateX(50px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
+        .review-form-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border-radius: var(--border-radius);
+            padding: 40px;
+            border: 1px solid rgba(0, 242, 254, 0.2);
+            box-shadow: var(--box-shadow);
+            animation: fadeInUp 1s ease-out;
         }
 
-        @keyframes float {
-            0% {
-                transform: translateY(0) rotate(0deg);
-            }
-            50% {
-                transform: translateY(-20px) rotate(5deg);
-            }
-            100% {
-                transform: translateY(0) rotate(0deg);
-            }
+        .review-form-container h3 {
+            font-size: 2rem;
+            margin-bottom: 30px;
+            text-align: center;
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            position: relative;
         }
 
-        @keyframes textGlow {
-            0% {
-                text-shadow: 0 0 10px rgba(0, 242, 254, 0.3);
-            }
-            100% {
-                text-shadow: 0 0 30px rgba(0, 242, 254, 0.6);
-            }
+        .review-form-container h3:after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            border-radius: 2px;
         }
 
-        /* Responsive Design */
+        .review-form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .review-form input,
+        .review-form textarea {
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid rgba(0, 242, 254, 0.3);
+            background: var(--glass-bg);
+            color: var(--text-color);
+            font-size: 1rem;
+            outline: none;
+            transition: var(--transition);
+        }
+
+        .review-form input:focus,
+        .review-form textarea:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 10px var(--glow-color);
+        }
+
+        .review-form textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .review-form button {
+            padding: 15px;
+            border-radius: 50px;
+            border: none;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: var(--dark-color);
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .review-form button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 242, 254, 0.3);
+        }
+
+        /* Previous Reviews Slideshow Styling */
+        .previous-reviews-container {
+            max-width: 900px;
+            margin: 0 auto;
+            margin-bottom: 80px;
+        }
+
+        .previous-reviews-title {
+            font-size: 2rem;
+            text-align: center;
+            margin-bottom: 40px;
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            position: relative;
+        }
+
+        .previous-reviews-title:after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            border-radius: 2px;
+        }
+
+        .reviews-slideshow {
+            position: relative;
+            width: 100%;
+            height: 400px;
+            overflow: hidden;
+            margin-bottom: 60px;
+            border-radius: var(--border-radius);
+            border: 1px solid rgba(0, 242, 254, 0.2);
+            box-shadow: var(--box-shadow);
+        }
+
+        .review-slide {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+        }
+
+        .review-slide.active {
+            opacity: 1;
+        }
+
+        .previous-review-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border-radius: var(--border-radius);
+            padding: 30px;
+            border: 1px solid rgba(0, 242, 254, 0.2);
+            box-shadow: var(--box-shadow);
+            transition: var(--transition);
+            text-align: center;
+            max-width: 600px;
+        }
+
+        .previous-review-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+            border-color: rgba(0, 242, 254, 0.4);
+        }
+
+        .previous-review-card .review-text {
+            font-size: 1.3rem;
+            color: var(--text-color);
+            margin-bottom: 15px;
+            font-style: italic;
+        }
+
+        .previous-review-card .review-author {
+            font-size: 1.1rem;
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        .previous-review-card .review-timestamp {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-top: 10px;
+        }
+
+        /* Responsive Adjustments */
         @media (max-width: 1200px) {
             .hero-title {
                 font-size: 3.8rem;
@@ -1356,16 +1330,33 @@
                 gap: 40px;
             }
 
-            .reviews-slideshow {
-                height: 300px;
+            .review-form-container {
+                padding: 20px;
             }
 
-            .review-text {
+            .review-form input,
+            .review-form textarea {
+                font-size: 0.9rem;
+            }
+
+            .review-form button {
+                font-size: 1rem;
+            }
+
+            .reviews-slideshow {
+                height: 350px;
+            }
+
+            .previous-review-card .review-text {
                 font-size: 1.2rem;
             }
 
-            .review-author {
+            .previous-review-card .review-author {
                 font-size: 1rem;
+            }
+
+            .previous-review-card .review-timestamp {
+                font-size: 0.8rem;
             }
         }
 
@@ -1398,11 +1389,34 @@
                 font-size: 1.8rem;
             }
 
+            .previous-reviews-title {
+                font-size: 1.8rem;
+            }
+
+            .reviews-slideshow {
+                height: 300px;
+            }
+
+            .previous-review-card {
+                padding: 20px;
+            }
+
+            .previous-review-card .review-text {
+                font-size: 1.1rem;
+            }
+
+            .previous-review-card .review-author {
+                font-size: 0.9rem;
+            }
+
+            .previous-review-card .review-timestamp {
+                font-size: 0.7rem;
+            }
+
             .review-form-container {
                 padding: 20px;
             }
 
-            .review-form select,
             .review-form input,
             .review-form textarea {
                 font-size: 0.9rem;
@@ -1432,7 +1446,6 @@
             <ul>
                 <li><a href="#home">Home</a></li>
                 <li><a href="courses.jsp">Courses</a></li>
-                <li><a href="Apply%20Course.jsp">Apply Course</a></li>
                 <li><a href="aboutus.jsp">About Us</a></li>
                 <li><a href="contact.jsp">Contact</a></li>
             </ul>
@@ -1453,7 +1466,7 @@
             <a href="${pageContext.request.contextPath}/courses.jsp" class="cta-button primary-cta">
                 <i class="fas fa-rocket"></i> Explore Courses
             </a>
-            <a href="${pageContext.request.contextPath}/Apply%20Course.jsp" class="cta-button secondary-cta">
+            <a href="${pageContext.request.contextPath}/signUp.jsp" class="cta-button secondary-cta">
                 <i class="fas fa-user-graduate"></i> Apply Now
             </a>
         </div>
@@ -1524,60 +1537,6 @@
     </div>
 </section>
 
-<!-- Reviews Section -->
-<section class="reviews">
-    <h2 class="section-title">What Our Students Say</h2>
-    <div class="reviews-container">
-        <div class="reviews-slideshow" id="reviews-slideshow">
-            <%
-                List<Review> reviews = (List<Review>) request.getAttribute("reviews");
-                String error = (String) request.getAttribute("error");
-
-                if (error != null) {
-                    out.println("<div class='review-slide active'><p class='review-text'>" + error + "</p><p class='review-author'>– NexoraSkill</p></div>");
-                } else if (reviews == null || reviews.isEmpty()) {
-                    out.println("<div class='review-slide active'><p class='review-text'>No reviews yet. Be the first to share!</p><p class='review-author'>– NexoraSkill</p></div>");
-                } else {
-                    for (int i = 0; i < reviews.size(); i++) {
-                        Review review = reviews.get(i);
-                        out.println("<div class='review-slide" + (i == 0 ? " active" : "") + "'>");
-                        out.println("<p class='review-text'>\"" + review.getText() + "\"</p>");
-                        out.println("<p class='review-author'>– " + review.getAuthor() + "</p>");
-                        out.println("</div>");
-                    }
-                }
-            %>
-        </div>
-
-        <!-- Review Management Form -->
-        <div class="review-form-container">
-            <h3 id="form-title">Manage Your Reviews</h3>
-            <form class="review-form" method="POST" action="${pageContext.request.contextPath}/ReviewServlet">
-                <input type="hidden" name="action" id="action" value="create">
-                <input type="hidden" name="id" id="review-id">
-                <select name="review-select" id="review-select" onchange="fillEditForm()">
-                    <option value="-1">Select a review to edit or delete</option>
-                    <%
-                        if (reviews != null) {
-                            for (int i = 0; i < reviews.size(); i++) {
-                                Review review = reviews.get(i);
-                                out.println("<option value=\"" + i + "\">" + review.getAuthor() + ": \"" + review.getText().substring(0, Math.min(review.getText().length(), 20)) + (review.getText().length() > 20 ? "..." : "") + "\"</option>");
-                            }
-                        }
-                    %>
-                </select>
-                <input type="text" name="author" id="author" placeholder="Your Name" required>
-                <textarea name="text" id="text" placeholder="Your Review" required></textarea>
-                <div class="review-actions">
-                    <button type="button" class="edit-btn" onclick="setAction('update')">Edit</button>
-                    <button type="button" class="delete-btn" onclick="setAction('delete')">Delete</button>
-                    <button type="submit" id="submit-btn"><i class="fas fa-paper-plane"></i> <span id="submit-text">Submit Review</span></button>
-                </div>
-            </form>
-        </div>
-    </div>
-</section>
-
 <!-- CTA Section -->
 <section class="cta-section">
     <div class="cta-bg-elements">
@@ -1592,6 +1551,132 @@
         </a>
     </div>
 </section>
+
+<!-- Review Form Section -->
+<section class="review-form-section">
+    <div class="review-form-container">
+        <h3>Submit a Review</h3>
+        <form class="review-form" id="reviewForm" action="${pageContext.request.contextPath}/index.jsp" method="POST">
+            <input type="text" name="reviewerName" placeholder="Your Name" required maxlength="50">
+            <textarea name="reviewText" placeholder="Your Review" required maxlength="500"></textarea>
+            <button type="submit"><i class="fas fa-paper-plane"></i> Submit Review</button>
+        </form>
+        <!-- Display Feedback Message -->
+        <div id="feedbackMessage" class="feedback-message" style="display: ${not empty feedbackMessage ? 'block' : 'none'}; color: ${feedbackMessageType == 'error' ? '#ff4d7e' : '#00f2fe'}; margin-top: 15px; text-align: center;">
+            ${feedbackMessage}
+        </div>
+    </div>
+</section>
+
+<%--
+    Handle Form Submission
+--%>
+<%
+    String reviewerName = request.getParameter("reviewerName");
+    String reviewText = request.getParameter("reviewText");
+    boolean formSubmitted = reviewerName != null && reviewText != null;
+
+    if (formSubmitted) {
+        reviewerName = reviewerName.trim();
+        reviewText = reviewText.trim();
+
+        // Initialize feedback attributes
+        String feedbackMessage = null;
+        String feedbackMessageType = "success";
+
+        if (reviewerName.isEmpty() || reviewText.isEmpty()) {
+            feedbackMessage = "Name and review are required.";
+            feedbackMessageType = "error";
+        } else if (reviewerName.length() > 50 || reviewText.length() > 500) {
+            feedbackMessage = "Name must be 50 characters or less, and review must be 500 characters or less.";
+            feedbackMessageType = "error";
+        } else {
+            String filePath = application.getRealPath("/WEB-INF/data/reviews.txt");
+            File file = new File(filePath);
+            File parentDir = file.getParentFile();
+            if (!parentDir.exists() && !parentDir.mkdirs()) {
+                feedbackMessage = "Error: Could not create directory for reviews.";
+                feedbackMessageType = "error";
+            } else {
+                String entry = reviewerName + "|" + reviewText;
+                try (BufferedWriter writer = new BufferedWriter(new FileWriter(file, true))) {
+                    writer.write(entry);
+                    writer.newLine();
+                    feedbackMessage = "Review saved successfully.";
+                } catch (IOException e) {
+                    feedbackMessage = "Error saving review: " + e.getMessage();
+                    feedbackMessageType = "error";
+                }
+            }
+        }
+
+        // Set feedback attributes in request scope
+        request.setAttribute("feedbackMessage", feedbackMessage);
+        request.setAttribute("feedbackMessageType", feedbackMessageType);
+
+        // If successful, reload the page to reflect the new review
+        if ("success".equals(feedbackMessageType)) {
+            response.sendRedirect(request.getRequestURI());
+            return;
+        }
+    }
+%>
+
+<!-- Previous Reviews Section -->
+<div class="previous-reviews-container">
+    <h3 class="previous-reviews-title">What Our Students Are Saying</h3>
+
+
+
+    <%-- Display Previous Reviews --%>
+    <div class="reviews-slideshow" id="reviews-slideshow">
+        <%
+            String filePath = application.getRealPath("/WEB-INF/data/reviews.txt");
+            List<String[]> reviews = new ArrayList<>();
+            try {
+                File file = new File(filePath);
+                if (file.exists()) {
+                    try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+                        String line;
+                        while ((line = reader.readLine()) != null) {
+                            String[] parts = line.split("\\|", 2);
+                            if (parts.length == 2) {
+                                reviews.add(parts);
+                            }
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                System.out.println("<script>alert('Error reading reviews: " + e.getMessage() + "');</script>");
+            }
+
+            if (reviews.isEmpty()) {
+        %>
+        <div class="review-slide active">
+            <div class="previous-review-card">
+                <p class="review-text">"No reviews yet. Be the first to share your experience!"</p>
+                <p class="review-author">– NexoraSkill Team</p>
+            </div>
+        </div>
+        <%
+        } else {
+            for (int i = 0; i < reviews.size(); i++) {
+                String[] review = reviews.get(i);
+                String className = (i == 0) ? "review-slide active" : "review-slide";
+        %>
+        <div class="<%= className %>">
+            <div class="previous-review-card">
+                <p class="review-text">"<%= review[1] %>"</p>
+                <p class="review-author">– <%= review[0] %></p>
+            </div>
+        </div>
+        <%
+                }
+            }
+        %>
+    </div>
+</div>
 
 <!-- Footer -->
 <footer class="footer">
@@ -1688,7 +1773,6 @@
         });
     }
 
-    // Start counters when stats section is in view
     const statsSection = document.querySelector('.stats');
     const observer = new IntersectionObserver((entries) => {
         if (entries[0].isIntersecting) {
@@ -1698,72 +1782,6 @@
     }, { threshold: 0.5 });
 
     observer.observe(statsSection);
-
-    // Reviews Slideshow
-    const slides = document.querySelectorAll('.review-slide');
-    let currentSlide = 0;
-
-    function showSlide(index) {
-        slides.forEach((slide, i) => {
-            slide.classList.remove('active');
-            if (i === index) {
-                slide.classList.add('active');
-            }
-        });
-    }
-
-    function nextSlide() {
-        currentSlide = (currentSlide + 1) % slides.length;
-        showSlide(currentSlide);
-    }
-
-    // Auto-slide every 5 seconds
-    if (slides.length > 1) {
-        setInterval(nextSlide, 5000);
-    }
-    showSlide(currentSlide);
-
-    // Fill Edit Form
-    function fillEditForm() {
-        const select = document.getElementById('review-select');
-        const selectedIndex = parseInt(select.value);
-        if (selectedIndex >= 0) {
-            const reviews = <%=(reviews != null) ? reviews : "[]" %>;
-            const review = reviews[selectedIndex];
-            document.getElementById('form-title').innerText = 'Edit Your Review';
-            document.getElementById('action').value = 'create';
-            document.getElementById('review-id').value = selectedIndex;
-            document.getElementById('author').value = review.author;
-            document.getElementById('text').value = review.text;
-            document.getElementById('submit-text').innerText = 'Update Review';
-        } else {
-            resetForm();
-        }
-    }
-
-    // Set Action for Edit/Delete
-    function setAction(action) {
-        const select = document.getElementById('review-select');
-        const selectedIndex = parseInt(select.value);
-        if (selectedIndex >= 0) {
-            document.getElementById('action').value = action;
-            document.getElementById('review-id').value = selectedIndex;
-            document.querySelector('.review-form').submit();
-        } else {
-            alert('Please select a review to ' + (action === 'update' ? 'edit' : 'delete') + '.');
-        }
-    }
-
-    // Reset Form
-    function resetForm() {
-        document.getElementById('form-title').innerText = 'Manage Your Reviews';
-        document.getElementById('action').value = 'create';
-        document.getElementById('review-id').value = '';
-        document.getElementById('author').value = '';
-        document.getElementById('text').value = '';
-        document.getElementById('submit-text').innerText = 'Submit Review';
-        document.getElementById('review-select').value = '-1';
-    }
 
     // Scroll To Top Button
     const scrollTop = document.querySelector('.scroll-top');
@@ -1776,10 +1794,7 @@
     });
 
     scrollTop.addEventListener('click', function() {
-        window.scrollTo({
-            top: 0,
-            behavior: 'smooth'
-        });
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     });
 
     // Particle System
@@ -1790,30 +1805,62 @@
         for (let i = 0; i < particleCount; i++) {
             const particle = document.createElement('div');
             particle.classList.add('particle');
-
             particle.style.left = Math.random() * 100 + '%';
             particle.style.top = Math.random() * 100 + '%';
-
             const size = Math.random() * 4 + 1;
             particle.style.width = size + 'px';
             particle.style.height = size + 'px';
-
             particle.style.opacity = Math.random() * 0.7 + 0.1;
-
             particle.style.animationDuration = Math.random() * 25 + 15 + 's';
             particle.style.animationDelay = Math.random() * 5 + 's';
-
             particlesContainer.appendChild(particle);
         }
     });
-    
+
+    // Smooth scrolling for anchor links
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function(e) {
             e.preventDefault();
-            document.querySelector(this.getAttribute('href')).scrollIntoView({
-                behavior: 'smooth'
-            });
+            document.querySelector(this.getAttribute('href')).scrollIntoView({ behavior: 'smooth' });
         });
+    });
+
+    // Slideshow Functionality
+    const slides = document.querySelectorAll('.review-slide');
+    let currentSlide = 0;
+
+    function showSlide(index) {
+        slides.forEach((slide, i) => {
+            slide.classList.remove('active');
+            if (i === index) slide.classList.add('active');
+        });
+    }
+
+    function nextSlide() {
+        currentSlide = (currentSlide + 1) % slides.length;
+        showSlide(currentSlide);
+    }
+
+    if (slides.length > 1) {
+        setInterval(nextSlide, 5000);
+    }
+    showSlide(currentSlide);
+
+    // Review Form Submission (Simplified)
+    document.getElementById('reviewForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        const form = this;
+        const reviewerName = form.querySelector('input[name="reviewerName"]').value.trim();
+        const reviewText = form.querySelector('textarea[name="reviewText"]').value.trim();
+
+        if (!reviewerName || !reviewText) {
+            alert('Please fill in both fields.');
+            return;
+        }
+
+        // Submit the form directly to let JSP handle it
+        form.submit();
     });
 </script>
 </body>

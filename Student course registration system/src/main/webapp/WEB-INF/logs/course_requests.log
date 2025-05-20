@@ -1,0 +1,22 @@
+May 11, 2025 6:24:30 PM com.studentregistration.servlets.ProcessNewCourseRequest init
+INFO: ProcessNewCourseRequest servlet initialized successfully
+May 11, 2025 6:24:30 PM com.studentregistration.servlets.ProcessNewCourseRequest doPost
+WARNING: Unauthorized access attempt to course request
+May 11, 2025 6:24:32 PM com.studentregistration.servlets.ProcessNewCourseRequest doPost
+WARNING: Unauthorized access attempt to course request
+May 11, 2025 6:24:41 PM com.studentregistration.servlets.ProcessNewCourseRequest doPost
+WARNING: Unauthorized access attempt to course request
+May 11, 2025 6:24:42 PM com.studentregistration.servlets.ProcessNewCourseRequest doPost
+WARNING: Unauthorized access attempt to course request
+May 11, 2025 6:25:54 PM com.studentregistration.servlets.ProcessNewCourseRequest doPost
+WARNING: Unauthorized access attempt to course request
+May 11, 2025 6:27:31 PM com.studentregistration.servlets.ProcessNewCourseRequest doPost
+WARNING: Unauthorized access attempt to course request
+May 14, 2025 12:25:39 PM com.studentregistration.servlets.ProcessNewCourseRequest init
+INFO: ProcessNewCourseRequest servlet initialized successfully
+May 14, 2025 12:26:59 PM com.studentregistration.servlets.ProcessNewCourseRequest destroy
+WARNING: Queue processor did not terminate gracefully
+May 14, 2025 12:26:59 PM com.studentregistration.servlets.ProcessNewCourseRequest lambda$startQueueProcessor$1
+INFO: Queue processor interrupted, shutting down
+May 14, 2025 12:26:59 PM com.studentregistration.servlets.ProcessNewCourseRequest destroy
+INFO: ProcessNewCourseRequest servlet destroyed

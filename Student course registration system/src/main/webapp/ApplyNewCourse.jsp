@@ -727,7 +727,6 @@
             padding: 15px;
             border-radius: var(--border-radius);
             text-align: center;
-            display: none;
         }
 
         .message.success {
@@ -794,9 +793,16 @@
                 } catch (IOException e) {
                     request.setAttribute("error", "Failed to load course data: " + e.getMessage());
                 }
+
+                // Display message or error from query parameters
+                String message = request.getParameter("message");
+                String error = request.getParameter("error");
+                String contextPath = request.getContextPath();
             %>
 
-            <form action="ProcessNewCourseRequest" method="POST" id="newCourseForm">
+            <form action="${pageContext.request.contextPath}/processNewCourseRequest" method="POST" id="newCourseForm">
+                <input type="hidden" name="action" value="submit">
+                <input type="hidden" name="debug_context_path" value="<%= contextPath %>">
                 <div class="form-group">
                     <label for="fullName" class="form-label">Full Name</label>
                     <input type="text" id="fullName" name="fullName" class="form-control" placeholder="Enter your full name" required>
@@ -854,7 +860,13 @@
             </form>
 
             <!-- Message Display -->
-            <div class="message" id="submissionMessage"></div>
+            <div class="message <%= message != null ? "success" : error != null ? "error" : "" %>">
+                <%= message != null ? "Request submitted successfully!" : "" %>
+                <%= error != null ? error.equals("invalid_input") ? "Please fill in all required fields." : error.equals("inappropriate_content") ? "Inappropriate content detected in your request." : "An error occurred. Please try again. (Check if /processNewCourseRequest is mapped in web.xml)" : "" %>
+                <% if (error != null && error.contains("404")) { %>
+                <p>Debug: Context Path is <%= contextPath %>. Ensure /processNewCourseRequest is mapped correctly.</p>
+                <% } %>
+            </div>
         </div>
     </div>
 </section>
@@ -948,64 +960,4 @@
             });
         });
     });
-
-    // Form Submission Handler
-    document.getElementById('newCourseForm').addEventListener('submit', function(e) {
-        e.preventDefault();
-
-        const form = this;
-        const formData = new FormData(form);
-        const submitBtn = document.querySelector('.submit-btn');
-        const messageDiv = document.getElementById('submissionMessage');
-
-        // Log form data for debugging
-        const formDataObj = {};
-        formData.forEach((value, key) => {
-            formDataObj[key] = value;
-        });
-        console.log('Form Data:', formDataObj);
-
-        // Client-side validation
-        if (!formDataObj.fullName || !formDataObj.email || !formDataObj.course || !formDataObj.reason) {
-            messageDiv.className = 'message error';
-            messageDiv.textContent = 'Please fill in all required fields.';
-            messageDiv.style.display = 'block';
-            return;
-        }
-
-        submitBtn.disabled = true;
-        submitBtn.textContent = 'Submitting...';
-
-        fetch('ProcessNewCourseRequest', {
-            method: 'POST',
-            body: formData
-        })
-            .then(response => {
-                console.log('Response Status:', response.status);
-                return response.text();
-            })
-            .then(data => {
-                console.log('Response Text:', data);
-                if (data === "Request submitted successfully!") {
-                    messageDiv.className = 'message success';
-                    messageDiv.textContent = data;
-                    messageDiv.style.display = 'block';
-                    setTimeout(() => {
-                        window.location.href = 'student-dashboard.jsp';
-                    }, 2000);
-                } else {
-                    throw new Error(data);
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                messageDiv.className = 'message error';
-                messageDiv.textContent = error.message || 'Error submitting request. Please try again.';
-                messageDiv.style.display = 'block';
-                submitBtn.disabled = false;
-                submitBtn.textContent = 'Submit Request';
-            });
-    });
 </script>
-</body>
-</html>
